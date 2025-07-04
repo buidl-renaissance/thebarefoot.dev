@@ -21,5 +21,7 @@ export type ThemeType = typeof theme;
 declare module 'styled-components' {
   export interface DefaultTheme extends ThemeType {
     // Theme interface for styled-components
+    colors: typeof theme.colors;
+    fonts: typeof theme.fonts;
   }
 } 
