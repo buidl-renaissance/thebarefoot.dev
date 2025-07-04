@@ -326,32 +326,32 @@ const ColumnText = styled.p<{ theme: ThemeType }>`
   color: ${({ theme }) => theme.colors.asphaltBlack};
 `;
 
-const ProjectsSection = styled.section<{ theme: ThemeType }>`
-  background: ${({ theme }) => theme.colors.asphaltBlack};
-  color: ${({ theme }) => theme.colors.creamyBeige};
-  padding: 4rem 1rem;
-  text-align: center;
-  position: relative;
-`;
+// const ProjectsSection = styled.section<{ theme: ThemeType }>`
+//   background: ${({ theme }) => theme.colors.asphaltBlack};
+//   color: ${({ theme }) => theme.colors.creamyBeige};
+//   padding: 4rem 1rem;
+//   text-align: center;
+//   position: relative;
+// `;
 
-const ProjectsTitle = styled.h2<{ theme: ThemeType }>`
-  font-family: ${({ theme }) => theme.fonts.heading};
-  font-size: clamp(1.8rem, 3vw, 2.5rem);
-  margin-bottom: 1.5rem;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-`;
+// const ProjectsTitle = styled.h2<{ theme: ThemeType }>`
+//   font-family: ${({ theme }) => theme.fonts.heading};
+//   font-size: clamp(1.8rem, 3vw, 2.5rem);
+//   margin-bottom: 1.5rem;
+//   text-transform: uppercase;
+//   letter-spacing: 2px;
+// `;
 
-const ProjectsDescription = styled.p<{ theme: ThemeType }>`
-  font-family: ${({ theme }) => theme.fonts.body};
-  font-size: 1.1rem;
-  margin-bottom: 2.5rem;
-  max-width: 700px;
-  margin-left: auto;
-  margin-right: auto;
-  line-height: 1.6;
-  opacity: 0.9;
-`;
+// const ProjectsDescription = styled.p<{ theme: ThemeType }>`
+//   font-family: ${({ theme }) => theme.fonts.body};
+//   font-size: 1.1rem;
+//   margin-bottom: 2.5rem;
+//   max-width: 700px;
+//   margin-left: auto;
+//   margin-right: auto;
+//   line-height: 1.6;
+//   opacity: 0.9;
+// `;
 
 const AboutPreview = styled.section<{ theme: ThemeType }>`
   /* background: ${({ theme }) => theme.colors.creamyBeige}; */
