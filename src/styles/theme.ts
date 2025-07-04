@@ -20,6 +20,6 @@ export type ThemeType = typeof theme;
 // styled-components theme typing augmentation
 declare module 'styled-components' {
   export interface DefaultTheme extends ThemeType {
-    // Extend with additional properties if needed
+    // Theme interface for styled-components
   }
 } 
