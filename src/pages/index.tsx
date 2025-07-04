@@ -3,6 +3,8 @@ import Image from "next/image";
 import styled from "styled-components";
 import { useState } from "react";
 import Link from "next/link";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGithub, faInstagram } from "@fortawesome/free-brands-svg-icons";
 import type { ThemeType } from "@/styles/theme";
 
 const HeroSection = styled.section<{ theme: ThemeType }>`
@@ -115,18 +117,7 @@ const CTAButton = styled.button<{ primary?: boolean; theme: ThemeType }>`
     font-size: 0.9rem;
     min-width: 180px;
   }
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: left 0.5s;
-  }
-  
+    
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(0,0,0,0.3);
@@ -180,16 +171,24 @@ const EmailDescription = styled.p<{ theme: ThemeType }>`
 
 const EmailForm = styled.form`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  gap: 1rem;
+  justify-content: center;
+  gap: 0;
   margin-bottom: 2rem;
+  
+  @media (max-width: 480px) {
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+  }
 `;
 
 const EmailInput = styled.input<{ theme: ThemeType }>`
   padding: 1rem 1.5rem;
-  border-radius: 8px;
+  border-radius: 8px 0 0 8px;
   border: 2px solid ${({ theme }) => theme.colors.neonOrange};
+  border-right: none;
   font-size: 1rem;
   font-family: ${({ theme }) => theme.fonts.body};
   width: 300px;
@@ -199,9 +198,12 @@ const EmailInput = styled.input<{ theme: ThemeType }>`
   transition: all 0.3s ease;
   
   @media (max-width: 480px) {
-    width: 280px;
+    width: 100%;
+    max-width: 280px;
     padding: 0.875rem 1.25rem;
     font-size: 0.9rem;
+    border-radius: 8px;
+    border-right: 2px solid ${({ theme }) => theme.colors.neonOrange};
   }
   
   &::placeholder {
@@ -215,7 +217,17 @@ const EmailInput = styled.input<{ theme: ThemeType }>`
   }
 `;
 
-const EmailSubmit = styled(CTAButton).attrs({ as: "button" })``;
+const EmailSubmit = styled(CTAButton).attrs({ as: "button" })`
+  border-radius: 0 8px 8px 0;
+  border-left: none;
+  
+  @media (max-width: 480px) {
+    border-radius: 8px;
+    border-left: 2px solid ${({ theme }) => theme.colors.neonOrange};
+    width: 100%;
+    max-width: 280px;
+  }
+`;
 
 const SuccessMsg = styled.p<{ theme: ThemeType }>`
   color: ${({ theme }) => theme.colors.neonOrange};
@@ -234,7 +246,7 @@ const WhyJoinSection = styled.section<{ theme: ThemeType }>`
 
 const SectionTitle = styled.h2<{ theme: ThemeType }>`
   font-family: ${({ theme }) => theme.fonts.heading};
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(1.5rem, 4vw, 3rem);
   margin-bottom: 3rem;
   color: ${({ theme }) => theme.colors.asphaltBlack};
   text-transform: uppercase;
@@ -342,15 +354,16 @@ const ProjectsDescription = styled.p<{ theme: ThemeType }>`
 `;
 
 const AboutPreview = styled.section<{ theme: ThemeType }>`
-  background: ${({ theme }) => theme.colors.creamyBeige};
-  color: ${({ theme }) => theme.colors.asphaltBlack};
+  /* background: ${({ theme }) => theme.colors.creamyBeige}; */
+  /* color: ${({ theme }) => theme.colors.asphaltBlack}; */
   padding: 4rem 1rem;
+  padding-top: 0;
   text-align: center;
   position: relative;
 `;
 
 const AboutText = styled.p<{ theme: ThemeType }>`
-  font-size: 1.2rem;
+  font-size: 0.9rem;
   font-family: ${({ theme }) => theme.fonts.body};
   margin-bottom: 2rem;
   max-width: 700px;
@@ -370,7 +383,7 @@ const Footer = styled.footer<{ theme: ThemeType }>`
   gap: 2rem;
   position: relative;
   
-  &::before {
+  /* &::before {
     content: '';
     position: absolute;
     top: 0;
@@ -378,7 +391,7 @@ const Footer = styled.footer<{ theme: ThemeType }>`
     right: 0;
     height: 1px;
     background: linear-gradient(90deg, transparent, ${({ theme }) => theme.colors.neonOrange}, transparent);
-  }
+  } */
 `;
 
 const FooterRow = styled.div`
@@ -476,7 +489,7 @@ export default function Home() {
           <Headline>Build for your people.</Headline>
           <Headline>Code with purpose.</Headline>
           <Subheadline>
-            Join a network of Detroit technologists and creators building tools for collective ownership, empowerment, and change.
+            Join a network of Detroit technologists and creators building tools for collective change.
           </Subheadline>
         <CTAGroup>
           <CTAButton primary onClick={() => document.getElementById("email-capture")?.scrollIntoView({ behavior: "smooth" })}>
@@ -507,7 +520,7 @@ export default function Home() {
         </EmailForm>
       </EmailSection>
       <WhyJoinSection>
-        <SectionTitle>Why Barefoot Devs?</SectionTitle>
+        <SectionTitle>Why Barefoot Dev?</SectionTitle>
         <ThreeColumnGrid>
           <Column>
             <ColumnIcon>🛠️</ColumnIcon>
@@ -527,18 +540,19 @@ export default function Home() {
             <ColumnIcon>🔓</ColumnIcon>
             <ColumnTitle>Own What You Create</ColumnTitle>
             <ColumnText>
-              Every line of code, every idea — credited, open-source, and community-owned.
+              Every line of code, every idea — credited, open-source, and community supported.
             </ColumnText>
           </Column>
         </ThreeColumnGrid>
       </WhyJoinSection>
-      <ProjectsSection>
+      {/* <ProjectsSection>
         <ProjectsTitle>Live Projects</ProjectsTitle>
         <ProjectsDescription>
-          Now Collaborating On: Collector Quest, Art Night Detroit, Neighborhood Housing Tools.
+          Art Night Detroit
         </ProjectsDescription>
         <CTAButton primary>Join a Project</CTAButton>
-      </ProjectsSection>
+      </ProjectsSection> */}
+      <Footer>
       <AboutPreview>
         <AboutText>
           We&apos;re inspired by the barefoot doctors of China — community-trained, resourceful, and people-first. We build tech the same way: with care, craft, and collective wisdom.
@@ -547,10 +561,15 @@ export default function Home() {
           <CTAButton as="a">👉 Learn More</CTAButton>
         </Link>
       </AboutPreview>
-      <Footer>
         <FooterRow>
-          <FooterLink href="https://github.com/buidl-renaissance">GitHub</FooterLink>
-          <FooterLink href="https://www.instagram.com/thebarefoot.dev">Instagram</FooterLink>
+          <FooterLink href="https://github.com/buidl-renaissance">
+            <FontAwesomeIcon icon={faGithub} style={{ marginRight: '0.5rem' }} />
+            GitHub
+          </FooterLink>
+          <FooterLink href="https://www.instagram.com/thebarefoot.dev">
+            <FontAwesomeIcon icon={faInstagram} style={{ marginRight: '0.5rem' }} />
+            Instagram
+          </FooterLink>
         </FooterRow>
       </Footer>
     </>
