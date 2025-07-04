@@ -64,7 +64,7 @@ export default function About() {
             The Barefoot Developer Group draws inspiration from the barefoot doctors of rural China—community-based medical practitioners trained to provide essential healthcare in underserved areas during the 20th century. They were not elite specialists but locals equipped with practical knowledge, tools, and deep community trust. They walked among the people—solving urgent problems, sharing knowledge, and building resilience from the ground up.
           </BodyText>
           <BodyText>
-            In the same spirit, Barefoot Developers are technologists committed to building essential digital tools with and for their communities. They aren't just coding from afar—they are embedded in the places they serve, listening to needs, and designing software that empowers neighbors, organizations, and movements.
+            In the same spirit, Barefoot Developers are technologists committed to building essential digital tools with and for their communities. They aren&apos;t just coding from afar—they are embedded in the places they serve, listening to needs, and designing software that empowers neighbors, organizations, and movements.
           </BodyText>
         </Section>
         <Section>

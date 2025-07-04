@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Image from "next/image";
-import styled, { useTheme, DefaultTheme } from "styled-components";
+import styled from "styled-components";
 import { useState } from "react";
 import Link from "next/link";
 import type { ThemeType } from "@/styles/theme";
@@ -483,7 +483,7 @@ export default function Home() {
             Join the Movement
           </CTAButton>
           <Link href="/about" passHref legacyBehavior>
-            <CTAButton as="a">What We're About</CTAButton>
+            <CTAButton as="a">What We&apos;re About</CTAButton>
           </Link>
         </CTAGroup>
       </HeroSection>
@@ -503,7 +503,7 @@ export default function Home() {
           />
           <EmailSubmit primary type="submit">Sign Up</EmailSubmit>
           {error && <SuccessMsg style={{ color: '#B33A3A' }}>{error}</SuccessMsg>}
-          {success && <SuccessMsg>You're in. We'll be in touch soon.</SuccessMsg>}
+          {success && <SuccessMsg>You&apos;re in. We&apos;ll be in touch soon.</SuccessMsg>}
         </EmailForm>
       </EmailSection>
       <WhyJoinSection>
@@ -541,7 +541,7 @@ export default function Home() {
       </ProjectsSection>
       <AboutPreview>
         <AboutText>
-          We're inspired by the barefoot doctors of China — community-trained, resourceful, and people-first. We build tech the same way: with care, craft, and collective wisdom.
+          We&apos;re inspired by the barefoot doctors of China — community-trained, resourceful, and people-first. We build tech the same way: with care, craft, and collective wisdom.
         </AboutText>
         <Link href="/about" passHref legacyBehavior>
           <CTAButton as="a">👉 Learn More</CTAButton>
