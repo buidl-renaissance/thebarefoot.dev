@@ -1,4 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { db } from '@/db';
+import { subscriptions } from '@/db/schema';
+import { eq } from 'drizzle-orm';
 
 type ResponseData = {
   success: boolean;
@@ -37,12 +40,26 @@ export default async function handler(
       });
     }
 
-    // TODO: Connect to email service (Mailchimp, ConvertKit, Supabase, etc.)
-    // For now, just log the email and return success
-    console.log('New subscription:', email);
-    
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 500));
+    // Check if email already exists
+    const existingSubscription = await db
+      .select()
+      .from(subscriptions)
+      .where(eq(subscriptions.email, email))
+      .limit(1);
+
+    if (existingSubscription.length > 0) {
+      return res.status(200).json({
+        success: true,
+        message: "You're already subscribed! We'll be in touch soon."
+      });
+    }
+
+    // Insert new subscription
+    await db.insert(subscriptions).values({
+      email,
+      source: 'website',
+      status: 'active'
+    });
 
     return res.status(200).json({
       success: true,

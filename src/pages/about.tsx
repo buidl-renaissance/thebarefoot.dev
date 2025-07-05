@@ -37,6 +37,7 @@ const BodyText = styled.p`
   font-family: ${({ theme }) => theme.fonts.body};
   font-size: 1.15rem;
   margin-bottom: 1rem;
+  line-height: 1.6;
 `;
 
 const List = styled.ul`
@@ -44,10 +45,22 @@ const List = styled.ul`
   font-size: 1.1rem;
   margin-left: 1.2rem;
   margin-bottom: 1rem;
+  line-height: 1.6;
 `;
 
 const ListItem = styled.li`
   margin-bottom: 0.7rem;
+`;
+
+const Quote = styled.blockquote`
+  font-family: ${({ theme }) => theme.fonts.body};
+  font-style: italic;
+  font-size: 1.1rem;
+  margin: 1.5rem 0;
+  padding: 1rem 1.5rem;
+  border-left: 4px solid ${({ theme }) => theme.colors.neonOrange};
+  background: rgba(255, 79, 0, 0.05);
+  border-radius: 0 8px 8px 0;
 `;
 
 export default function About() {
@@ -55,41 +68,133 @@ export default function About() {
     <PageWrapper>
       <Head>
         <title>About | thebarefoot.dev</title>
-        <meta name="description" content="Learn about the Barefoot Developer Group – Tech as Community Care." />
+        <meta name="description" content="Learn about Barefoot Technologists – A Modern Framework for Community-Led Tech Empowerment." />
       </Head>
       <Main>
-        <Heading>🌱 Tech as Community Care</Heading>
+        <Heading>🦶 Barefoot Technologists</Heading>
+        <BodyText>
+          "Technology, like medicine, should be in the hands of the people who need it most."
+        </BodyText>
+        <BodyText>
+          Inspired by the Barefoot Doctor legacy, we&apos;re building a modern framework for community-led tech empowerment. thebarefoot.dev draws inspiration from the barefoot doctors of rural China—community-based medical practitioners trained to provide essential healthcare in underserved areas during the 20th century. They were not elite specialists but locals equipped with practical knowledge, tools, and deep community trust.
+        </BodyText>
+        
         <Section>
-          <BodyText>
-            thebarefoot.dev draws inspiration from the barefoot doctors of rural China—community-based medical practitioners trained to provide essential healthcare in underserved areas during the 20th century. They were not elite specialists but locals equipped with practical knowledge, tools, and deep community trust. They walked among the people—solving urgent problems, sharing knowledge, and building resilience from the ground up.
-          </BodyText>
-          <BodyText>
-            In the same spirit, Barefoot Developers are committed to building essential digital tools with and for their communities. They aren&apos;t just coding from afar—they are embedded in the places they serve, listening to needs, and designing software that empowers neighbors, organizations, and movements.
-          </BodyText>
-        </Section>
-        <Section>
-          <SubHeading>🛠️ Core Beliefs</SubHeading>
+          <SubHeading>💡 Core Problems We Address</SubHeading>
           <List>
-            <ListItem><strong>Technology is care</strong> — When built with compassion and understanding, software becomes infrastructure for social well-being.</ListItem>
-            <ListItem><strong>Local is powerful</strong> — Developers rooted in community can solve hyper-specific problems others overlook.</ListItem>
-            <ListItem><strong>Open source is medicine</strong> — Like public health knowledge, open tools should be shared, remixable, and collectively maintained.</ListItem>
-            <ListItem><strong>Education is empowerment</strong> — Barefoot Developers mentor others, grow local talent, and reduce reliance on extractive tech models.</ListItem>
+            <ListItem><strong>Tech deserts</strong> — Lack of infrastructure, internet access, or relevant tools in marginalized areas</ListItem>
+            <ListItem><strong>Skill barriers</strong> — Many are digital consumers, not digital creators</ListItem>
+            <ListItem><strong>Cultural misfit</strong> — Imported tech often lacks local relevance or accessibility</ListItem>
+            <ListItem><strong>Centralized ownership</strong> — Platforms extract value but don&apos;t reinvest locally</ListItem>
           </List>
         </Section>
+
         <Section>
-          <SubHeading>🌍 Our Mission</SubHeading>
+          <SubHeading>🧭 Principle-Based Response</SubHeading>
+          <List>
+            <ListItem>Community-first development</ListItem>
+            <ListItem>Tech as preventative care (education, empowerment, early access)</ListItem>
+            <ListItem>Hybrid fluency (local customs × digital tools)</ListItem>
+            <ListItem>Peer-to-peer knowledge exchange</ListItem>
+          </List>
+        </Section>
+
+        <Section>
+          <SubHeading>🎓 Training the Barefoot Technologist</SubHeading>
           <BodyText>
-            To build and maintain open, community-driven software that addresses real needs—whether it’s documenting cultural stories, organizing neighborhood projects, streamlining local governance, or improving access to resources. We organize around service, not profit. Around proximity, not prestige.
+            <strong>Basic Training Modules:</strong>
+          </BodyText>
+          <List>
+            <ListItem>Internet fundamentals (privacy, safety, literacy)</ListItem>
+            <ListItem>Device repair, open hardware, or recycled infrastructure</ListItem>
+            <ListItem>App building with low-code / no-code tools</ListItem>
+            <ListItem>Community data collection & visualization (e.g. mapping assets, needs)</ListItem>
+            <ListItem>Intro to AI tools for storytelling, automation, and local problem-solving</ListItem>
+          </List>
+          
+          <BodyText>
+            <strong>Who Becomes a Barefoot Technologist?</strong>
+          </BodyText>
+          <BodyText>
+            Local youth, artists, gig workers, faith-based organizers, librarians, elders. People trusted by the community—peers, not outsiders. Often selected by the community themselves, with social incentives.
           </BodyText>
         </Section>
+
         <Section>
-          <SubHeading>✨ First Steps</SubHeading>
+          <SubHeading>💼 Scope of Work: Tech as Public Service</SubHeading>
+          <BodyText>
+            <strong>What They Do:</strong> Build, repair, or deploy tools for:
+          </BodyText>
           <List>
-            <ListItem><strong>Storytelling:</strong> Document the mission, values, and impact of barefoot tech work—starting with Detroit and expanding globally.</ListItem>
-            <ListItem><strong>Workshops & Study Groups:</strong> Host sessions to teach community members and aspiring barefoot developers how to build tools that matter.</ListItem>
-            <ListItem><strong>Tool Library:</strong> Create and maintain a GitHub ecosystem of community-useful software (like event calendars, archival platforms, mutual aid trackers).</ListItem>
-            <ListItem><strong>Partnerships:</strong> Collaborate with nonprofits, artists, educators, and organizers to solve local challenges.</ListItem>
+            <ListItem><strong>Civic engagement</strong> — RSVP tools, voting resources, policy feedback</ListItem>
+            <ListItem><strong>Economic empowerment</strong> — Local marketplaces, resume/portfolio sites, gig coordination</ListItem>
+            <ListItem><strong>Cultural preservation</strong> — Archiving oral history, community art NFTs</ListItem>
+            <ListItem><strong>Health and safety</strong> — Crisis response maps, mutual aid dashboards</ListItem>
+            <ListItem><strong>Education</strong> — Community Wi-Fi, open learning hubs, tech help desks</ListItem>
           </List>
+          
+          <BodyText>
+            <strong>Hybrid Tools:</strong> Blend modern & local systems:
+          </BodyText>
+          <List>
+            <ListItem>Offline-first apps in low-connectivity areas</ListItem>
+            <ListItem>Local-first databases (e.g. Turso, SQLite)</ListItem>
+            <ListItem>AI + oral storytelling traditions</ListItem>
+            <ListItem>Blockchain for transparency in public goods or community-owned assets</ListItem>
+          </List>
+        </Section>
+
+        <Section>
+          <SubHeading>🫂 Community Integration & Trust</SubHeading>
+          <BodyText>
+            <strong>Cultural Fit:</strong> Barefoot technologists remain community members first. They continue their daily lives (e.g. artists, farmers, barbers, activists) and build trust through co-creation, not consulting.
+          </BodyText>
+          
+          <BodyText>
+            <strong>Accountability:</strong> Peer-reviewed projects, local governance models (DAO-lite structures or co-ops). Community decides what&apos;s built, when, and how.
+          </BodyText>
+        </Section>
+
+        <Section>
+          <SubHeading>💸 Sustainable Models & Support</SubHeading>
+          <BodyText>
+            <strong>How They&apos;re Paid:</strong>
+          </BodyText>
+          <List>
+            <ListItem>Local microgrants (e.g. Art Night, city funds)</ListItem>
+            <ListItem>Cooperatively managed revenue splits (digital marketplaces, app sales)</ListItem>
+            <ListItem>Tokenized incentive systems (community badges, upvotes, proof of contribution)</ListItem>
+          </List>
+          
+          <BodyText>
+            <strong>Infrastructure:</strong> Shared cloud and code resources, open-source templates for common needs, access to community servers, creative commons tools, and AI infrastructure.
+          </BodyText>
+        </Section>
+
+        <Section>
+          <SubHeading>🌍 Legacy and Scaling</SubHeading>
+          <BodyText>
+            Like the barefoot doctors inspired Alma Ata, barefoot technologists can inspire:
+          </BodyText>
+          <List>
+            <ListItem>UN Local2030 initiatives</ListItem>
+            <ListItem>Digital Public Infrastructure (DPI) movements</ListItem>
+            <ListItem>Regenerative finance (ReFi), crypto-local currencies, digital commons</ListItem>
+          </List>
+          
+          <BodyText>
+            <strong>Tools to Build & Share:</strong> Documentation of practices (GitHub repos, local zines), cross-city knowledge exchange (e.g. Detroit ↔ Nairobi ↔ Bogotá), toolkits and playbooks for replicability.
+          </BodyText>
+        </Section>
+
+        <Section>
+          <Quote>
+            "Start from the people. Serve the people. Stay with the people."
+          </Quote>
+          
+          <BodyText>
+            Barefoot technologists are not just developers—they&apos;re cultural translators, peer educators, digital healers, and architects of new public infrastructure. Their work doesn&apos;t scale through code alone, but through relationships, trust, and context.
+          </BodyText>
         </Section>
       </Main>
     </PageWrapper>

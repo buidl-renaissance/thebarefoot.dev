@@ -1,128 +1,115 @@
-# 🌱 Barefoot Developer Group
+# 🦶 Barefoot Technologists: A Modern Framework for Community-Led Tech Empowerment
 
-**Build for your people. Code with purpose.**
+"Technology, like medicine, should be in the hands of the people who need it most."
+— Inspired by the Barefoot Doctor legacy
 
-A grassroots developer collective building tools for collective ownership, empowerment, and change. Made in Detroit. Shared with the world.
+## 1. Foundations: The Digital Health of a Community
 
-## 🚀 About
+### 💡 Core Problems
 
-The Barefoot Developer Group draws inspiration from the barefoot doctors of rural China—community-based medical practitioners trained to provide essential healthcare in underserved areas. In the same spirit, Barefoot Developers are technologists committed to building essential digital tools with and for their communities.
+- **Tech deserts**: Lack of infrastructure, internet access, or relevant tools in marginalized areas
+- **Skill barriers**: Many are digital consumers, not digital creators
+- **Cultural misfit**: Imported tech often lacks local relevance or accessibility 
+- **Centralized ownership**: Platforms extract value but don't reinvest locally
 
-### Core Beliefs
-- **Technology is care** — When built with compassion and understanding, software becomes infrastructure for social well-being
-- **Local is powerful** — Developers rooted in community can solve hyper-specific problems others overlook
-- **Open source is medicine** — Like public health knowledge, open tools should be shared, remixable, and collectively maintained
-- **Education is empowerment** — Barefoot Developers mentor others, grow local talent, and reduce reliance on extractive tech models
+### 🧭 Principle-Based Response
 
-## 🛠️ Tech Stack
+- Community-first development
+- Tech as preventative care (education, empowerment, early access)
+- Hybrid fluency (local customs × digital tools)
+- Peer-to-peer knowledge exchange
 
-- **Framework**: [Next.js](https://nextjs.org/) with TypeScript
-- **Styling**: [Styled Components](https://styled-components.com/) with custom Detroit theme
-- **Package Manager**: [Yarn](https://yarnpkg.com/)
-- **Deployment**: Ready for Vercel, Netlify, or any static hosting
+## 2. Training the Barefoot Technologist
 
-## 🎨 Design System
+### 🎓 Curriculum & Onboarding
 
-### Detroit Local, Global Impact Theme
-- **Colors**: Asphalt Black, Rusted Steel, Neon Orange, Brick Red, Creamy Beige
-- **Typography**: Industrial headings with humanist body text
-- **Aesthetic**: Blue-collar-meets-hacker energy with gritty textures
+**Basic Training Modules:**
+- Internet fundamentals (privacy, safety, literacy)
+- Device repair, open hardware, or recycled infrastructure
+- App building with low-code / no-code tools
+- Community data collection & visualization (e.g. mapping assets, needs)
+- Intro to AI tools for storytelling, automation, and local problem-solving
 
-## 🚀 Getting Started
+### 🧑‍🌾 Who Becomes a Barefoot Technologist?
 
-### Prerequisites
-- Node.js 18+ 
-- Yarn package manager
+- Local youth, artists, gig workers, faith-based organizers, librarians, elders
+- People trusted by the community—peers, not outsiders
+- Often selected by the community themselves, with social incentives
 
-### Installation
+### 🧑‍🏫 How They're Taught
 
-1. Clone the repository:
-```bash
-git clone https://github.com/your-org/thebarefoot.dev.git
-cd thebarefoot.dev
-```
+- Mentorship from "urban" technologists (e.g. devs, AI/crypto folks, designers)
+- Short, intensive workshops or "tech clinics"
+- Recurring community labs or build nights
+- Emphasis on doing + teaching: every learner becomes a trainer
 
-2. Install dependencies:
-```bash
-yarn install
-```
+## 3. Scope of Work: Tech as Public Service
 
-3. Run the development server:
-```bash
-yarn dev
-```
+### 💼 What They Do
 
-4. Open [http://localhost:3000](http://localhost:3000) to view the site
+Build, repair, or deploy tools for:
+- Civic engagement (RSVP tools, voting resources, policy feedback)
+- Economic empowerment (local marketplaces, resume/portfolio sites, gig coordination)
+- Cultural preservation (archiving oral history, community art NFTs)
+- Health and safety (crisis response maps, mutual aid dashboards)
+- Education (community Wi-Fi, open learning hubs, tech help desks)
 
-## 📁 Project Structure
+### 🌿 Hybrid Tools
 
-```
-src/
-├── pages/           # Next.js pages and API routes
-│   ├── index.tsx    # Homepage
-│   ├── about.tsx    # About page
-│   └── api/         # API endpoints
-│       └── subscribe.ts  # Email subscription API
-├── styles/          # Styled components and theme
-│   └── theme.ts     # Detroit theme configuration
-└── public/          # Static assets
-    └── images/      # Images and logos
-```
+Blend modern & local systems:
+- Offline-first apps in low-connectivity areas
+- Local-first databases (e.g. Turso, SQLite)
+- AI + oral storytelling traditions
+- Blockchain for transparency in public goods or community-owned assets
 
-## 🔧 Development
+## 4. Community Integration & Trust
 
-### Available Scripts
+### 🫂 Cultural Fit
 
-- `yarn dev` - Start development server
-- `yarn build` - Build for production
-- `yarn start` - Start production server
-- `yarn lint` - Run ESLint
+- Barefoot technologists remain community members first
+- Continue their daily lives (e.g. artists, farmers, barbers, activists)
+- Build trust through co-creation, not consulting
 
-### Adding New Pages
+### 🗳 Accountability
 
-1. Create a new file in `src/pages/`
-2. Use styled-components with the theme
-3. Follow the existing component patterns
+- Peer-reviewed projects
+- Local governance models (DAO-lite structures or co-ops)
+- Community decides what's built, when, and how
 
-### Styling Guidelines
+## 5. Sustainable Models & Support
 
-- Use the theme colors and fonts from `src/styles/theme.ts`
-- Follow the Detroit aesthetic with industrial, gritty elements
-- Ensure mobile-first responsive design
-- Use styled-components for all styling
+### 💸 How They're Paid
 
-## 📧 Email Integration
+Through:
+- Local microgrants (e.g. Art Night, city funds)
+- Cooperatively managed revenue splits (digital marketplaces, app sales)
+- Tokenized incentive systems (community badges, upvotes, proof of contribution)
 
-The site includes an email capture system with API endpoint at `/api/subscribe`. Currently logs emails to console - ready for integration with:
+### 🛠 Infrastructure
 
-- Mailchimp
-- ConvertKit
-- Supabase
-- Custom email service
+- Shared cloud and code resources
+- Open-source templates for common needs
+- Access to community servers, creative commons tools, and AI infrastructure
 
-## 🌍 Mission
+## 6. Legacy and Scaling
 
-To build and maintain open, community-driven software that addresses real needs—whether it's documenting cultural stories, organizing neighborhood projects, streamlining local governance, or improving access to resources.
+### 🌍 Global Inspiration
 
-## 🤝 Contributing
+Like the barefoot doctors inspired Alma Ata, barefoot technologists can inspire:
+- UN Local2030 initiatives
+- Digital Public Infrastructure (DPI) movements
+- Regenerative finance (ReFi), crypto-local currencies, digital commons
 
-We organize around service, not profit. Around proximity, not prestige.
+### 🛠️ Tools to Build & Share
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
+- Documentation of practices (GitHub repos, local zines)
+- Cross-city knowledge exchange (e.g. Detroit ↔ Nairobi ↔ Bogotá)
+- Toolkits and playbooks for replicability
 
-## 📄 License
+## ✨ Closing Thought
 
-This project is open source and available under the [MIT License](LICENSE).
+Barefoot technologists are not just developers—they're cultural translators, peer educators, digital healers, and architects of new public infrastructure. Their work doesn't scale through code alone, but through relationships, trust, and context.
 
-## 🔗 Links
+Just like the original barefoot doctors, they remind us:
 
-- **Website**: [thebarefoot.dev](https://thebarefoot.dev)
-- **GitHub**: [buidl-renaissance](https://github.com/buidl-renaissance)
-- **Instagram**: [@thebarefoot.dev](https://www.instagram.com/thebarefoot.dev)
-
----
-
-*Made in Detroit. Shared with the world.*
+> "Start from the people. Serve the people. Stay with the people."

@@ -18,13 +18,13 @@ const HeroSection = styled.section<{ theme: ThemeType }>`
   text-align: center;
   position: relative;
   padding: 2rem 1rem;
-  
+
   @media (max-width: 480px) {
     padding: 1rem;
   }
-  
+
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
@@ -45,14 +45,14 @@ const Headline = styled.h1<{ theme: ThemeType }>`
   position: relative;
   z-index: 1;
   padding: 0 1rem;
-  
+
   &:last-of-type {
     margin-bottom: 1.5rem;
   }
-  
+
   &:nth-of-type(2) {
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       bottom: -10px;
       left: 50%;
@@ -86,7 +86,7 @@ const CTAGroup = styled.div`
   position: relative;
   z-index: 1;
   padding: 0 1rem;
-  
+
   @media (max-width: 480px) {
     flex-direction: column;
     align-items: center;
@@ -98,7 +98,9 @@ const CTAButton = styled.button<{ primary?: boolean; theme: ThemeType }>`
   background: ${({ theme, primary }) =>
     primary ? theme.colors.neonOrange : theme.colors.rustedSteel};
   color: ${({ theme }) => theme.colors.creamyBeige};
-  border: 2px solid ${({ theme, primary }) => primary ? theme.colors.neonOrange : theme.colors.rustedSteel};
+  border: 2px solid
+    ${({ theme, primary }) =>
+      primary ? theme.colors.neonOrange : theme.colors.rustedSteel};
   border-radius: 8px;
   padding: 1rem 2rem;
   font-size: 1rem;
@@ -111,22 +113,22 @@ const CTAButton = styled.button<{ primary?: boolean; theme: ThemeType }>`
   position: relative;
   overflow: hidden;
   min-width: 200px;
-  
+
   @media (max-width: 480px) {
     padding: 0.875rem 1.5rem;
     font-size: 0.9rem;
     min-width: 180px;
   }
-    
+
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-    
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+
     &::before {
       left: 100%;
     }
   }
-  
+
   &:active {
     transform: translateY(0);
   }
@@ -138,15 +140,20 @@ const EmailSection = styled.section<{ theme: ThemeType }>`
   padding: 4rem 1rem;
   text-align: center;
   position: relative;
-  
+
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, ${({ theme }) => theme.colors.neonOrange}, transparent);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      ${({ theme }) => theme.colors.neonOrange},
+      transparent
+    );
   }
 `;
 
@@ -176,7 +183,7 @@ const EmailForm = styled.form`
   justify-content: center;
   gap: 0;
   margin-bottom: 2rem;
-  
+
   @media (max-width: 480px) {
     flex-direction: column;
     gap: 1rem;
@@ -193,10 +200,10 @@ const EmailInput = styled.input<{ theme: ThemeType }>`
   font-family: ${({ theme }) => theme.fonts.body};
   width: 300px;
   max-width: 90vw;
-  background: rgba(255,255,255,0.15);
+  background: rgba(255, 255, 255, 0.15);
   color: ${({ theme }) => theme.colors.creamyBeige};
   transition: all 0.3s ease;
-  
+
   @media (max-width: 480px) {
     width: 100%;
     max-width: 280px;
@@ -205,22 +212,22 @@ const EmailInput = styled.input<{ theme: ThemeType }>`
     border-radius: 8px;
     border-right: 2px solid ${({ theme }) => theme.colors.neonOrange};
   }
-  
+
   &::placeholder {
-    color: rgba(245,233,218,0.6);
+    color: rgba(245, 233, 218, 0.6);
   }
-  
+
   &:focus {
     outline: none;
     border-color: ${({ theme }) => theme.colors.neonOrange};
-    box-shadow: 0 0 0 3px rgba(255,79,0,0.2);
+    box-shadow: 0 0 0 3px rgba(255, 79, 0, 0.2);
   }
 `;
 
 const EmailSubmit = styled(CTAButton).attrs({ as: "button" })`
   border-radius: 0 8px 8px 0;
   border-left: none;
-  
+
   @media (max-width: 480px) {
     border-radius: 8px;
     border-left: 2px solid ${({ theme }) => theme.colors.neonOrange};
@@ -252,9 +259,9 @@ const SectionTitle = styled.h2<{ theme: ThemeType }>`
   text-transform: uppercase;
   letter-spacing: 2px;
   position: relative;
-  
+
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     bottom: -15px;
     left: 50%;
@@ -273,12 +280,12 @@ const ThreeColumnGrid = styled.div`
   max-width: 1000px;
   margin: 0 auto 3rem auto;
   padding: 0 1rem;
-  
+
   @media (max-width: 768px) {
     gap: 2rem;
     padding: 0 0.5rem;
   }
-  
+
   @media (max-width: 480px) {
     grid-template-columns: 1fr;
     gap: 1.5rem;
@@ -289,16 +296,16 @@ const ThreeColumnGrid = styled.div`
 const Column = styled.div`
   text-align: center;
   padding: 2rem;
-  background: rgba(255,255,255,0.7);
+  background: rgba(255, 255, 255, 0.7);
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  
+
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
   }
-  
+
   @media (max-width: 480px) {
     padding: 1.5rem;
   }
@@ -307,7 +314,7 @@ const Column = styled.div`
 const ColumnIcon = styled.div<{ theme: ThemeType }>`
   font-size: 4rem;
   margin-bottom: 1.5rem;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 `;
 
 const ColumnTitle = styled.h3<{ theme: ThemeType }>`
@@ -382,7 +389,7 @@ const Footer = styled.footer<{ theme: ThemeType }>`
   align-items: center;
   gap: 2rem;
   position: relative;
-  
+
   /* &::before {
     content: '';
     position: absolute;
@@ -390,7 +397,8 @@ const Footer = styled.footer<{ theme: ThemeType }>`
     left: 0;
     right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, ${({ theme }) => theme.colors.neonOrange}, transparent);
+    background: linear-gradient(90deg, transparent, ${({ theme }) =>
+    theme.colors.neonOrange}, transparent);
   } */
 `;
 
@@ -400,7 +408,7 @@ const FooterRow = styled.div`
   align-items: center;
   flex-wrap: wrap;
   justify-content: center;
-  
+
   @media (max-width: 480px) {
     gap: 1rem;
     flex-direction: column;
@@ -413,7 +421,7 @@ const FooterLink = styled.a<{ theme: ThemeType }>`
   font-family: ${({ theme }) => theme.fonts.body};
   font-size: 1rem;
   transition: all 0.3s ease;
-  
+
   &:hover {
     text-decoration: underline;
     color: ${({ theme }) => theme.colors.creamyBeige};
@@ -449,10 +457,10 @@ export default function Home() {
     }
 
     try {
-      const response = await fetch('/api/subscribe', {
-        method: 'POST',
+      const response = await fetch("/api/subscribe", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ email }),
       });
@@ -468,7 +476,7 @@ export default function Home() {
         setSuccess(false);
       }
     } catch (error) {
-      console.error('Subscription error:', error);
+      console.error("Subscription error:", error);
       setError("Something went wrong. Please try again.");
       setSuccess(false);
     }
@@ -478,21 +486,37 @@ export default function Home() {
     <>
       <Head>
         <title>Barefoot Developer Group | Detroit</title>
-        <meta name="description" content="Build for your people. Code with purpose. Join a network of Detroit technologists and creators building tools for collective ownership, empowerment, and change." />
+        <meta
+          name="description"
+          content="Build for your people. Code with purpose. Join a network of Detroit technologists and creators building tools for collective ownership, empowerment, and change."
+        />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-              <HeroSection>
-          <Logo>
-            <Image src="/images/thebarefoot.dev.png" alt="Barefoot Dev Logo" width={150} height={150} />
-          </Logo>
-          <Headline>Build for your people.</Headline>
-          <Headline>Code with purpose.</Headline>
-          <Subheadline>
-            Join a network of Detroit technologists and creators building tools for collective change.
-          </Subheadline>
+      <HeroSection>
+        <Logo>
+          <Image
+            src="/images/thebarefoot.dev.png"
+            alt="Barefoot Dev Logo"
+            width={150}
+            height={150}
+          />
+        </Logo>
+        <Headline>Build for your people.</Headline>
+        <Headline>Code with purpose.</Headline>
+        <Subheadline>
+          Join a network of Detroit technologists and creators building tools
+          for collective change.
+        </Subheadline>
         <CTAGroup>
-          <CTAButton primary onClick={() => document.getElementById("email-capture")?.scrollIntoView({ behavior: "smooth" })}>
+          <CTAButton
+            primary
+            onClick={() =>
+              document
+                .getElementById("email-capture")
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
+          >
             Join the Movement
           </CTAButton>
           <Link href="/about" passHref legacyBehavior>
@@ -503,7 +527,9 @@ export default function Home() {
       <EmailSection id="email-capture">
         <EmailTitle>Join the Collective</EmailTitle>
         <EmailDescription>
-          Get updates on community hack nights, open-source projects, and how you can get involved. Be the first to shape the future of civic tech in Detroit.
+          Get updates on community hack nights, open-source projects, and how
+          you can get involved. Be the first to shape the future of civic tech
+          in Detroit.
         </EmailDescription>
         <EmailForm onSubmit={handleEmailSubmit}>
           <EmailInput
@@ -514,9 +540,17 @@ export default function Home() {
             required
             aria-label="Email address"
           />
-          <EmailSubmit primary type="submit">Sign Up</EmailSubmit>
-          {error && <SuccessMsg style={{ color: '#B33A3A' }}>{error}</SuccessMsg>}
-          {success && <SuccessMsg>You&apos;re in. We&apos;ll be in touch soon.</SuccessMsg>}
+          <EmailSubmit primary type="submit">
+            Sign Up
+          </EmailSubmit>
+          {error && (
+            <SuccessMsg style={{ color: "#B33A3A" }}>{error}</SuccessMsg>
+          )}
+          {success && (
+            <SuccessMsg>
+              You&apos;re in. We&apos;ll be in touch soon.
+            </SuccessMsg>
+          )}
         </EmailForm>
       </EmailSection>
       <WhyJoinSection>
@@ -526,21 +560,24 @@ export default function Home() {
             <ColumnIcon>🛠️</ColumnIcon>
             <ColumnTitle>Build with Purpose</ColumnTitle>
             <ColumnText>
-              Open-source tools built for real-world use — from affordable housing to artist empowerment.
+              Open-source tools built for real-world use — from affordable
+              housing to artist empowerment.
             </ColumnText>
           </Column>
           <Column>
             <ColumnIcon>🤝</ColumnIcon>
             <ColumnTitle>Community-Centered Collaboration</ColumnTitle>
             <ColumnText>
-              Join others like you who care about Detroit and want to use tech to uplift their people.
+              Join others like you who care about Detroit and want to use tech
+              to uplift their people.
             </ColumnText>
           </Column>
           <Column>
             <ColumnIcon>🔓</ColumnIcon>
             <ColumnTitle>Own What You Create</ColumnTitle>
             <ColumnText>
-              Every line of code, every idea — credited, open-source, and community supported.
+              Every line of code, every idea — credited, open-source, and
+              community supported.
             </ColumnText>
           </Column>
         </ThreeColumnGrid>
@@ -553,21 +590,29 @@ export default function Home() {
         <CTAButton primary>Join a Project</CTAButton>
       </ProjectsSection> */}
       <Footer>
-      <AboutPreview>
-        <AboutText>
-          We&apos;re inspired by the barefoot doctors of China — community-trained, resourceful, and people-first. We build tech the same way: with care, craft, and collective wisdom.
-        </AboutText>
-        <Link href="/about" passHref legacyBehavior>
-          <CTAButton as="a">👉 Learn More</CTAButton>
-        </Link>
-      </AboutPreview>
+        <AboutPreview>
+          <AboutText>
+            We&apos;re inspired by the barefoot doctors of China —
+            community-trained, resourceful, and people-first. We build tech the
+            same way: with care, craft, and collective wisdom.
+          </AboutText>
+          <Link href="/about" passHref legacyBehavior>
+            <CTAButton as="a">👉 Learn More</CTAButton>
+          </Link>
+        </AboutPreview>
         <FooterRow>
           <FooterLink href="https://github.com/buidl-renaissance">
-            <FontAwesomeIcon icon={faGithub} style={{ marginRight: '0.5rem' }} />
+            <FontAwesomeIcon
+              icon={faGithub}
+              style={{ marginRight: "0.5rem" }}
+            />
             GitHub
           </FooterLink>
           <FooterLink href="https://www.instagram.com/thebarefoot.dev">
-            <FontAwesomeIcon icon={faInstagram} style={{ marginRight: '0.5rem' }} />
+            <FontAwesomeIcon
+              icon={faInstagram}
+              style={{ marginRight: "0.5rem" }}
+            />
             Instagram
           </FooterLink>
         </FooterRow>
