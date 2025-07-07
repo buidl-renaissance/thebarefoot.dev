@@ -445,6 +445,15 @@ export default function JourneyPage() {
                 <CheckboxOption>
                   <input
                     type="checkbox"
+                    value="portfolio"
+                    checked={formData.interests.includes('portfolio')}
+                    onChange={() => handleInterestChange('portfolio')}
+                  />
+                  <span>Improve or launch my personal portfolio site</span>
+                </CheckboxOption>
+                <CheckboxOption>
+                  <input
+                    type="checkbox"
                     value="neighborhood-apps"
                     checked={formData.interests.includes('neighborhood-apps')}
                     onChange={() => handleInterestChange('neighborhood-apps')}
