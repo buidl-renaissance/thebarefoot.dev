@@ -113,7 +113,7 @@ export async function sendWelcomeEmail(email: string, subscriptionUuid?: string)
               <div style="border-top: 2px solid #e2e8f0; padding-top: 20px;">
                 <p style="color: #2d3748; font-size: 16px; line-height: 1.6; margin: 0; font-weight: 500;">
                   Cheers,<br>
-                  <span style="color: #ff4f00; font-weight: 600;">The Barefoot Dev Team</span>
+                  <span style="color: #ff4f00; font-weight: 600;">The Barefoot Dev</span>
                 </p>
               </div>
               

@@ -40,11 +40,14 @@ export const projects = sqliteTable("projects", {
 export const events = sqliteTable("events", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   title: text("title").notNull(),
+  slug: text("slug").notNull().unique(),
   description: text("description"),
-  date: integer("date", { mode: "timestamp" }).notNull(),
+  startDatetime: integer("start_datetime", { mode: "timestamp" }).notNull(),
+  endDatetime: integer("end_datetime", { mode: "timestamp" }).notNull(),
   location: text("location"),
+  imageUrl: text("image_url"),
   type: text("type").notNull(), // workshop, hacknight, meetup, etc.
-  maxParticipants: integer("max_participants"),
+  data: text("data"), // JSON object of additional data
   createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
   updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
   deletedAt: integer("deleted_at", { mode: "timestamp" }),
