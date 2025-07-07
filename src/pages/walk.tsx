@@ -498,7 +498,7 @@ export default function JourneyPage() {
             </FormSection>
 
             <SubmitButton type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Submitting...' : 'Start my journey'}
+              {isSubmitting ? 'Submitting...' : 'Take Your Next Step'}
             </SubmitButton>
           </Form>
         </Main>

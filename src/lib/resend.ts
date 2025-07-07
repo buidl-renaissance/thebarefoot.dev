@@ -72,7 +72,7 @@ export async function sendWelcomeEmail(email: string) {
                     box-shadow: 0 4px 12px rgba(255, 79, 0, 0.3);
                     transition: all 0.3s ease;
                   ">
-                    👉 Share Your Dev Journey
+                    👉 Walk your path
                   </a>
                 </div>
               </div>
