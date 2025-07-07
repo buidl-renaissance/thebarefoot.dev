@@ -6,6 +6,8 @@ import { db } from "@/db";
 import { blogPosts } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import type { ThemeType } from "@/styles/theme";
+import Image from "next/image";
+import EmailSubscription from "@/components/EmailSubscription";
 
 const BlogContainer = styled.div<{ theme: ThemeType }>`
   min-height: 100vh;
@@ -25,7 +27,18 @@ const BlogHeader = styled.header<{ theme: ThemeType }>`
     top: 0;
     left: 0;
     right: 0;
-    height: 1px;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,79,0,0.2)" stroke-width="0.8"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+    z-index: 0;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
     background: linear-gradient(
       90deg,
       transparent,
@@ -35,16 +48,42 @@ const BlogHeader = styled.header<{ theme: ThemeType }>`
   }
 
   @media (max-width: 768px) {
-    padding: 3rem 1rem 2rem;
+    padding: 2.5rem 1rem 1.5rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 2rem 1rem 1rem;
   }
 `;
 
 const BlogTitle = styled.h1<{ theme: ThemeType }>`
   font-family: ${({ theme }) => theme.fonts.heading};
-  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-size: clamp(1.6rem, 4vw, 2.5rem);
   margin-bottom: 1rem;
-  text-transform: uppercase;
   letter-spacing: 2px;
+  position: relative;
+  z-index: 1;
+
+  @media (max-width: 480px) {
+    font-size: clamp(1.4rem, 5vw, 2.5rem);
+    margin-bottom: 0.75rem;
+  }
+`;
+
+const BlockSpan = styled.span`
+  display: inline-block;
+  position: relative;
+  
+  &:after {
+    content: "";
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: ${({ theme }) => theme.colors.neonOrange};
+    border-radius: 2px;
+  }
 `;
 
 const BlogSubtitle = styled.p<{ theme: ThemeType }>`
@@ -52,45 +91,66 @@ const BlogSubtitle = styled.p<{ theme: ThemeType }>`
   font-size: 1.2rem;
   opacity: 0.8;
   max-width: 600px;
-  margin: 0 auto;
+  margin: 0 auto 1.5rem;
   line-height: 1.6;
+  position: relative;
+  z-index: 1;
+
+  @media (max-width: 480px) {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    max-width: 100%;
+  }
 `;
 
-const BlogGrid = styled.div`
-  max-width: 1200px;
+
+
+const BlogList = styled.div`
+  max-width: 800px;
   margin: 0 auto;
   padding: 2rem;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 2rem;
 
   @media (max-width: 768px) {
-    padding: 1rem;
-    grid-template-columns: 1fr;
+    padding: 1.5rem 1rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 1rem 0.75rem;
   }
 `;
 
-const BlogCard = styled.article<{ theme: ThemeType }>`
-  background: ${({ theme }) => theme.colors.rustedSteel};
-  border-radius: 12px;
-  overflow: hidden;
-  transition: all 0.3s ease;
-  border: 1px solid ${({ theme }) => theme.colors.neonOrange}20;
+const BlogPostItem = styled.article<{ theme: ThemeType }>`
+  margin-bottom: 3rem;
+  position: relative;
 
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 30px rgba(255, 79, 0, 0.2);
-    border-color: ${({ theme }) => theme.colors.neonOrange};
+  &:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    bottom: -1.5rem;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      ${({ theme }) => theme.colors.neonOrange}30,
+      transparent
+    );
+  }
+
+  @media (max-width: 480px) {
+    margin-bottom: 2rem;
+    padding: 0.5rem;
+
+    &:not(:last-child)::after {
+      bottom: -1rem;
+    }
   }
 `;
 
-const BlogCardContent = styled.div`
-  padding: 1.5rem;
-`;
-
-const BlogCardTitle = styled.h2<{ theme: ThemeType }>`
+const BlogPostTitle = styled.h2<{ theme: ThemeType }>`
   font-family: ${({ theme }) => theme.fonts.heading};
-  font-size: 1.4rem;
+  font-size: clamp(1.6rem, 3vw, 2.5rem);
   margin-bottom: 0.75rem;
   line-height: 1.3;
   color: ${({ theme }) => theme.colors.creamyBeige};
@@ -98,40 +158,64 @@ const BlogCardTitle = styled.h2<{ theme: ThemeType }>`
   a {
     color: inherit;
     text-decoration: none;
+    transition: color 0.3s ease;
     
     &:hover {
       color: ${({ theme }) => theme.colors.neonOrange};
     }
   }
+
+  @media (max-width: 480px) {
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+  }
 `;
 
-const BlogCardExcerpt = styled.p<{ theme: ThemeType }>`
+const BlogPostExcerpt = styled.p<{ theme: ThemeType }>`
   font-family: ${({ theme }) => theme.fonts.body};
-  font-size: 0.95rem;
-  line-height: 1.6;
+  font-size: 1.1rem;
+  line-height: 1.7;
   margin-bottom: 1rem;
   opacity: 0.9;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+
+  @media (max-width: 480px) {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+  }
 `;
 
-const BlogCardMeta = styled.div<{ theme: ThemeType }>`
+const BlogPostMeta = styled.div<{ theme: ThemeType }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-family: ${({ theme }) => theme.fonts.body};
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   opacity: 0.7;
   margin-bottom: 1rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.85rem;
+    margin-bottom: 0.75rem;
+  }
 `;
 
-const BlogCardTags = styled.div`
+const BlogPostTags = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-top: 1rem;
+
+  @media (max-width: 480px) {
+    margin-top: 0.75rem;
+    gap: 0.4rem;
+  }
 `;
 
 const Tag = styled.span<{ theme: ThemeType }>`
@@ -142,6 +226,11 @@ const Tag = styled.span<{ theme: ThemeType }>`
   font-size: 0.75rem;
   font-weight: 600;
   font-family: ${({ theme }) => theme.fonts.body};
+
+  @media (max-width: 480px) {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.6rem;
+  }
 `;
 
 const EmptyState = styled.div<{ theme: ThemeType }>`
@@ -150,7 +239,22 @@ const EmptyState = styled.div<{ theme: ThemeType }>`
   font-family: ${({ theme }) => theme.fonts.body};
   font-size: 1.1rem;
   opacity: 0.7;
+
+  @media (max-width: 480px) {
+    padding: 3rem 1rem;
+    font-size: 1rem;
+  }
 `;
+
+const Logo = styled.div<{ theme: ThemeType }>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+  position: relative;
+  z-index: 1;
+`;
+
 
 interface BlogPost {
   id: number;
@@ -193,48 +297,60 @@ export default function BlogPage({ posts }: BlogPageProps) {
       
       <BlogContainer>
         <BlogHeader>
-          <BlogTitle>Blog</BlogTitle>
+          <Logo>
+            <Image
+              src="/images/thebarefoot.dev.png"
+              alt="Barefoot Dev Logo"
+              width={144}
+              height={144}
+            />
+          </Logo>
+          <BlogTitle>Sharing community tools,</BlogTitle>
+          <BlogTitle>one <BlockSpan>blog</BlockSpan> at a time.</BlogTitle>
           <BlogSubtitle>
             Thoughts on technology, community, and building in Detroit
           </BlogSubtitle>
         </BlogHeader>
 
         {posts.length > 0 ? (
-          <BlogGrid>
+          <BlogList>
             {posts.map((post) => (
-              <BlogCard key={post.id}>
-                <BlogCardContent>
-                  <BlogCardTitle>
-                    <Link href={`/blog/${post.slug}`}>
-                      {post.title}
-                    </Link>
-                  </BlogCardTitle>
-                  
-                  {post.excerpt && (
-                    <BlogCardExcerpt>{post.excerpt}</BlogCardExcerpt>
-                  )}
-                  
-                  <BlogCardMeta>
-                    <span>By {post.author}</span>
-                    <span>{formatDate(post.publishedAt)}</span>
-                  </BlogCardMeta>
-                  
-                  {post.tags && parseTags(post.tags).length > 0 && (
-                    <BlogCardTags>
-                      {parseTags(post.tags).slice(0, 3).map((tag: string, index: number) => (
-                        <Tag key={index}>{tag}</Tag>
-                      ))}
-                    </BlogCardTags>
-                  )}
-                </BlogCardContent>
-              </BlogCard>
+              <BlogPostItem key={post.id}>
+                <BlogPostTitle>
+                  <Link href={`/blog/${post.slug}`}>
+                    {post.title}
+                  </Link>
+                </BlogPostTitle>
+                
+                {post.excerpt && (
+                  <BlogPostExcerpt>{post.excerpt}</BlogPostExcerpt>
+                )}
+                
+                <BlogPostMeta>
+                  <span>By {post.author}</span>
+                  <span>{formatDate(post.publishedAt)}</span>
+                </BlogPostMeta>
+                
+                {post.tags && parseTags(post.tags).length > 0 && (
+                  <BlogPostTags>
+                    {parseTags(post.tags).slice(0, 3).map((tag: string, index: number) => (
+                      <Tag key={index}>{tag}</Tag>
+                    ))}
+                  </BlogPostTags>
+                )}
+              </BlogPostItem>
             ))}
-          </BlogGrid>
+          </BlogList>
         ) : (
           <EmptyState>
             <p>No blog posts published yet. Check back soon!</p>
           </EmptyState>
         )}
+
+        <EmailSubscription 
+          title="Stay in the loop"
+          description="Get notified when new posts are published. I share insights about building community tools, lessons learned from Detroit projects, and thoughts on technology that serves people first."
+        />
       </BlogContainer>
     </>
   );
