@@ -31,13 +31,13 @@ const HeroSection = styled.section<{ theme: ThemeType }>`
     right: 0;
     bottom: 0;
     background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,79,0,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-    opacity: 0.8;
+    z-index: 0;
   }
 `;
 
 const Headline = styled.h1<{ theme: ThemeType }>`
   font-family: ${({ theme }) => theme.fonts.heading};
-  font-size: clamp(1.6rem, 5vw, 3.5rem);
+  font-size: clamp(1.35rem, 5vw, 3.5rem);
   font-weight: bold;
   margin-bottom: 0.5rem;
   letter-spacing: 2px;
@@ -49,19 +49,21 @@ const Headline = styled.h1<{ theme: ThemeType }>`
   &:last-of-type {
     margin-bottom: 1.5rem;
   }
+`;
 
-  &:nth-of-type(2) {
-    &::after {
-      content: "";
-      position: absolute;
-      bottom: -10px;
-      left: 50%;
-      transform: translateX(20%);
-      width: 100px;
-      height: 4px;
-      background: ${({ theme }) => theme.colors.neonOrange};
-      border-radius: 2px;
-    }
+const BlockSpan = styled.span`
+  display: inline-block;
+  position: relative;
+  
+  &:after {
+    content: "";
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: ${({ theme }) => theme.colors.neonOrange};
+    border-radius: 2px;
   }
 `;
 
@@ -100,7 +102,7 @@ const CTAButton = styled.button<{ primary?: boolean; theme: ThemeType }>`
   color: ${({ theme }) => theme.colors.creamyBeige};
   border: 2px solid
     ${({ theme, primary }) =>
-      primary ? theme.colors.neonOrange : theme.colors.rustedSteel};
+    primary ? theme.colors.neonOrange : theme.colors.rustedSteel};
   border-radius: 8px;
   padding: 1rem 2rem;
   font-size: 1rem;
@@ -226,7 +228,13 @@ const EmailInput = styled.input<{ theme: ThemeType }>`
 
 const EmailSubmit = styled(CTAButton).attrs({ as: "button" })`
   border-radius: 0 8px 8px 0;
+  border: 3px solid ${({ theme }) => theme.colors.neonOrange};
   border-left: none;
+
+  &:hover {
+    transform: none;
+    color: white;
+  }
 
   @media (max-width: 480px) {
     border-radius: 8px;
@@ -432,7 +440,9 @@ const Logo = styled.div<{ theme: ThemeType }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
+  position: relative;
+  z-index: 1;
 `;
 
 export default function Home() {
@@ -485,10 +495,10 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Barefoot Developer Group | Detroit</title>
+        <title>Building community tools, one block at a time | thebarefoot.dev</title>
         <meta
           name="description"
-          content="Build for your people. Code with purpose. Join a network of Detroit technologists and creators building tools for collective ownership, empowerment, and change."
+          content="Inspired by the philosophy of barefoot doctors — community members trained to serve their neighbors — this project is about bringing that same spirit to technology."
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
@@ -498,15 +508,14 @@ export default function Home() {
           <Image
             src="/images/thebarefoot.dev.png"
             alt="Barefoot Dev Logo"
-            width={150}
-            height={150}
+            width={144}
+            height={144}
           />
         </Logo>
-        <Headline>Build for your people.</Headline>
-        <Headline>Code with purpose.</Headline>
+        <Headline>Building community tools,</Headline>
+        <Headline>one <BlockSpan>block</BlockSpan> at a time.</Headline>
         <Subheadline>
-          Join a network of Detroit technologists and creators building tools
-          for collective change.
+          Inspired by the philosophy of barefoot doctors — community members trained to serve their neighbors — this project is about bringing that same spirit to technology.
         </Subheadline>
         <CTAGroup>
           <CTAButton
@@ -525,11 +534,9 @@ export default function Home() {
         </CTAGroup>
       </HeroSection>
       <EmailSection id="email-capture">
-        <EmailTitle>Join the Collective</EmailTitle>
+        <EmailTitle>Subscribe for updates</EmailTitle>
         <EmailDescription>
-          Get updates on community hack nights, open-source projects, and how
-          you can get involved. Be the first to shape the future of civic tech
-          in Detroit.
+          I&apos;m documenting the process of building small, meaningful tech for real communities — starting with Detroit. This is a space for lessons learned, open-source blueprints, and ideas rooted in care, not scale.
         </EmailDescription>
         <EmailForm onSubmit={handleEmailSubmit}>
           <EmailInput
