@@ -63,4 +63,14 @@ export const blogPosts = sqliteTable("blog_posts", {
   createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
   updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
   deletedAt: integer("deleted_at", { mode: "timestamp" }),
+});
+
+// Walk form submissions table
+export const walkSubmissions = sqliteTable("walk_submissions", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  experience: text("experience").notNull(), // none, beginner, intermediate, advanced
+  interests: text("interests").notNull(), // JSON array of selected interests
+  zipCode: text("zip_code").notNull(), // city selection
+  accountability: integer("accountability", { mode: "boolean" }).notNull().default(false),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
 }); 

@@ -76,6 +76,8 @@ const Form = styled.form`
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   margin-bottom: 2rem;
   position: relative;
+  max-width: 550px;
+  margin: 0 auto;
 
   @media (max-width: 768px) {
     border: none;
@@ -140,8 +142,7 @@ const RadioOption = styled.label<{ theme: ThemeType }>`
   }
 
   &:has(input[type="radio"]:checked) {
-    background: ${({ theme }) => theme.colors.neonOrange};
-    color: ${({ theme }) => theme.colors.asphaltBlack};
+    color: ${({ theme }) => theme.colors.neonOrange};
     box-shadow: 0 4px 12px rgba(255, 79, 0, 0.3);
   }
 `;
@@ -187,43 +188,12 @@ const CheckboxOption = styled.label<{ theme: ThemeType }>`
   }
 
   &:has(input[type="checkbox"]:checked) {
-    background: ${({ theme }) => theme.colors.neonOrange};
-    color: ${({ theme }) => theme.colors.asphaltBlack};
+    color: ${({ theme }) => theme.colors.neonOrange};
     box-shadow: 0 4px 12px rgba(255, 79, 0, 0.3);
   }
 `;
 
-const InputGroup = styled.div`
-  margin-bottom: 1.5rem;
-`;
 
-const Label = styled.label<{ theme: ThemeType }>`
-  display: block;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: ${({ theme }) => theme.colors.creamyBeige};
-`;
-
-const Input = styled.input<{ theme: ThemeType }>`
-  width: 100%;
-  padding: 1rem;
-  border: 2px solid ${({ theme }) => theme.colors.neonOrange};
-  border-radius: 8px;
-  font-size: 1rem;
-  font-family: ${({ theme }) => theme.fonts.body};
-  background: ${({ theme }) => theme.colors.asphaltBlack};
-  color: ${({ theme }) => theme.colors.creamyBeige};
-  transition: all 0.3s ease;
-
-  &::placeholder {
-    color: ${({ theme }) => theme.colors.rustedSteel};
-  }
-
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(255, 79, 0, 0.2);
-  }
-`;
 
 const SubmitButton = styled.button<{ theme: ThemeType }>`
   background: ${({ theme }) => theme.colors.neonOrange};
@@ -273,10 +243,34 @@ const ErrorMessage = styled.div<{ theme: ThemeType }>`
   border: 2px solid ${({ theme }) => theme.colors.brickRed};
 `;
 
+const OtherCityInput = styled.input<{ theme: ThemeType }>`
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid ${({ theme }) => theme.colors.neonOrange};
+  border-radius: 8px;
+  background: ${({ theme }) => theme.colors.asphaltBlack};
+  color: ${({ theme }) => theme.colors.creamyBeige};
+  font-size: 1rem;
+  font-family: ${({ theme }) => theme.fonts.body};
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 79, 0, 0.3);
+  }
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.creamyBeige};
+    opacity: 0.6;
+  }
+`;
+
 interface FormData {
   experience: string;
   interests: string[];
-  zipCode: string;
+  city: string;
+  otherCity: string;
   accountability: boolean;
 }
 
@@ -284,7 +278,8 @@ export default function JourneyPage() {
   const [formData, setFormData] = useState<FormData>({
     experience: '',
     interests: [],
-    zipCode: '',
+    city: '',
+    otherCity: '',
     accountability: false
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -314,17 +309,28 @@ export default function JourneyPage() {
     setError('');
 
     try {
-      // Here you would typically send the data to your API
-      // For now, we&apos;ll just simulate a successful submission
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      setSuccess(true);
-      setFormData({
-        experience: '',
-        interests: [],
-        zipCode: '',
-        accountability: false
+      const response = await fetch('/api/walk-submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setSuccess(true);
+        setFormData({
+          experience: '',
+          interests: [],
+          city: '',
+          otherCity: '',
+          accountability: false
+        });
+      } else {
+        setError(result.message || 'Something went wrong. Please try again.');
+      }
     } catch {
       setError('Something went wrong. Please try again.');
     } finally {
@@ -471,18 +477,57 @@ export default function JourneyPage() {
 
             <FormSection>
               <SectionTitle>Connect Locally</SectionTitle>
-              <InputGroup>
-                <Label htmlFor="zipCode">
-                  Optional: Add your zip code so we can connect you to local devs in your area.
-                </Label>
-                <Input
+              <QuestionText>Where do you prefer to connect?</QuestionText>
+              <RadioGroup>
+                <RadioOption>
+                  <input
+                    type="radio"
+                    name="city"
+                    value="ann-arbor"
+                    checked={formData.city === 'ann-arbor'}
+                    onChange={() => handleInputChange('city', 'ann-arbor')}
+                  />
+                  <span>Ann Arbor</span>
+                </RadioOption>
+                <RadioOption>
+                  <input
+                    type="radio"
+                    name="city"
+                    value="detroit"
+                    checked={formData.city === 'detroit'}
+                    onChange={() => handleInputChange('city', 'detroit')}
+                  />
+                  <span>Detroit</span>
+                </RadioOption>
+                <RadioOption>
+                  <input
+                    type="radio"
+                    name="city"
+                    value="royal-oak"
+                    checked={formData.city === 'royal-oak'}
+                    onChange={() => handleInputChange('city', 'royal-oak')}
+                  />
+                  <span>Royal Oak</span>
+                </RadioOption>
+                <RadioOption>
+                  <input
+                    type="radio"
+                    name="city"
+                    value="other"
+                    checked={formData.city === 'other'}
+                    onChange={() => handleInputChange('city', 'other')}
+                  />
+                  <span>Other</span>
+                </RadioOption>
+              </RadioGroup>
+              {formData.city === 'other' && (
+                <OtherCityInput
                   type="text"
-                  id="zipCode"
-                  value={formData.zipCode}
-                  onChange={(e) => handleInputChange('zipCode', e.target.value)}
-                  placeholder="Enter your zip code"
+                  placeholder="Enter your city"
+                  value={formData.otherCity}
+                  onChange={(e) => handleInputChange('otherCity', e.target.value)}
                 />
-              </InputGroup>
+              )}
             </FormSection>
 
             <FormSection>
