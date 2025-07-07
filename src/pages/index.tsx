@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Image from "next/image";
 import styled from "styled-components";
-import { useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub, faInstagram } from "@fortawesome/free-brands-svg-icons";
@@ -447,7 +447,129 @@ const Logo = styled.div<{ theme: ThemeType }>`
   z-index: 1;
 `;
 
-export default function Home() {
+const EventsSection = styled.section<{ theme: ThemeType }>`
+  background: ${({ theme }) => theme.colors.asphaltBlack};
+  color: ${({ theme }) => theme.colors.creamyBeige};
+  padding: 4rem 1rem;
+  text-align: center;
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      ${({ theme }) => theme.colors.neonOrange},
+      transparent
+    );
+  }
+`;
+
+const EventsTitle = styled.h2<{ theme: ThemeType }>`
+  font-family: ${({ theme }) => theme.fonts.heading};
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+`;
+
+const EventsDescription = styled.p<{ theme: ThemeType }>`
+  font-family: ${({ theme }) => theme.fonts.body};
+  font-size: 1.1rem;
+  margin-bottom: 3rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+  opacity: 0.9;
+`;
+
+const EventsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  margin-bottom: 3rem;
+  justify-items: center;
+`;
+
+const EventCard = styled.div<{ theme: ThemeType }>`
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid ${({ theme }) => theme.colors.rustedSteel};
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: left;
+  transition: all 0.3s ease;
+  width: 100%;
+  max-width: 460px;
+  
+  &:hover {
+    border-color: ${({ theme }) => theme.colors.neonOrange};
+    transform: translateY(-2px);
+  }
+`;
+
+const EventTitle = styled.h3<{ theme: ThemeType }>`
+  font-family: ${({ theme }) => theme.fonts.heading};
+  font-size: 1.5rem;
+  color: ${({ theme }) => theme.colors.neonOrange};
+  margin-bottom: 1rem;
+`;
+
+const EventDetails = styled.div`
+  display: grid;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+`;
+
+const EventDetail = styled.div`
+  font-family: ${({ theme }) => theme.fonts.body};
+  font-size: 0.9rem;
+  color: ${({ theme }) => theme.colors.creamyBeige};
+`;
+
+const EventImage = styled.div`
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  overflow: hidden;
+`;
+
+const EventDescription = styled.p<{ theme: ThemeType }>`
+  font-family: ${({ theme }) => theme.fonts.body};
+  color: ${({ theme }) => theme.colors.creamyBeige};
+  line-height: 1.6;
+  margin: 0;
+`;
+
+const NoEventsMessage = styled.p<{ theme: ThemeType }>`
+  font-family: ${({ theme }) => theme.fonts.body};
+  color: ${({ theme }) => theme.colors.rustedSteel};
+  font-style: italic;
+  margin: 2rem 0;
+`;
+
+interface Event {
+  id: number;
+  title: string;
+  description: string;
+  startDatetime: string | Date;
+  endDatetime: string | Date;
+  location: string;
+  type: string;
+  imageUrl?: string;
+}
+
+interface HomeProps {
+  events: Event[];
+}
+
+export default function Home({ events }: HomeProps) {
   const [email, setEmail] = useState("");
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
@@ -459,6 +581,68 @@ export default function Home() {
 
   const validateEmail = (email: string) => {
     return /\S+@\S+\.\S+/.test(email);
+  };
+
+
+
+  // Helper function to format date for display (EST timezone)
+
+
+  const formatEventDateRange = (startDateTime: string | Date, endDateTime: string | Date) => {
+    const startDate = typeof startDateTime === 'string' ? new Date(startDateTime) : startDateTime;
+    const endDate = typeof endDateTime === 'string' ? new Date(endDateTime) : endDateTime;
+    
+    // Check if both events are on the same day
+    const isSameDay = startDate.toDateString() === endDate.toDateString();
+    
+    if (isSameDay) {
+      // Same day: show date once, then time range
+      const dateStr = startDate.toLocaleDateString("en-US", {
+        timeZone: "America/New_York",
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+      
+      const startTime = startDate.toLocaleTimeString("en-US", {
+        timeZone: "America/New_York",
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      });
+      
+      const endTime = endDate.toLocaleTimeString("en-US", {
+        timeZone: "America/New_York",
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      });
+      
+      return `${dateStr}, ${startTime} - ${endTime}`;
+    } else {
+      // Different days: show full date range
+      const startStr = startDate.toLocaleString("en-US", {
+        timeZone: "America/New_York",
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      });
+      
+      const endStr = endDate.toLocaleString("en-US", {
+        timeZone: "America/New_York",
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      });
+      
+      return `${startStr} - ${endStr}`;
+    }
   };
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
@@ -598,6 +782,48 @@ export default function Home() {
         </ProjectsDescription>
         <CTAButton primary>Join a Project</CTAButton>
       </ProjectsSection> */}
+      <EventsSection>
+        <EventsTitle>Upcoming Events</EventsTitle>
+        <EventsDescription>
+          Join us for workshops, meetups, and community gatherings in Detroit.
+        </EventsDescription>
+        {events.length > 0 ? (
+          <EventsGrid>
+            {events.map((event) => (
+              <EventCard key={event.id}>
+                {event.imageUrl && (
+                  <EventImage>
+                    <Image
+                      src={event.imageUrl}
+                      alt={event.title}
+                      width={400}
+                      height={200}
+                      style={{ objectFit: 'cover' }}
+                    />
+                  </EventImage>
+                )}
+                <EventTitle>{event.title}</EventTitle>
+                <EventDetails>
+                  <EventDetail>
+                    📅 {formatEventDateRange(event.startDatetime, event.endDatetime)}
+                  </EventDetail>
+                  <EventDetail>
+                    📍 {event.location}
+                  </EventDetail>
+                  <EventDetail>
+                    🎯 {event.type.charAt(0).toUpperCase() + event.type.slice(1)}
+                  </EventDetail>
+                </EventDetails>
+                <EventDescription>{event.description}</EventDescription>
+              </EventCard>
+            ))}
+          </EventsGrid>
+        ) : (
+          <NoEventsMessage>
+            No upcoming events at the moment. Check back soon!
+          </NoEventsMessage>
+        )}
+      </EventsSection>
       <Footer>
         <AboutPreview>
           <AboutText>
@@ -628,4 +854,52 @@ export default function Home() {
       </Footer>
     </>
   );
+}
+
+export async function getServerSideProps() {
+  try {
+    // Fetch events from the API
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/admin/events`);
+    
+    if (response.ok) {
+      const allEvents = await response.json();
+      
+      // Filter for upcoming events (events that haven't ended yet)
+      const now = new Date();
+      const upcomingEvents = allEvents.filter((event: Event) => {
+        const endDate = typeof event.endDatetime === 'string' 
+          ? new Date(event.endDatetime) 
+          : event.endDatetime;
+        return endDate > now;
+      });
+      
+      // Sort by start date (earliest first)
+      upcomingEvents.sort((a: Event, b: Event) => {
+        const dateA = typeof a.startDatetime === 'string' 
+          ? new Date(a.startDatetime) 
+          : a.startDatetime;
+        const dateB = typeof b.startDatetime === 'string' 
+          ? new Date(b.startDatetime) 
+          : b.startDatetime;
+        return dateA.getTime() - dateB.getTime();
+      });
+      
+      // Limit to 3 upcoming events
+      const events = upcomingEvents.slice(0, 3);
+      
+      return {
+        props: {
+          events,
+        },
+      };
+    }
+  } catch (error) {
+    console.error('Error fetching events in getServerSideProps:', error);
+  }
+  
+  return {
+    props: {
+      events: [],
+    },
+  };
 }
