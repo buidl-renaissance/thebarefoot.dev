@@ -59,7 +59,7 @@ export async function sendWelcomeEmail(email: string) {
                     👇 Click below to tell us where you're at, and we'll guide you to the best tools for your goals.
                   </p>
                   
-                  <a href="https://thebarefoot.dev" style="
+                  <a href="https://thebarefoot.dev/walk" style="
                     display: inline-block;
                     background: linear-gradient(135deg, #ff4f00 0%, #ff6b35 100%);
                     color: white;
@@ -92,6 +92,16 @@ export async function sendWelcomeEmail(email: string) {
               <div style="margin-bottom: 30px;">
                 <p style="color: #4a5568; font-size: 16px; line-height: 1.6; margin: 0;">
                   If you have any questions or want to connect, just reply to this email. We read every message.
+                </p>
+              </div>
+              
+              <!-- PS Section -->
+              <div style="background-color: #fff5f0; border-left: 4px solid #ff4f00; padding: 20px; margin-bottom: 30px; border-radius: 0 8px 8px 0;">
+                <p style="color: #2d3748; font-size: 16px; line-height: 1.6; margin: 0 0 15px 0; font-weight: 500;">
+                  <strong>PS:</strong> We host monthly meetups in Detroit (and online soon!) to share ideas, demo tools, and build real things together. You'll hear more about that soon.
+                </p>
+                <p style="color: #2d3748; font-size: 16px; line-height: 1.6; margin: 0; font-weight: 500;">
+                  Welcome to the circle.
                 </p>
               </div>
               
