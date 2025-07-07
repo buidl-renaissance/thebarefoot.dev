@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '@/db';
 import { subscriptions } from '@/db/schema';
 import { eq } from 'drizzle-orm';
+import { sendWelcomeEmail } from '@/lib/resend';
 
 type ResponseData = {
   success: boolean;
@@ -60,6 +61,14 @@ export default async function handler(
       source: 'website',
       status: 'active'
     });
+
+    // Send welcome email
+    try {
+      await sendWelcomeEmail(email);
+    } catch (emailError) {
+      console.error('Failed to send welcome email:', emailError);
+      // Don't fail the subscription if email fails
+    }
 
     return res.status(200).json({
       success: true,
