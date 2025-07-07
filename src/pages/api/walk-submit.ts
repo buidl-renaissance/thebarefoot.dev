@@ -11,8 +11,9 @@ type ResponseData = {
 interface WalkFormData {
   experience: string;
   interests: string[];
-  zipCode: string;
+  city: string;
   accountability: boolean;
+  subscriptionUuid?: string;
 }
 
 export default async function handler(
@@ -27,7 +28,7 @@ export default async function handler(
   }
 
   try {
-    const { experience, interests, zipCode, accountability }: WalkFormData = req.body;
+    const { experience, interests, city, accountability, subscriptionUuid }: WalkFormData = req.body;
 
     // Validate required fields
     if (!experience || typeof experience !== 'string') {
@@ -44,10 +45,10 @@ export default async function handler(
       });
     }
 
-    if (!zipCode || typeof zipCode !== 'string') {
+    if (!city || typeof city !== 'string') {
       return res.status(400).json({
         success: false,
-        message: 'Location is required'
+        message: 'City is required'
       });
     }
 
@@ -81,8 +82,9 @@ export default async function handler(
     await db.insert(walkSubmissions).values({
       experience,
       interests: JSON.stringify(interests),
-      zipCode,
-      accountability: accountability || false
+      city,
+      accountability: accountability || false,
+      subscriptionUuid: subscriptionUuid || null
     });
 
     return res.status(200).json({

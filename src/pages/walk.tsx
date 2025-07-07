@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Image from 'next/image';
 import styled from 'styled-components';
@@ -275,6 +276,8 @@ interface FormData {
 }
 
 export default function JourneyPage() {
+  const router = useRouter();
+  const [subscriptionUuid, setSubscriptionUuid] = useState<string | null>(null);
   const [formData, setFormData] = useState<FormData>({
     experience: '',
     interests: [],
@@ -285,6 +288,13 @@ export default function JourneyPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+
+  // Extract UUID from query parameters
+  useEffect(() => {
+    if (router.isReady && router.query.uuid) {
+      setSubscriptionUuid(router.query.uuid as string);
+    }
+  }, [router.isReady, router.query.uuid]);
 
   const handleExperienceChange = (value: string) => {
     setFormData(prev => ({ ...prev, experience: value }));
@@ -309,12 +319,17 @@ export default function JourneyPage() {
     setError('');
 
     try {
+      const submissionData = {
+        ...formData,
+        subscriptionUuid: subscriptionUuid || undefined
+      };
+
       const response = await fetch('/api/walk-submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(submissionData),
       });
 
       const result = await response.json();

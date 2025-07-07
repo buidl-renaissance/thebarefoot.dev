@@ -3,6 +3,7 @@ import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 // Email subscriptions table
 export const subscriptions = sqliteTable("subscriptions", {
   id: integer("id").primaryKey({ autoIncrement: true }),
+  uuid: text("uuid").notNull().unique().$defaultFn(() => crypto.randomUUID()),
   email: text("email").notNull().unique(),
   createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
   source: text("source").notNull().default("website"), // website, workshop, event, etc.
@@ -68,9 +69,10 @@ export const blogPosts = sqliteTable("blog_posts", {
 // Walk form submissions table
 export const walkSubmissions = sqliteTable("walk_submissions", {
   id: integer("id").primaryKey({ autoIncrement: true }),
+  subscriptionUuid: text("subscription_uuid").references(() => subscriptions.uuid),
   experience: text("experience").notNull(), // none, beginner, intermediate, advanced
   interests: text("interests").notNull(), // JSON array of selected interests
-  zipCode: text("zip_code").notNull(), // city selection
+  city: text("city").notNull(), // city selection
   accountability: integer("accountability", { mode: "boolean" }).notNull().default(false),
   createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
 }); 

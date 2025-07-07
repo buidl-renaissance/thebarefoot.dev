@@ -2,8 +2,12 @@ import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export async function sendWelcomeEmail(email: string) {
+export async function sendWelcomeEmail(email: string, subscriptionUuid?: string) {
   try {
+    const walkUrl = subscriptionUuid 
+      ? `https://thebarefoot.dev/walk?uuid=${subscriptionUuid}`
+      : 'https://thebarefoot.dev/walk';
+      
     const { data, error } = await resend.emails.send({
       from: 'thebarefoot.dev <john@thebarefoot.dev>',
       to: [email],
@@ -59,7 +63,7 @@ export async function sendWelcomeEmail(email: string) {
                     👇 Click below to tell us where you're at, and we'll guide you to the best tools for your goals.
                   </p>
                   
-                  <a href="https://thebarefoot.dev/walk" style="
+                  <a href="${walkUrl}" style="
                     display: inline-block;
                     background: linear-gradient(135deg, #ff4f00 0%, #ff6b35 100%);
                     color: white;

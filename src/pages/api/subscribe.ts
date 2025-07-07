@@ -56,15 +56,15 @@ export default async function handler(
     }
 
     // Insert new subscription
-    await db.insert(subscriptions).values({
+    const [newSubscription] = await db.insert(subscriptions).values({
       email,
       source: 'website',
       status: 'active'
-    });
+    }).returning();
 
     // Send welcome email
     try {
-      await sendWelcomeEmail(email);
+      await sendWelcomeEmail(email, newSubscription.uuid);
     } catch (emailError) {
       console.error('Failed to send welcome email:', emailError);
       // Don't fail the subscription if email fails
