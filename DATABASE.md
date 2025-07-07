@@ -69,6 +69,23 @@ Workshops, hacknights, and community events.
 - updated_at (TIMESTAMP NOT NULL)
 ```
 
+#### `blog_posts`
+Blog posts and articles.
+
+```sql
+- id (INTEGER PRIMARY KEY AUTOINCREMENT)
+- title (TEXT NOT NULL)
+- slug (TEXT NOT NULL UNIQUE)
+- content (TEXT NOT NULL)
+- excerpt (TEXT)
+- author (TEXT NOT NULL)
+- published_at (TIMESTAMP NOT NULL)
+- status (TEXT NOT NULL DEFAULT 'draft') -- draft, published, archived
+- tags (TEXT) -- JSON array of tags
+- created_at (TIMESTAMP NOT NULL)
+- updated_at (TIMESTAMP NOT NULL)
+```
+
 ## Environment Variables
 
 Create a `.env.local` file with your Turso database credentials:
@@ -77,6 +94,8 @@ Create a `.env.local` file with your Turso database credentials:
 TURSO_DATABASE_URL=libsql://your-database-url.turso.io
 TURSO_DATABASE_AUTH_TOKEN=your-auth-token
 ```
+
+**Note**: The seed script requires these environment variables to be set. If you get a "URL_INVALID" error when running `yarn db:seed`, make sure your `.env.local` file exists and contains the correct database credentials.
 
 ## Database Commands
 
@@ -103,6 +122,12 @@ Runs pending migrations on the database.
 yarn db:studio
 ```
 Opens Drizzle Studio for database inspection and management.
+
+### Seed Blog Posts
+```bash
+yarn db:seed
+```
+Adds sample blog posts to the database for testing and development.
 
 ## Database Connection
 

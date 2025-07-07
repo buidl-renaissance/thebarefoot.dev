@@ -19,6 +19,7 @@ export const members = sqliteTable("members", {
   bio: text("bio"),
   createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
   updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+  deletedAt: integer("deleted_at", { mode: "timestamp" }),
 });
 
 // Projects table
@@ -27,11 +28,11 @@ export const projects = sqliteTable("projects", {
   name: text("name").notNull(),
   description: text("description"),
   status: text("status").notNull().default("active"), // active, completed, archived
-  githubUrl: text("github_url"),
-  liveUrl: text("live_url"),
+  data: text("data"), // JSON object of data
   tags: text("tags"), // JSON array of tags
   createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
   updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+  deletedAt: integer("deleted_at", { mode: "timestamp" }),
 });
 
 // Events/workshops table
@@ -45,4 +46,21 @@ export const events = sqliteTable("events", {
   maxParticipants: integer("max_participants"),
   createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
   updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+  deletedAt: integer("deleted_at", { mode: "timestamp" }),
+});
+
+// Blog posts table
+export const blogPosts = sqliteTable("blog_posts", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  title: text("title").notNull(),
+  slug: text("slug").notNull().unique(),
+  content: text("content").notNull(),
+  excerpt: text("excerpt"),
+  author: text("author").notNull(),
+  publishedAt: integer("published_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+  status: text("status").notNull().default("draft"), // draft, published, archived
+  tags: text("tags"), // JSON array of tags
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+  deletedAt: integer("deleted_at", { mode: "timestamp" }),
 }); 

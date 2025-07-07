@@ -249,6 +249,8 @@ const SuccessMsg = styled.p<{ theme: ThemeType }>`
   font-weight: 600;
   margin-top: 0.5rem;
   font-size: 1rem;
+  text-align: center;
+  width: 100%;
 `;
 
 const WhyJoinSection = styled.section<{ theme: ThemeType }>`
@@ -550,15 +552,15 @@ export default function Home() {
           <EmailSubmit primary type="submit">
             Sign Up
           </EmailSubmit>
-          {error && (
-            <SuccessMsg style={{ color: "#B33A3A" }}>{error}</SuccessMsg>
-          )}
-          {success && (
-            <SuccessMsg>
-              You&apos;re in. We&apos;ll be in touch soon.
-            </SuccessMsg>
-          )}
         </EmailForm>
+        {error && (
+          <SuccessMsg style={{ color: "#B33A3A" }}>{error}</SuccessMsg>
+        )}
+        {success && (
+          <SuccessMsg>
+            You&apos;re in. We&apos;ll be in touch soon.
+          </SuccessMsg>
+        )}
       </EmailSection>
       <WhyJoinSection>
         <SectionTitle>Why Barefoot Dev?</SectionTitle>

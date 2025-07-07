@@ -286,6 +286,8 @@ const SuccessMsg = styled.div<{ theme: ThemeType }>`
   font-size: 0.9rem;
   margin-top: 1rem;
   color: ${({ theme }) => theme.colors.neonOrange};
+  text-align: center;
+  width: 100%;
 `;
 
 const Footer = styled.footer<{ theme: ThemeType }>`
@@ -640,15 +642,15 @@ export default function Home() {
                         <EmailSubmit primary type="submit">
                             📩 Subscribe to the newsletter
                         </EmailSubmit>
-                        {error && (
-                            <SuccessMsg style={{ color: "#B33A3A" }}>{error}</SuccessMsg>
-                        )}
-                        {success && (
-                            <SuccessMsg>
-                                You&apos;re in. We&apos;ll be in touch soon.
-                            </SuccessMsg>
-                        )}
                     </EmailForm>
+                    {error && (
+                        <SuccessMsg style={{ color: "#B33A3A" }}>{error}</SuccessMsg>
+                    )}
+                    {success && (
+                        <SuccessMsg>
+                            You&apos;re in. We&apos;ll be in touch soon.
+                        </SuccessMsg>
+                    )}
                 </Container>
             </Section>
 

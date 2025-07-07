@@ -1,3 +1,18 @@
+CREATE TABLE `blog_posts` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`title` text NOT NULL,
+	`slug` text NOT NULL,
+	`content` text NOT NULL,
+	`excerpt` text,
+	`author` text NOT NULL,
+	`published_at` integer NOT NULL,
+	`status` text DEFAULT 'draft' NOT NULL,
+	`tags` text,
+	`created_at` integer NOT NULL,
+	`updated_at` integer NOT NULL
+);
+--> statement-breakpoint
+CREATE UNIQUE INDEX `blog_posts_slug_unique` ON `blog_posts` (`slug`);--> statement-breakpoint
 CREATE TABLE `events` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`title` text NOT NULL,
