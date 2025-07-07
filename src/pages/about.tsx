@@ -73,7 +73,7 @@ export default function About() {
       <Main>
         <Heading>🦶 Barefoot Technologists</Heading>
         <BodyText>
-          "Technology, like medicine, should be in the hands of the people who need it most."
+          &ldquo;Technology, like medicine, should be in the hands of the people who need it most.&rdquo;
         </BodyText>
         <BodyText>
           Inspired by the Barefoot Doctor legacy, we&apos;re building a modern framework for community-led tech empowerment. thebarefoot.dev draws inspiration from the barefoot doctors of rural China—community-based medical practitioners trained to provide essential healthcare in underserved areas during the 20th century. They were not elite specialists but locals equipped with practical knowledge, tools, and deep community trust.
@@ -189,7 +189,7 @@ export default function About() {
 
         <Section>
           <Quote>
-            "Start from the people. Serve the people. Stay with the people."
+            &ldquo;Start from the people. Serve the people. Stay with the people.&rdquo;
           </Quote>
           
           <BodyText>
