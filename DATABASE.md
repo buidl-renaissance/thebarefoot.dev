@@ -74,8 +74,8 @@ Workshops, hacknights, and community events.
 Create a `.env.local` file with your Turso database credentials:
 
 ```env
-DATABASE_URL=libsql://your-database-url.turso.io
-DATABASE_AUTH_TOKEN=your-auth-token
+TURSO_DATABASE_URL=libsql://your-database-url.turso.io
+TURSO_DATABASE_AUTH_TOKEN=your-auth-token
 ```
 
 ## Database Commands
@@ -113,8 +113,8 @@ import { drizzle } from "drizzle-orm/libsql";
 import { createClient } from "@libsql/client";
 
 const client = createClient({
-  url: process.env.DATABASE_URL!,
-  authToken: process.env.DATABASE_AUTH_TOKEN,
+  url: process.env.TURSO_DATABASE_URL!,
+  authToken: process.env.TURSO_DATABASE_AUTH_TOKEN,
 });
 
 export const db = drizzle(client);
@@ -175,7 +175,7 @@ const existing = await db
 
 ### Common Issues
 
-1. **Connection Errors**: Verify `DATABASE_URL` and `DATABASE_AUTH_TOKEN`
+1. **Connection Errors**: Verify `TURSO_DATABASE_URL` and `TURSO_DATABASE_AUTH_TOKEN`
 2. **Migration Failures**: Check schema compatibility
 3. **Type Errors**: Ensure Drizzle types match schema
 4. **Performance**: Monitor query patterns in Turso dashboard
