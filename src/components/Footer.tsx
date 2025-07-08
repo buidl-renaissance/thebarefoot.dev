@@ -61,6 +61,16 @@ const Footer = styled.footer<{ theme: ThemeType }>`
   }
 `;
 
+const FooterContainer = styled.div`
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  width: 100%;
+`;
+
 const FooterRow = styled.div`
   display: flex;
   gap: 2rem;
@@ -99,37 +109,39 @@ const Logo = styled.div<{ theme: ThemeType }>`
 const FooterComponent: React.FC = () => {
     return (
         <Footer>
-            <FooterRow>
-                <FooterLink href="https://github.com/buidl-renaissance">
-                    <FontAwesomeIcon
-                        icon={faGithub}
-                        style={{ marginRight: "0.5rem" }}
+            <FooterContainer>
+                <FooterRow>
+                    <FooterLink href="https://github.com/buidl-renaissance/thebarefoot.dev" target="_blank">
+                        <FontAwesomeIcon
+                            icon={faGithub}
+                            style={{ marginRight: "0.5rem" }}
+                        />
+                        GitHub
+                    </FooterLink>
+                    <FooterLink href="https://www.instagram.com/thebarefoot.dev" target="_blank">
+                        <FontAwesomeIcon
+                            icon={faInstagram}
+                            style={{ marginRight: "0.5rem" }}
+                        />
+                        Instagram
+                    </FooterLink>
+                </FooterRow>
+                <Logo>
+                    <Image
+                        src="/images/thebarefoot.dev.png"
+                        alt="Barefoot Dev Logo"
+                        width={100}
+                        height={100}
                     />
-                    GitHub
-                </FooterLink>
-                <FooterLink href="https://www.instagram.com/thebarefoot.dev">
-                    <FontAwesomeIcon
-                        icon={faInstagram}
-                        style={{ marginRight: "0.5rem" }}
-                    />
-                    Instagram
-                </FooterLink>
-            </FooterRow>
-            <Logo>
-                <Image
-                    src="/images/thebarefoot.dev.png"
-                    alt="Barefoot Dev Logo"
-                    width={100}
-                    height={100}
-                />
-            </Logo>
-            <AboutPreview>
-                <AboutText>
-                    We&apos;re inspired by the barefoot doctors of China —
-                    community-trained, resourceful, and people-first. We build tech the
-                    same way: with care, craft, and collective wisdom. <Link href="/about" style={{ color: "#FF4F00" }}>Learn more.</Link>
-                </AboutText>
-            </AboutPreview>
+                </Logo>
+                <AboutPreview>
+                    <AboutText>
+                        We&apos;re inspired by the barefoot doctors of China —
+                        community-trained, resourceful, and people-first. We build tech the
+                        same way: with care, craft, and collective wisdom. <Link href="/about" style={{ color: "#FF4F00" }}>Learn more.</Link>
+                    </AboutText>
+                </AboutPreview>
+            </FooterContainer>
         </Footer>
     );
 };

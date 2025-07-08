@@ -1,0 +1,699 @@
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import Head from 'next/head';
+import Link from 'next/link';
+
+const AdminContainer = styled.div`
+  min-height: 100vh;
+  background: ${({ theme }) => theme.colors.asphaltBlack};
+  color: ${({ theme }) => theme.colors.creamyBeige};
+  padding: 2rem;
+`;
+
+const Header = styled.header`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+`;
+
+const Title = styled.h1`
+  font-family: ${({ theme }) => theme.fonts.heading};
+  font-size: 3rem;
+  color: ${({ theme }) => theme.colors.neonOrange};
+  margin: 0;
+`;
+
+const BackLink = styled(Link)`
+  color: ${({ theme }) => theme.colors.rustedSteel};
+  text-decoration: none;
+  font-family: ${({ theme }) => theme.fonts.body};
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  
+  &:hover {
+    color: ${({ theme }) => theme.colors.neonOrange};
+  }
+`;
+
+const ActionBar = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+`;
+
+const CreateButton = styled.button`
+  background: ${({ theme }) => theme.colors.neonOrange};
+  color: ${({ theme }) => theme.colors.asphaltBlack};
+  font-family: ${({ theme }) => theme.fonts.body};
+  font-weight: 600;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: ${({ theme }) => theme.colors.brickRed};
+    transform: translateY(-1px);
+  }
+`;
+
+const PostsGrid = styled.div`
+  display: grid;
+  gap: 1.5rem;
+`;
+
+const PostCard = styled.div`
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid ${({ theme }) => theme.colors.rustedSteel};
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    border-color: ${({ theme }) => theme.colors.neonOrange};
+  }
+`;
+
+const PostHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+`;
+
+const PostTitle = styled.h3`
+  font-family: ${({ theme }) => theme.fonts.heading};
+  font-size: 1.5rem;
+  color: ${({ theme }) => theme.colors.neonOrange};
+  margin: 0;
+`;
+
+const PostActions = styled.div`
+  display: flex;
+  gap: 0.5rem;
+`;
+
+const ActionButton = styled.button<{ variant?: 'edit' | 'delete' }>`
+  background: ${({ theme, variant }) => 
+    variant === 'delete' ? theme.colors.brickRed : 'transparent'};
+  color: ${({ theme, variant }) => 
+    variant === 'delete' ? theme.colors.creamyBeige : theme.colors.neonOrange};
+  border: 1px solid ${({ theme, variant }) => 
+    variant === 'delete' ? theme.colors.brickRed : theme.colors.neonOrange};
+  font-family: ${({ theme }) => theme.fonts.body};
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: ${({ theme, variant }) => 
+      variant === 'delete' ? theme.colors.brickRed : theme.colors.neonOrange};
+    color: ${({ theme, variant }) => 
+      variant === 'delete' ? theme.colors.creamyBeige : theme.colors.asphaltBlack};
+  }
+`;
+
+const PostDetails = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+`;
+
+const DetailItem = styled.div`
+  font-family: ${({ theme }) => theme.fonts.body};
+`;
+
+const DetailLabel = styled.div`
+  font-size: 0.8rem;
+  color: ${({ theme }) => theme.colors.rustedSteel};
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.25rem;
+`;
+
+const DetailValue = styled.div`
+  color: ${({ theme }) => theme.colors.creamyBeige};
+  font-weight: 500;
+`;
+
+const PostExcerpt = styled.p`
+  font-family: ${({ theme }) => theme.fonts.body};
+  color: ${({ theme }) => theme.colors.rustedSteel};
+  line-height: 1.6;
+  margin: 0;
+`;
+
+const StatusBadge = styled.span<{ status: string }>`
+  background: ${({ theme, status }) => 
+    status === 'published' ? theme.colors.neonOrange : 
+    status === 'draft' ? theme.colors.rustedSteel : 
+    theme.colors.brickRed};
+  color: ${({ theme, status }) => 
+    status === 'published' ? theme.colors.asphaltBlack : 
+    theme.colors.creamyBeige};
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+`;
+
+const Modal = styled.div<{ isOpen: boolean }>`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: ${({ isOpen }) => isOpen ? 'flex' : 'none'};
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+`;
+
+const ModalContent = styled.div`
+  background: ${({ theme }) => theme.colors.asphaltBlack};
+  border: 1px solid ${({ theme }) => theme.colors.rustedSteel};
+  border-radius: 8px;
+  padding: 2rem;
+  max-width: 800px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+`;
+
+const ModalHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+`;
+
+const ModalTitle = styled.h2`
+  font-family: ${({ theme }) => theme.fonts.heading};
+  color: ${({ theme }) => theme.colors.neonOrange};
+  margin: 0;
+`;
+
+const CloseButton = styled.button`
+  background: none;
+  border: none;
+  color: ${({ theme }) => theme.colors.rustedSteel};
+  font-size: 1.5rem;
+  cursor: pointer;
+  
+  &:hover {
+    color: ${({ theme }) => theme.colors.neonOrange};
+  }
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+`;
+
+const FormGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+`;
+
+const Label = styled.label`
+  font-family: ${({ theme }) => theme.fonts.body};
+  color: ${({ theme }) => theme.colors.creamyBeige};
+  font-weight: 600;
+`;
+
+const Input = styled.input`
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid ${({ theme }) => theme.colors.rustedSteel};
+  border-radius: 4px;
+  padding: 0.75rem;
+  color: ${({ theme }) => theme.colors.creamyBeige};
+  font-family: ${({ theme }) => theme.fonts.body};
+  
+  &:focus {
+    outline: none;
+    border-color: ${({ theme }) => theme.colors.neonOrange};
+  }
+`;
+
+const Textarea = styled.textarea`
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid ${({ theme }) => theme.colors.rustedSteel};
+  border-radius: 4px;
+  padding: 0.75rem;
+  color: ${({ theme }) => theme.colors.creamyBeige};
+  font-family: ${({ theme }) => theme.fonts.body};
+  min-height: 120px;
+  resize: vertical;
+  
+  &:focus {
+    outline: none;
+    border-color: ${({ theme }) => theme.colors.neonOrange};
+  }
+`;
+
+const Select = styled.select`
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid ${({ theme }) => theme.colors.rustedSteel};
+  border-radius: 4px;
+  padding: 0.75rem;
+  color: ${({ theme }) => theme.colors.creamyBeige};
+  font-family: ${({ theme }) => theme.fonts.body};
+  
+  &:focus {
+    outline: none;
+    border-color: ${({ theme }) => theme.colors.neonOrange};
+  }
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+`;
+
+const SubmitButton = styled.button`
+  background: ${({ theme }) => theme.colors.neonOrange};
+  color: ${({ theme }) => theme.colors.asphaltBlack};
+  font-family: ${({ theme }) => theme.fonts.body};
+  font-weight: 600;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: ${({ theme }) => theme.colors.brickRed};
+  }
+`;
+
+const CancelButton = styled.button`
+  background: transparent;
+  color: ${({ theme }) => theme.colors.rustedSteel};
+  font-family: ${({ theme }) => theme.fonts.body};
+  border: 1px solid ${({ theme }) => theme.colors.rustedSteel};
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    border-color: ${({ theme }) => theme.colors.neonOrange};
+    color: ${({ theme }) => theme.colors.neonOrange};
+  }
+`;
+
+const TagsContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  min-height: 2.5rem;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid ${({ theme }) => theme.colors.rustedSteel};
+  border-radius: 4px;
+  
+  &:focus-within {
+    border-color: ${({ theme }) => theme.colors.neonOrange};
+  }
+`;
+
+const TagChip = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: ${({ theme }) => theme.colors.neonOrange};
+  color: ${({ theme }) => theme.colors.asphaltBlack};
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+`;
+
+const RemoveTagButton = styled.button`
+  background: none;
+  border: none;
+  color: ${({ theme }) => theme.colors.asphaltBlack};
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  
+  &:hover {
+    color: ${({ theme }) => theme.colors.brickRed};
+  }
+`;
+
+const TagsInput = styled.input`
+  background: none;
+  border: none;
+  color: ${({ theme }) => theme.colors.creamyBeige};
+  font-family: ${({ theme }) => theme.fonts.body};
+  flex: 1;
+  min-width: 120px;
+  
+  &:focus {
+    outline: none;
+  }
+  
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.rustedSteel};
+  }
+`;
+
+interface BlogPost {
+  id: number;
+  title: string;
+  slug: string;
+  content: string;
+  excerpt: string;
+  author: string;
+  status: string;
+  tags: string;
+  publishedAt: string | Date;
+  createdAt: string | Date;
+  updatedAt: string | Date;
+}
+
+interface PostFormData {
+  title: string;
+  content: string;
+  excerpt: string;
+  author: string;
+  status: string;
+  tags: string;
+  id?: number;
+}
+
+export default function AdminBlog() {
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
+  const [formData, setFormData] = useState({
+    title: '',
+    content: '',
+    excerpt: '',
+    author: 'The Barefoot Dev',
+    status: 'draft',
+    tags: '',
+  });
+  const [tags, setTags] = useState<string[]>([]);
+  const [tagInput, setTagInput] = useState('');
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  const fetchPosts = async () => {
+    try {
+      const response = await fetch('/api/admin/blog');
+      const data = await response.json();
+      setPosts(data);
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+    }
+  };
+
+  const handleCreatePost = () => {
+    setEditingPost(null);
+    setFormData({
+      title: '',
+      content: '',
+      excerpt: '',
+      author: 'The Barefoot Dev',
+      status: 'draft',
+      tags: '',
+    });
+    setTags([]);
+    setTagInput('');
+    setIsModalOpen(true);
+  };
+
+  const handleEditPost = (post: BlogPost) => {
+    setEditingPost(post);
+    setFormData({
+      title: post.title,
+      content: post.content,
+      excerpt: post.excerpt || '',
+      author: post.author,
+      status: post.status,
+      tags: post.tags ? JSON.parse(post.tags).join(', ') : '',
+    });
+    setTags(post.tags ? JSON.parse(post.tags) : []);
+    setTagInput('');
+    setIsModalOpen(true);
+  };
+
+  const handleDeletePost = async (postId: number) => {
+    if (confirm('Are you sure you want to delete this post?')) {
+      try {
+        await fetch(`/api/admin/blog?id=${postId}`, {
+          method: 'DELETE',
+        });
+        fetchPosts();
+      } catch (error) {
+        console.error('Error deleting post:', error);
+      }
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    try {
+      const postData: PostFormData = {
+        ...formData,
+        tags: tags.join(', '),
+      };
+
+      const url = '/api/admin/blog';
+      const method = editingPost ? 'PUT' : 'POST';
+      
+      if (editingPost) {
+        postData.id = editingPost.id;
+      }
+
+      const response = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(postData),
+      });
+
+      if (response.ok) {
+        setIsModalOpen(false);
+        fetchPosts();
+      } else {
+        console.error('Error saving post');
+      }
+    } catch (error) {
+      console.error('Error saving post:', error);
+    }
+  };
+
+  const formatDate = (date: string | Date) => {
+    return new Date(date).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+  };
+
+  const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && tagInput.trim()) {
+      e.preventDefault();
+      const newTag = tagInput.trim();
+      if (!tags.includes(newTag)) {
+        setTags([...tags, newTag]);
+      }
+      setTagInput('');
+    }
+  };
+
+  const handleRemoveTag = (tagToRemove: string) => {
+    setTags(tags.filter(tag => tag !== tagToRemove));
+  };
+
+  return (
+    <>
+      <Head>
+        <title>Blog Management - Admin Dashboard</title>
+        <meta name="description" content="Manage blog posts" />
+      </Head>
+      
+      <AdminContainer>
+        <Header>
+          <Title>Blog Management</Title>
+          <BackLink href="/admin">
+            ← Back to Dashboard
+          </BackLink>
+        </Header>
+
+        <ActionBar>
+          <CreateButton onClick={handleCreatePost}>
+            Create New Post
+          </CreateButton>
+        </ActionBar>
+
+        <PostsGrid>
+          {posts.map((post) => (
+            <PostCard key={post.id}>
+              <PostHeader>
+                <PostTitle>{post.title}</PostTitle>
+                <PostActions>
+                  <ActionButton onClick={() => handleEditPost(post)}>
+                    Edit
+                  </ActionButton>
+                  <ActionButton variant="delete" onClick={() => handleDeletePost(post.id)}>
+                    Delete
+                  </ActionButton>
+                </PostActions>
+              </PostHeader>
+
+              <PostDetails>
+                <DetailItem>
+                  <DetailLabel>Status</DetailLabel>
+                  <StatusBadge status={post.status}>{post.status}</StatusBadge>
+                </DetailItem>
+                <DetailItem>
+                  <DetailLabel>Author</DetailLabel>
+                  <DetailValue>{post.author}</DetailValue>
+                </DetailItem>
+                <DetailItem>
+                  <DetailLabel>Published</DetailLabel>
+                  <DetailValue>{formatDate(post.publishedAt)}</DetailValue>
+                </DetailItem>
+                <DetailItem>
+                  <DetailLabel>Slug</DetailLabel>
+                  <DetailValue>{post.slug}</DetailValue>
+                </DetailItem>
+              </PostDetails>
+
+              {post.excerpt && (
+                <PostExcerpt>{post.excerpt}</PostExcerpt>
+              )}
+            </PostCard>
+          ))}
+        </PostsGrid>
+
+        <Modal isOpen={isModalOpen}>
+          <ModalContent>
+            <ModalHeader>
+              <ModalTitle>
+                {editingPost ? 'Edit Post' : 'Create New Post'}
+              </ModalTitle>
+              <CloseButton onClick={() => setIsModalOpen(false)}>×</CloseButton>
+            </ModalHeader>
+
+            <Form onSubmit={handleSubmit}>
+              <FormGroup>
+                <Label htmlFor="title">Title</Label>
+                <Input
+                  id="title"
+                  type="text"
+                  value={formData.title}
+                  onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                  required
+                />
+              </FormGroup>
+
+              <FormGroup>
+                <Label htmlFor="author">Author</Label>
+                <Input
+                  id="author"
+                  type="text"
+                  value={formData.author}
+                  onChange={(e) => setFormData(prev => ({ ...prev, author: e.target.value }))}
+                  required
+                />
+              </FormGroup>
+
+              <FormGroup>
+                <Label htmlFor="excerpt">Excerpt</Label>
+                <Textarea
+                  id="excerpt"
+                  value={formData.excerpt}
+                  onChange={(e) => setFormData(prev => ({ ...prev, excerpt: e.target.value }))}
+                  placeholder="Brief description of the post..."
+                />
+              </FormGroup>
+
+              <FormGroup>
+                <Label htmlFor="content">Content (HTML)</Label>
+                <Textarea
+                  id="content"
+                  value={formData.content}
+                  onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
+                  placeholder="Write your blog post content in HTML..."
+                  required
+                />
+              </FormGroup>
+
+              <FormGroup>
+                <Label htmlFor="tags">Tags</Label>
+                <TagsContainer>
+                  {tags.map((tag, index) => (
+                    <TagChip key={index}>
+                      {tag}
+                      <RemoveTagButton onClick={() => handleRemoveTag(tag)}>
+                        ×
+                      </RemoveTagButton>
+                    </TagChip>
+                  ))}
+                  <TagsInput
+                    type="text"
+                    value={tagInput}
+                    onChange={(e) => setTagInput(e.target.value)}
+                    onKeyDown={handleAddTag}
+                    placeholder="Type a tag and press Enter..."
+                  />
+                </TagsContainer>
+              </FormGroup>
+
+              <FormGroup>
+                <Label htmlFor="status">Status</Label>
+                <Select
+                  id="status"
+                  value={formData.status}
+                  onChange={(e) => setFormData(prev => ({ ...prev, status: e.target.value }))}
+                >
+                  <option value="draft">Draft</option>
+                  <option value="published">Published</option>
+                  <option value="archived">Archived</option>
+                </Select>
+              </FormGroup>
+
+              <ButtonGroup>
+                <CancelButton type="button" onClick={() => setIsModalOpen(false)}>
+                  Cancel
+                </CancelButton>
+                <SubmitButton type="submit">
+                  {editingPost ? 'Update Post' : 'Create Post'}
+                </SubmitButton>
+              </ButtonGroup>
+            </Form>
+          </ModalContent>
+        </Modal>
+      </AdminContainer>
+    </>
+  );
+} 
