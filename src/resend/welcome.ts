@@ -1,12 +1,49 @@
 import { Resend } from 'resend';
+import { db } from '@/db';
+import { events } from '@/db/schema';
+import { isNull, gt } from 'drizzle-orm';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+
+// Function to get the next upcoming event
+async function getNextEvent() {
+  try {
+    const now = new Date();
+    const upcomingEvents = await db
+      .select()
+      .from(events)
+      .where(
+        isNull(events.deletedAt) && gt(events.endDatetime, now)
+      )
+      .orderBy(events.startDatetime)
+      .limit(1);
+    
+    return upcomingEvents[0] || null;
+  } catch (error) {
+    console.error('Error fetching next event:', error);
+    return null;
+  }
+}
+
+// Helper function to format event date
+function formatEventDate(date: Date) {
+  return date.toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    timeZone: 'America/New_York'
+  });
+}
 
 export async function sendWelcomeEmail(email: string, subscriptionUuid?: string) {
   try {
     const walkUrl = subscriptionUuid 
       ? `https://thebarefoot.dev/walk?uuid=${subscriptionUuid}`
       : 'https://thebarefoot.dev/walk';
+    
+    // Get the next upcoming event
+    const nextEvent = await getNextEvent();
       
     const { data, error } = await resend.emails.send({
       from: 'thebarefoot.dev <john@thebarefoot.dev>',
@@ -101,9 +138,25 @@ export async function sendWelcomeEmail(email: string, subscriptionUuid?: string)
               
               <!-- PS Section -->
               <div style="background-color: #fff5f0; border-left: 4px solid #ff4f00; padding: 20px; margin-bottom: 30px; border-radius: 0 8px 8px 0;">
-                <p style="color: #2d3748; font-size: 16px; line-height: 1.6; margin: 0 0 15px 0; font-weight: 500;">
-                  <strong>PS:</strong> We host monthly meetups in Detroit (and online soon!) to share ideas, demo tools, and build real things together. You'll hear more about that soon.
-                </p>
+                ${nextEvent ? `
+                  <p style="color: #2d3748; font-size: 16px; line-height: 1.6; margin: 0 0 15px 0; font-weight: 500;">
+                    <strong>PS:</strong> We host monthly meetups in Detroit (and online soon!) to share ideas, demo tools, and build real things together.
+                  </p>
+                  <div style="background-color: #ffffff; border-radius: 8px; padding: 15px; margin-bottom: 15px; border: 1px solid #ffd7c7;">
+                    <p style="color: #2d3748; font-size: 16px; line-height: 1.6; margin: 0 0 10px 0; font-weight: 600;">
+                      🎉 <strong>Next Event:</strong> ${nextEvent.title}
+                    </p>
+                    <p style="color: #4a5568; font-size: 14px; line-height: 1.5; margin: 0 0 8px 0;">
+                      📅 ${formatEventDate(new Date(nextEvent.startDatetime))}
+                    </p>
+                    ${nextEvent.location ? `<p style="color: #4a5568; font-size: 14px; line-height: 1.5; margin: 0 0 8px 0;">📍 ${nextEvent.location}</p>` : ''}
+                    ${nextEvent.description ? `<p style="color: #4a5568; font-size: 14px; line-height: 1.5; margin: 0;">${nextEvent.description}</p>` : ''}
+                  </div>
+                ` : `
+                  <p style="color: #2d3748; font-size: 16px; line-height: 1.6; margin: 0 0 15px 0; font-weight: 500;">
+                    <strong>PS:</strong> We host monthly meetups in Detroit (and online soon!) to share ideas, demo tools, and build real things together. You'll hear more about that soon.
+                  </p>
+                `}
                 <p style="color: #2d3748; font-size: 16px; line-height: 1.6; margin: 0; font-weight: 500;">
                   Welcome to the circle.
                 </p>

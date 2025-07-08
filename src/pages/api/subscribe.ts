@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '@/db';
 import { subscriptions } from '@/db/schema';
 import { eq } from 'drizzle-orm';
-import { sendWelcomeEmail } from '@/lib/resend';
+import { sendWelcomeEmail } from '@/resend/welcome';
 
 type ResponseData = {
   success: boolean;
@@ -72,7 +72,7 @@ export default async function handler(
 
     return res.status(200).json({
       success: true,
-      message: "You're in. We'll be in touch soon."
+      message: "You're in. Check your email for a welcome message!"
     });
 
   } catch (error) {
