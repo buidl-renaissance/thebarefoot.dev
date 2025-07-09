@@ -4,7 +4,7 @@ import Link from "next/link";
 import { GetStaticProps } from "next";
 import { db } from "@/db";
 import { blogPosts } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import type { ThemeType } from "@/styles/theme";
 import Image from "next/image";
 import EmailSubscription from "@/components/EmailSubscription";
@@ -402,7 +402,7 @@ export const getStaticProps: GetStaticProps = async () => {
       })
       .from(blogPosts)
       .where(eq(blogPosts.status, "published"))
-      .orderBy(blogPosts.publishedAt);
+      .orderBy(desc(blogPosts.publishedAt));
 
     return {
       props: {

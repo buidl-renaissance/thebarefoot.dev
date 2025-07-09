@@ -408,6 +408,7 @@ export default function BlogPostPage({ post, otherPosts }: BlogPostPageProps) {
     <>
       <Head>
         <title>{post.title} - The Barefoot Developer</title>
+        <meta name="og:title" content={post.title} />
         <meta name="description" content={post.excerpt || post.title} />
         {post.featuredImage && (
           <>
