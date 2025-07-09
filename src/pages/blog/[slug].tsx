@@ -7,6 +7,7 @@ import { blogPosts } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import type { ThemeType } from "@/styles/theme";
 import EmailSubscription from "@/components/EmailSubscription";
+import BlogContent from "@/components/BlogContent";
 
 const PostContainer = styled.div<{ theme: ThemeType }>`
   min-height: 100vh;
@@ -101,105 +102,7 @@ const Tag = styled.span<{ theme: ThemeType }>`
   font-family: ${({ theme }) => theme.fonts.body};
 `;
 
-const PostContent = styled.article<{ theme: ThemeType }>`
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-family: ${({ theme }) => theme.fonts.body};
-  line-height: 1.8;
-  font-size: 1.1rem;
 
-  @media (max-width: 768px) {
-    padding: 1rem;
-    font-size: 1rem;
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: ${({ theme }) => theme.fonts.heading};
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-    color: ${({ theme }) => theme.colors.creamyBeige};
-  }
-
-  h1 {
-    font-size: 2rem;
-  }
-
-  h2 {
-    font-size: 1.5rem;
-  }
-
-  h3 {
-    font-size: 1.25rem;
-  }
-
-  p {
-    margin-bottom: 1.5rem;
-  }
-
-  ul,
-  ol {
-    margin-bottom: 1.5rem;
-    padding-left: 2rem;
-  }
-
-  li {
-    margin-bottom: 0.5rem;
-  }
-
-  blockquote {
-    border-left: 4px solid ${({ theme }) => theme.colors.neonOrange};
-    padding-left: 1.5rem;
-    margin: 2rem 0;
-    font-style: italic;
-    opacity: 0.9;
-  }
-
-  code {
-    background: ${({ theme }) => theme.colors.rustedSteel};
-    padding: 0.2rem 0.4rem;
-    border-radius: 4px;
-    font-family: ${({ theme }) => theme.fonts.mono};
-    font-size: 0.9em;
-  }
-
-  pre {
-    background: ${({ theme }) => theme.colors.rustedSteel};
-    padding: 1.5rem;
-    border-radius: 8px;
-    overflow-x: auto;
-    margin: 2rem 0;
-    border: 1px solid ${({ theme }) => theme.colors.neonOrange}20;
-
-    code {
-      background: none;
-      padding: 0;
-    }
-  }
-
-  a {
-    color: ${({ theme }) => theme.colors.neonOrange};
-    text-decoration: none;
-    border-bottom: 1px solid transparent;
-    transition: border-color 0.3s ease;
-
-    &:hover {
-      border-bottom-color: ${({ theme }) => theme.colors.neonOrange};
-    }
-  }
-
-  img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-    margin: 2rem 0;
-  }
-`;
 
 const NotFoundContainer = styled.div<{ theme: ThemeType }>`
   min-height: 100vh;
@@ -443,7 +346,7 @@ export default function BlogPostPage({ post, otherPosts }: BlogPostPageProps) {
           </FeaturedImageContainer>
         )} */}
 
-        <PostContent dangerouslySetInnerHTML={{ __html: post.content }} />
+        <BlogContent content={post.content} />
 
         <EmailSubscription
           title="Stay in the loop"
