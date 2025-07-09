@@ -1,7 +1,7 @@
 import Head from "next/head";
 import styled from "styled-components";
 import Link from "next/link";
-import { GetStaticProps, GetStaticPaths } from "next";
+import { GetServerSideProps } from "next";
 import { db } from "@/db";
 import { blogPosts } from "@/db/schema";
 import { eq } from "drizzle-orm";
@@ -381,31 +381,7 @@ export default function BlogPostPage({ post, otherPosts }: BlogPostPageProps) {
   );
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  try {
-    const posts = await db
-      .select({ slug: blogPosts.slug })
-      .from(blogPosts)
-      .where(eq(blogPosts.status, "published"));
-
-    const paths = posts.map((post) => ({
-      params: { slug: post.slug },
-    }));
-
-    return {
-      paths,
-      fallback: "blocking",
-    };
-  } catch (error) {
-    console.error("Error generating static paths:", error);
-    return {
-      paths: [],
-      fallback: "blocking",
-    };
-  }
-};
-
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   try {
     const slug = params?.slug as string;
 
@@ -465,7 +441,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
           publishedAt: post.publishedAt?.toISOString(),
         })),
       },
-      revalidate: 60, // Revalidate every minute
     };
   } catch (error) {
     console.error("Error fetching blog post:", error);

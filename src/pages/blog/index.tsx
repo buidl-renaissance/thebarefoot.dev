@@ -1,7 +1,7 @@
 import Head from "next/head";
 import styled from "styled-components";
 import Link from "next/link";
-import { GetStaticProps } from "next";
+import { GetServerSideProps } from "next";
 import { db } from "@/db";
 import { blogPosts } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
@@ -387,7 +387,7 @@ export default function BlogPage({ posts }: BlogPageProps) {
   );
 }
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getServerSideProps: GetServerSideProps = async () => {
   try {
     const posts = await db
       .select({
@@ -411,7 +411,6 @@ export const getStaticProps: GetStaticProps = async () => {
           publishedAt: post.publishedAt?.toISOString(),
         })),
       },
-      revalidate: 60, // Revalidate every minute
     };
   } catch (error) {
     console.error("Error fetching blog posts:", error);
@@ -419,7 +418,6 @@ export const getStaticProps: GetStaticProps = async () => {
       props: {
         posts: [],
       },
-      revalidate: 60,
     };
   }
 }; 

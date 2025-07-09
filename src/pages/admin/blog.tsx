@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Head from 'next/head';
 import Link from 'next/link';
+import { WYSIWYGEditor } from '../../components/WYSIWYGEditor';
 
 const AdminContainer = styled.div`
   min-height: 100vh;
@@ -697,9 +698,16 @@ export default function AdminBlog() {
       featuredImage: post.featuredImage,
       author: post.author,
       status: post.status,
-      tags: post.tags ? JSON.parse(post.tags).join(', ') : '',
+      tags: '', // We handle tags separately as an array
     });
-    setTags(post.tags ? JSON.parse(post.tags) : []);
+    // Parse tags from JSON string to array
+    try {
+      const parsedTags = post.tags ? JSON.parse(post.tags) : [];
+      setTags(Array.isArray(parsedTags) ? parsedTags : []);
+    } catch (error) {
+      console.error('Error parsing tags:', error);
+      setTags([]);
+    }
     setTagInput('');
     setActiveTab('manual');
     setGeneratedBlog(null);
@@ -729,7 +737,7 @@ export default function AdminBlog() {
         excerpt: formData.excerpt,
         author: formData.author,
         status: formData.status,
-        tags: tags.join(', '),
+        tags: tags,
         featuredImage: formData.featuredImage,
         ...(editingPost && { id: editingPost.id })
       };
@@ -1022,13 +1030,11 @@ export default function AdminBlog() {
                 </FormGroup>
 
                 <FormGroup>
-                  <Label htmlFor="content">Content (HTML)</Label>
-                  <Textarea
-                    id="content"
+                  <Label htmlFor="content">Content</Label>
+                  <WYSIWYGEditor
                     value={formData.content}
-                    onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
-                    placeholder="Write your blog post content in HTML..."
-                    required
+                    onChange={(value) => setFormData(prev => ({ ...prev, content: value }))}
+                    placeholder="Write your blog post content..."
                   />
                 </FormGroup>
 
@@ -1081,12 +1087,10 @@ export default function AdminBlog() {
               <Form onSubmit={handleSubmit}>
                 <FormGroup>
                   <Label htmlFor="transcript">Transcript/Notes</Label>
-                  <Textarea
-                    id="transcript"
+                  <WYSIWYGEditor
                     value={transcriptData.transcript}
-                    onChange={(e) => setTranscriptData(prev => ({ ...prev, transcript: e.target.value }))}
+                    onChange={(value) => setTranscriptData(prev => ({ ...prev, transcript: value }))}
                     placeholder="Paste the presentation transcript, notes, or summary here..."
-                    required
                   />
                 </FormGroup>
 
