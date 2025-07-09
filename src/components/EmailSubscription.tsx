@@ -2,12 +2,13 @@ import { useState } from "react";
 import styled from "styled-components";
 import type { ThemeType } from "@/styles/theme";
 
-const EmailSection = styled.section<{ theme: ThemeType }>`
+const EmailSection = styled.section<{ theme: ThemeType; compact?: boolean }>`
   background: ${({ theme }) => theme.colors.asphaltBlack};
   color: ${({ theme }) => theme.colors.creamyBeige};
-  padding: 4rem 1rem;
+  padding: ${({ compact }) => (compact ? "2rem 1rem" : "4rem 1rem")};
   text-align: center;
   position: relative;
+  margin-bottom: ${({ compact }) => (compact ? "0" : "2rem")};
 
   &::before {
     content: "";
@@ -25,32 +26,31 @@ const EmailSection = styled.section<{ theme: ThemeType }>`
   }
 `;
 
-const EmailTitle = styled.h2<{ theme: ThemeType }>`
+const EmailTitle = styled.h2<{ theme: ThemeType; compact?: boolean }>`
   font-family: ${({ theme }) => theme.fonts.heading};
-  font-size: clamp(1.8rem, 3vw, 2.5rem);
-  margin-bottom: 1.5rem;
+  font-size: ${({ compact }) => (compact ? "clamp(1.2rem, 2.5vw, 1.8rem)" : "clamp(1.8rem, 3vw, 2.5rem)")};
+  margin-bottom: ${({ compact }) => (compact ? "1rem" : "1.5rem")};
   text-transform: uppercase;
   letter-spacing: 2px;
 `;
 
-const EmailDescription = styled.p<{ theme: ThemeType }>`
+const EmailDescription = styled.p<{ theme: ThemeType; compact?: boolean }>`
   font-family: ${({ theme }) => theme.fonts.body};
-  font-size: 1.1rem;
-  margin-bottom: 2.5rem;
-  max-width: 600px;
+  font-size: ${({ compact }) => (compact ? "1rem" : "1.1rem")};
+  margin-bottom: ${({ compact }) => (compact ? "1.5rem" : "2.5rem")};
+  max-width: ${({ compact }) => (compact ? "500px" : "600px")};
   margin-left: auto;
   margin-right: auto;
   line-height: 1.6;
   opacity: 0.9;
 `;
 
-const EmailForm = styled.form`
+const EmailForm = styled.form<{ compact?: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   gap: 0;
-  margin-bottom: 2rem;
 
   @media (max-width: 480px) {
     flex-direction: column;
@@ -59,14 +59,14 @@ const EmailForm = styled.form`
   }
 `;
 
-const EmailInput = styled.input<{ theme: ThemeType }>`
-  padding: 1rem 1.5rem;
+const EmailInput = styled.input<{ theme: ThemeType; compact?: boolean }>`
+  padding: ${({ compact }) => (compact ? "0.75rem 1.25rem" : "1rem 1.5rem")};
   border-radius: 8px 0 0 8px;
   border: 2px solid ${({ theme }) => theme.colors.neonOrange};
   border-right: none;
-  font-size: 1rem;
+  font-size: ${({ compact }) => (compact ? "0.9rem" : "1rem")};
   font-family: ${({ theme }) => theme.fonts.body};
-  width: 300px;
+  width: ${({ compact }) => (compact ? "250px" : "300px")};
   max-width: 90vw;
   background: rgba(255, 255, 255, 0.15);
   color: ${({ theme }) => theme.colors.creamyBeige};
@@ -92,21 +92,21 @@ const EmailInput = styled.input<{ theme: ThemeType }>`
   }
 `;
 
-const EmailSubmit = styled.button<{ theme: ThemeType }>`
+const EmailSubmit = styled.button<{ theme: ThemeType; compact?: boolean }>`
   background: ${({ theme }) => theme.colors.neonOrange};
   color: ${({ theme }) => theme.colors.asphaltBlack};
   border: 3px solid ${({ theme }) => theme.colors.neonOrange};
   border-left: none;
   border-radius: 0 8px 8px 0;
-  padding: 1rem 2rem;
-  font-size: 1rem;
+  padding: ${({ compact }) => (compact ? "0.75rem 1.5rem" : "1rem 2rem")};
+  font-size: ${({ compact }) => (compact ? "0.9rem" : "1rem")};
   font-family: ${({ theme }) => theme.fonts.heading};
   cursor: pointer;
   font-weight: 700;
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 1px;
-  min-width: 200px;
+  min-width: ${({ compact }) => (compact ? "150px" : "200px")};
 
   @media (max-width: 480px) {
     padding: 0.875rem 1.5rem;
@@ -141,12 +141,14 @@ interface EmailSubscriptionProps {
   title?: string;
   description?: string;
   id?: string;
+  compact?: boolean;
 }
 
 export default function EmailSubscription({ 
   title = "Subscribe for updates", 
   description = "I'm documenting the process of building small, meaningful tech for real communities — starting with Detroit. This is a space for lessons learned, open-source blueprints, and ideas rooted in care, not scale.",
-  id = "email-capture"
+  id = "email-capture",
+  compact = false
 }: EmailSubscriptionProps) {
   const [email, setEmail] = useState("");
   const [success, setSuccess] = useState(false);
@@ -195,10 +197,10 @@ export default function EmailSubscription({
   };
 
   return (
-    <EmailSection id={id}>
-      <EmailTitle>{title}</EmailTitle>
-      <EmailDescription>{description}</EmailDescription>
-      <EmailForm onSubmit={handleEmailSubmit}>
+    <EmailSection id={id} compact={compact}>
+      <EmailTitle compact={compact}>{title}</EmailTitle>
+      <EmailDescription compact={compact}>{description}</EmailDescription>
+      <EmailForm onSubmit={handleEmailSubmit} compact={compact}>
         <EmailInput
           type="email"
           placeholder="Your email address"
@@ -206,8 +208,9 @@ export default function EmailSubscription({
           onChange={handleEmailChange}
           required
           aria-label="Email address"
+          compact={compact}
         />
-        <EmailSubmit type="submit">
+        <EmailSubmit type="submit" compact={compact}>
           Sign Up
         </EmailSubmit>
       </EmailForm>

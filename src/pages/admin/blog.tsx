@@ -61,6 +61,24 @@ const CreateButton = styled.button`
   }
 `;
 
+const CreateFromTranscriptButton = styled.button`
+  background: transparent;
+  color: ${({ theme }) => theme.colors.neonOrange};
+  font-family: ${({ theme }) => theme.fonts.body};
+  font-weight: 600;
+  border: 1px solid ${({ theme }) => theme.colors.neonOrange};
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-left: 1rem;
+  
+  &:hover {
+    background: ${({ theme }) => theme.colors.neonOrange};
+    color: ${({ theme }) => theme.colors.asphaltBlack};
+  }
+`;
+
 const PostsGrid = styled.div`
   display: grid;
   gap: 1.5rem;
@@ -183,9 +201,9 @@ const ModalContent = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.rustedSteel};
   border-radius: 8px;
   padding: 2rem;
-  max-width: 800px;
-  width: 90%;
-  max-height: 90vh;
+  max-width: 1000px;
+  width: 95%;
+  max-height: 95vh;
   overflow-y: auto;
 `;
 
@@ -379,6 +397,137 @@ const TagsInput = styled.input`
   }
 `;
 
+// New styled components for transcript workflow
+const WorkflowTabs = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.rustedSteel};
+`;
+
+const Tab = styled.button<{ active: boolean }>`
+  background: ${({ theme, active }) => 
+    active ? theme.colors.neonOrange : 'transparent'};
+  color: ${({ theme, active }) => 
+    active ? theme.colors.asphaltBlack : theme.colors.rustedSteel};
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-family: ${({ theme }) => theme.fonts.body};
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 4px 4px 0 0;
+  
+  &:hover {
+    color: ${({ theme, active }) => 
+      active ? theme.colors.asphaltBlack : theme.colors.neonOrange};
+  }
+`;
+
+const TabContent = styled.div<{ active: boolean }>`
+  display: ${({ active }) => active ? 'block' : 'none'};
+`;
+
+const OptionsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+`;
+
+const OptionGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+`;
+
+const Checkbox = styled.input`
+  margin-right: 0.5rem;
+`;
+
+const CheckboxLabel = styled.label`
+  display: flex;
+  align-items: center;
+  font-family: ${({ theme }) => theme.fonts.body};
+  color: ${({ theme }) => theme.colors.creamyBeige};
+  cursor: pointer;
+`;
+
+const GenerateButton = styled.button`
+  background: ${({ theme }) => theme.colors.neonOrange};
+  color: ${({ theme }) => theme.colors.asphaltBlack};
+  font-family: ${({ theme }) => theme.fonts.body};
+  font-weight: 600;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+  
+  &:hover {
+    background: ${({ theme }) => theme.colors.brickRed};
+  }
+  
+  &:disabled {
+    background: ${({ theme }) => theme.colors.rustedSteel};
+    cursor: not-allowed;
+  }
+`;
+
+const LoadingSpinner = styled.div`
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid ${({ theme }) => theme.colors.rustedSteel};
+  border-radius: 50%;
+  border-top-color: ${({ theme }) => theme.colors.neonOrange};
+  animation: spin 1s ease-in-out infinite;
+  margin-right: 0.5rem;
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+`;
+
+const GeneratedContent = styled.div`
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid ${({ theme }) => theme.colors.rustedSteel};
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-top: 1rem;
+`;
+
+const GeneratedTitle = styled.h3`
+  font-family: ${({ theme }) => theme.fonts.heading};
+  color: ${({ theme }) => theme.colors.neonOrange};
+  margin: 0 0 1rem 0;
+`;
+
+const GeneratedText = styled.div`
+  font-family: ${({ theme }) => theme.fonts.body};
+  color: ${({ theme }) => theme.colors.creamyBeige};
+  line-height: 1.6;
+  white-space: pre-wrap;
+`;
+
+const RegenerateButton = styled.button`
+  background: transparent;
+  color: ${({ theme }) => theme.colors.neonOrange};
+  font-family: ${({ theme }) => theme.fonts.body};
+  border: 1px solid ${({ theme }) => theme.colors.neonOrange};
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+  
+  &:hover {
+    background: ${({ theme }) => theme.colors.neonOrange};
+    color: ${({ theme }) => theme.colors.asphaltBlack};
+  }
+`;
+
 interface BlogPost {
   id: number;
   title: string;
@@ -403,10 +552,29 @@ interface PostFormData {
   id?: number;
 }
 
+interface TranscriptFormData {
+  transcript: string;
+  blogType: string;
+  addCallToAction: boolean;
+  tone: string;
+  length: string;
+}
+
+interface GeneratedBlogData {
+  title: string;
+  content: string;
+  excerpt: string;
+  tags: string[];
+}
+
 export default function AdminBlog() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
+  const [activeTab, setActiveTab] = useState<'manual' | 'transcript'>('manual');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generatedBlog, setGeneratedBlog] = useState<GeneratedBlogData | null>(null);
+  
   const [formData, setFormData] = useState({
     title: '',
     content: '',
@@ -415,6 +583,15 @@ export default function AdminBlog() {
     status: 'draft',
     tags: '',
   });
+  
+  const [transcriptData, setTranscriptData] = useState<TranscriptFormData>({
+    transcript: '',
+    blogType: 'Create an engaging blog post based on a presentation transcript by a local community-focused developer. Highlight their project, tools used, community impact, and any upcoming goals.',
+    addCallToAction: true,
+    tone: 'casual',
+    length: 'medium',
+  });
+  
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState('');
 
@@ -444,6 +621,32 @@ export default function AdminBlog() {
     });
     setTags([]);
     setTagInput('');
+    setActiveTab('manual');
+    setGeneratedBlog(null);
+    setIsModalOpen(true);
+  };
+
+  const handleCreateFromTranscript = () => {
+    setEditingPost(null);
+    setFormData({
+      title: '',
+      content: '',
+      excerpt: '',
+      author: 'The Barefoot Dev',
+      status: 'draft',
+      tags: '',
+    });
+    setTags([]);
+    setTagInput('');
+    setActiveTab('transcript');
+    setGeneratedBlog(null);
+    setTranscriptData({
+      transcript: '',
+      blogType: 'Create an engaging blog post based on a presentation transcript by a local community-focused developer. Highlight their project, tools used, community impact, and any upcoming goals.',
+      addCallToAction: true,
+      tone: 'casual',
+      length: 'medium',
+    });
     setIsModalOpen(true);
   };
 
@@ -459,6 +662,8 @@ export default function AdminBlog() {
     });
     setTags(post.tags ? JSON.parse(post.tags) : []);
     setTagInput('');
+    setActiveTab('manual');
+    setGeneratedBlog(null);
     setIsModalOpen(true);
   };
 
@@ -510,6 +715,55 @@ export default function AdminBlog() {
     }
   };
 
+  const handleGenerateBlog = async () => {
+    if (!transcriptData.transcript.trim()) {
+      alert('Please enter a transcript first.');
+      return;
+    }
+
+    setIsGenerating(true);
+    try {
+      const response = await fetch('/api/admin/blog/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          transcript: transcriptData.transcript,
+          blogType: transcriptData.blogType,
+          addCallToAction: transcriptData.addCallToAction,
+          tone: transcriptData.tone,
+          length: transcriptData.length,
+        }),
+      });
+
+      if (response.ok) {
+        const generatedData = await response.json();
+        setGeneratedBlog(generatedData);
+        
+        // Auto-fill the form with generated content
+        setFormData(prev => ({
+          ...prev,
+          title: generatedData.title,
+          content: generatedData.content,
+          excerpt: generatedData.excerpt,
+        }));
+        setTags(generatedData.tags || []);
+      } else {
+        console.error('Error generating blog post');
+      }
+    } catch (error) {
+      console.error('Error generating blog post:', error);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const handleRegenerateBlog = () => {
+    setGeneratedBlog(null);
+    handleGenerateBlog();
+  };
+
   const formatDate = (date: string | Date) => {
     return new Date(date).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -549,9 +803,14 @@ export default function AdminBlog() {
         </Header>
 
         <ActionBar>
-          <CreateButton onClick={handleCreatePost}>
-            Create New Post
-          </CreateButton>
+          <div>
+            <CreateButton onClick={handleCreatePost}>
+              Create New Post
+            </CreateButton>
+            <CreateFromTranscriptButton onClick={handleCreateFromTranscript}>
+              Create from Transcript
+            </CreateFromTranscriptButton>
+          </div>
         </ActionBar>
 
         <PostsGrid>
@@ -604,93 +863,273 @@ export default function AdminBlog() {
               <CloseButton onClick={() => setIsModalOpen(false)}>×</CloseButton>
             </ModalHeader>
 
-            <Form onSubmit={handleSubmit}>
-              <FormGroup>
-                <Label htmlFor="title">Title</Label>
-                <Input
-                  id="title"
-                  type="text"
-                  value={formData.title}
-                  onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                  required
-                />
-              </FormGroup>
-
-              <FormGroup>
-                <Label htmlFor="author">Author</Label>
-                <Input
-                  id="author"
-                  type="text"
-                  value={formData.author}
-                  onChange={(e) => setFormData(prev => ({ ...prev, author: e.target.value }))}
-                  required
-                />
-              </FormGroup>
-
-              <FormGroup>
-                <Label htmlFor="excerpt">Excerpt</Label>
-                <Textarea
-                  id="excerpt"
-                  value={formData.excerpt}
-                  onChange={(e) => setFormData(prev => ({ ...prev, excerpt: e.target.value }))}
-                  placeholder="Brief description of the post..."
-                />
-              </FormGroup>
-
-              <FormGroup>
-                <Label htmlFor="content">Content (HTML)</Label>
-                <Textarea
-                  id="content"
-                  value={formData.content}
-                  onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
-                  placeholder="Write your blog post content in HTML..."
-                  required
-                />
-              </FormGroup>
-
-              <FormGroup>
-                <Label htmlFor="tags">Tags</Label>
-                <TagsContainer>
-                  {tags.map((tag, index) => (
-                    <TagChip key={index}>
-                      {tag}
-                      <RemoveTagButton onClick={() => handleRemoveTag(tag)}>
-                        ×
-                      </RemoveTagButton>
-                    </TagChip>
-                  ))}
-                  <TagsInput
-                    type="text"
-                    value={tagInput}
-                    onChange={(e) => setTagInput(e.target.value)}
-                    onKeyDown={handleAddTag}
-                    placeholder="Type a tag and press Enter..."
-                  />
-                </TagsContainer>
-              </FormGroup>
-
-              <FormGroup>
-                <Label htmlFor="status">Status</Label>
-                <Select
-                  id="status"
-                  value={formData.status}
-                  onChange={(e) => setFormData(prev => ({ ...prev, status: e.target.value }))}
+            {!editingPost && (
+              <WorkflowTabs>
+                <Tab 
+                  active={activeTab === 'manual'} 
+                  onClick={() => setActiveTab('manual')}
                 >
-                  <option value="draft">Draft</option>
-                  <option value="published">Published</option>
-                  <option value="archived">Archived</option>
-                </Select>
-              </FormGroup>
+                  Manual Entry
+                </Tab>
+                <Tab 
+                  active={activeTab === 'transcript'} 
+                  onClick={() => setActiveTab('transcript')}
+                >
+                  From Transcript
+                </Tab>
+              </WorkflowTabs>
+            )}
 
-              <ButtonGroup>
-                <CancelButton type="button" onClick={() => setIsModalOpen(false)}>
-                  Cancel
-                </CancelButton>
-                <SubmitButton type="submit">
-                  {editingPost ? 'Update Post' : 'Create Post'}
-                </SubmitButton>
-              </ButtonGroup>
-            </Form>
+            <TabContent active={activeTab === 'manual'}>
+              <Form onSubmit={handleSubmit}>
+                <FormGroup>
+                  <Label htmlFor="title">Title</Label>
+                  <Input
+                    id="title"
+                    type="text"
+                    value={formData.title}
+                    onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                    required
+                  />
+                </FormGroup>
+
+                <FormGroup>
+                  <Label htmlFor="author">Author</Label>
+                  <Input
+                    id="author"
+                    type="text"
+                    value={formData.author}
+                    onChange={(e) => setFormData(prev => ({ ...prev, author: e.target.value }))}
+                    required
+                  />
+                </FormGroup>
+
+                <FormGroup>
+                  <Label htmlFor="excerpt">Excerpt</Label>
+                  <Textarea
+                    id="excerpt"
+                    value={formData.excerpt}
+                    onChange={(e) => setFormData(prev => ({ ...prev, excerpt: e.target.value }))}
+                    placeholder="Brief description of the post..."
+                  />
+                </FormGroup>
+
+                <FormGroup>
+                  <Label htmlFor="content">Content (HTML)</Label>
+                  <Textarea
+                    id="content"
+                    value={formData.content}
+                    onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
+                    placeholder="Write your blog post content in HTML..."
+                    required
+                  />
+                </FormGroup>
+
+                <FormGroup>
+                  <Label htmlFor="tags">Tags</Label>
+                  <TagsContainer>
+                    {tags.map((tag, index) => (
+                      <TagChip key={index}>
+                        {tag}
+                        <RemoveTagButton onClick={() => handleRemoveTag(tag)}>
+                          ×
+                        </RemoveTagButton>
+                      </TagChip>
+                    ))}
+                    <TagsInput
+                      type="text"
+                      value={tagInput}
+                      onChange={(e) => setTagInput(e.target.value)}
+                      onKeyDown={handleAddTag}
+                      placeholder="Type a tag and press Enter..."
+                    />
+                  </TagsContainer>
+                </FormGroup>
+
+                <FormGroup>
+                  <Label htmlFor="status">Status</Label>
+                  <Select
+                    id="status"
+                    value={formData.status}
+                    onChange={(e) => setFormData(prev => ({ ...prev, status: e.target.value }))}
+                  >
+                    <option value="draft">Draft</option>
+                    <option value="published">Published</option>
+                    <option value="archived">Archived</option>
+                  </Select>
+                </FormGroup>
+
+                <ButtonGroup>
+                  <CancelButton type="button" onClick={() => setIsModalOpen(false)}>
+                    Cancel
+                  </CancelButton>
+                  <SubmitButton type="submit">
+                    {editingPost ? 'Update Post' : 'Create Post'}
+                  </SubmitButton>
+                </ButtonGroup>
+              </Form>
+            </TabContent>
+
+            <TabContent active={activeTab === 'transcript'}>
+              <Form onSubmit={handleSubmit}>
+                <FormGroup>
+                  <Label htmlFor="transcript">Transcript/Notes</Label>
+                  <Textarea
+                    id="transcript"
+                    value={transcriptData.transcript}
+                    onChange={(e) => setTranscriptData(prev => ({ ...prev, transcript: e.target.value }))}
+                    placeholder="Paste the presentation transcript, notes, or summary here..."
+                    required
+                  />
+                </FormGroup>
+
+                <OptionsGrid>
+                  <OptionGroup>
+                    <Label>Tone</Label>
+                    <Select
+                      value={transcriptData.tone}
+                      onChange={(e) => setTranscriptData(prev => ({ ...prev, tone: e.target.value }))}
+                    >
+                      <option value="casual">Casual</option>
+                      <option value="professional">Professional</option>
+                      <option value="inspirational">Inspirational</option>
+                    </Select>
+                  </OptionGroup>
+
+                  <OptionGroup>
+                    <Label>Length</Label>
+                    <Select
+                      value={transcriptData.length}
+                      onChange={(e) => setTranscriptData(prev => ({ ...prev, length: e.target.value }))}
+                    >
+                      <option value="short">Short Highlight</option>
+                      <option value="medium">Medium Summary</option>
+                      <option value="full">Full Feature</option>
+                    </Select>
+                  </OptionGroup>
+                </OptionsGrid>
+
+                <OptionGroup>
+                  <CheckboxLabel>
+                    <Checkbox
+                      type="checkbox"
+                      checked={transcriptData.addCallToAction}
+                      onChange={(e) => setTranscriptData(prev => ({ ...prev, addCallToAction: e.target.checked }))}
+                    />
+                    Add call to action (e.g., &quot;Join their next meetup&quot;)
+                  </CheckboxLabel>
+                </OptionGroup>
+
+                <GenerateButton 
+                  type="button" 
+                  onClick={handleGenerateBlog}
+                  disabled={isGenerating || !transcriptData.transcript.trim()}
+                >
+                  {isGenerating && <LoadingSpinner />}
+                  {isGenerating ? 'Generating...' : 'Generate Blog Post'}
+                </GenerateButton>
+
+                {generatedBlog && (
+                  <GeneratedContent>
+                    <GeneratedTitle>Generated Blog Post</GeneratedTitle>
+                    <GeneratedText>{generatedBlog.content}</GeneratedText>
+                    <RegenerateButton type="button" onClick={handleRegenerateBlog}>
+                      Regenerate with Different Style
+                    </RegenerateButton>
+                  </GeneratedContent>
+                )}
+
+                {generatedBlog && (
+                  <>
+                    <FormGroup>
+                      <Label htmlFor="title">Title</Label>
+                      <Input
+                        id="title"
+                        type="text"
+                        value={formData.title}
+                        onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                        required
+                      />
+                    </FormGroup>
+
+                    <FormGroup>
+                      <Label htmlFor="author">Author</Label>
+                      <Input
+                        id="author"
+                        type="text"
+                        value={formData.author}
+                        onChange={(e) => setFormData(prev => ({ ...prev, author: e.target.value }))}
+                        required
+                      />
+                    </FormGroup>
+
+                    <FormGroup>
+                      <Label htmlFor="excerpt">Excerpt</Label>
+                      <Textarea
+                        id="excerpt"
+                        value={formData.excerpt}
+                        onChange={(e) => setFormData(prev => ({ ...prev, excerpt: e.target.value }))}
+                        placeholder="Brief description of the post..."
+                      />
+                    </FormGroup>
+
+                    <FormGroup>
+                      <Label htmlFor="content">Content (HTML)</Label>
+                      <Textarea
+                        id="content"
+                        value={formData.content}
+                        onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
+                        placeholder="Write your blog post content in HTML..."
+                        required
+                      />
+                    </FormGroup>
+
+                    <FormGroup>
+                      <Label htmlFor="tags">Tags</Label>
+                      <TagsContainer>
+                        {tags.map((tag, index) => (
+                          <TagChip key={index}>
+                            {tag}
+                            <RemoveTagButton onClick={() => handleRemoveTag(tag)}>
+                              ×
+                            </RemoveTagButton>
+                          </TagChip>
+                        ))}
+                        <TagsInput
+                          type="text"
+                          value={tagInput}
+                          onChange={(e) => setTagInput(e.target.value)}
+                          onKeyDown={handleAddTag}
+                          placeholder="Type a tag and press Enter..."
+                        />
+                      </TagsContainer>
+                    </FormGroup>
+
+                    <FormGroup>
+                      <Label htmlFor="status">Status</Label>
+                      <Select
+                        id="status"
+                        value={formData.status}
+                        onChange={(e) => setFormData(prev => ({ ...prev, status: e.target.value }))}
+                      >
+                        <option value="draft">Draft</option>
+                        <option value="published">Published</option>
+                        <option value="archived">Archived</option>
+                      </Select>
+                    </FormGroup>
+
+                    <ButtonGroup>
+                      <CancelButton type="button" onClick={() => setIsModalOpen(false)}>
+                        Cancel
+                      </CancelButton>
+                      <SubmitButton type="submit">
+                        Create Post
+                      </SubmitButton>
+                    </ButtonGroup>
+                  </>
+                )}
+              </Form>
+            </TabContent>
           </ModalContent>
         </Modal>
       </AdminContainer>

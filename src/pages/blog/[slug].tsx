@@ -6,6 +6,7 @@ import { db } from "@/db";
 import { blogPosts } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import type { ThemeType } from "@/styles/theme";
+import EmailSubscription from "@/components/EmailSubscription";
 
 const PostContainer = styled.div<{ theme: ThemeType }>`
   min-height: 100vh;
@@ -113,7 +114,12 @@ const PostContent = styled.article<{ theme: ThemeType }>`
     font-size: 1rem;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: ${({ theme }) => theme.fonts.heading};
     margin-top: 2rem;
     margin-bottom: 1rem;
@@ -136,7 +142,8 @@ const PostContent = styled.article<{ theme: ThemeType }>`
     margin-bottom: 1.5rem;
   }
 
-  ul, ol {
+  ul,
+  ol {
     margin-bottom: 1.5rem;
     padding-left: 2rem;
   }
@@ -193,8 +200,6 @@ const PostContent = styled.article<{ theme: ThemeType }>`
     margin: 2rem 0;
   }
 `;
-
-
 
 const NotFoundContainer = styled.div<{ theme: ThemeType }>`
   min-height: 100vh;
@@ -267,40 +272,34 @@ const OtherPostsSection = styled.section<{ theme: ThemeType }>`
 
 const OtherPostsTitle = styled.h2<{ theme: ThemeType }>`
   font-family: ${({ theme }) => theme.fonts.heading};
-  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-size: clamp(1.4rem, 3vw, 1.4rem);
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 1rem;
   text-transform: uppercase;
   letter-spacing: 2px;
 `;
 
 const OtherPostsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 2rem;
-  max-width: 1200px;
+  max-width: 600px;
   margin: 0 auto;
 
   @media (max-width: 768px) {
-    grid-template-columns: 1fr;
     gap: 1.5rem;
   }
 `;
 
 const OtherPostCard = styled(Link)<{ theme: ThemeType }>`
-  background: ${({ theme }) => theme.colors.rustedSteel};
-  border: 1px solid ${({ theme }) => theme.colors.neonOrange}20;
   border-radius: 8px;
   padding: 1.5rem;
   text-decoration: none;
   color: ${({ theme }) => theme.colors.creamyBeige};
   transition: all 0.3s ease;
   display: block;
-
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(255, 79, 0, 0.2);
-    border-color: ${({ theme }) => theme.colors.neonOrange}40;
+    text-decoration: underline;
   }
 `;
 
@@ -364,10 +363,10 @@ export default function BlogPostPage({ post, otherPosts }: BlogPostPageProps) {
   }
 
   const formatDate = (date: Date) => {
-    return new Date(date).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
+    return new Date(date).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   };
 
@@ -386,7 +385,7 @@ export default function BlogPostPage({ post, otherPosts }: BlogPostPageProps) {
         <title>{post.title} - The Barefoot Developer</title>
         <meta name="description" content={post.excerpt || post.title} />
       </Head>
-      
+
       <PostContainer>
         <PostHeader>
           <PostTitle>{post.title}</PostTitle>
@@ -394,7 +393,7 @@ export default function BlogPostPage({ post, otherPosts }: BlogPostPageProps) {
             <span>By {post.author}</span>
             <span>{formatDate(post.publishedAt)}</span>
           </PostMeta>
-          
+
           {post.tags && parseTags(post.tags).length > 0 && (
             <PostTags>
               {parseTags(post.tags).map((tag: string, index: number) => (
@@ -404,16 +403,23 @@ export default function BlogPostPage({ post, otherPosts }: BlogPostPageProps) {
           )}
         </PostHeader>
 
-        <PostContent 
-          dangerouslySetInnerHTML={{ __html: post.content }}
+        <PostContent dangerouslySetInnerHTML={{ __html: post.content }} />
+
+        <EmailSubscription
+          title="Stay in the loop"
+          description="Get notified when I publish new posts about building meaningful tech for real communities."
+          compact
         />
 
         {otherPosts.length > 0 && (
           <OtherPostsSection>
-            <OtherPostsTitle>Keep Reading</OtherPostsTitle>
+            <OtherPostsTitle>More from the Barefoot Dev</OtherPostsTitle>
             <OtherPostsGrid>
               {otherPosts.map((otherPost) => (
-                <OtherPostCard key={otherPost.id} href={`/blog/${otherPost.slug}`}>
+                <OtherPostCard
+                  key={otherPost.id}
+                  href={`/blog/${otherPost.slug}`}
+                >
                   <OtherPostTitle>{otherPost.title}</OtherPostTitle>
                   {otherPost.excerpt && (
                     <OtherPostExcerpt>{otherPost.excerpt}</OtherPostExcerpt>
@@ -445,13 +451,13 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
     return {
       paths,
-      fallback: 'blocking',
+      fallback: "blocking",
     };
   } catch (error) {
     console.error("Error generating static paths:", error);
     return {
       paths: [],
-      fallback: 'blocking',
+      fallback: "blocking",
     };
   }
 };
@@ -459,7 +465,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   try {
     const slug = params?.slug as string;
-    
+
     const post = await db
       .select({
         id: blogPosts.id,
@@ -501,7 +507,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       .limit(3); // Limit to 3 other posts
 
     // Filter out the current post
-    const filteredOtherPosts = otherPosts.filter(p => p.slug !== slug);
+    const filteredOtherPosts = otherPosts.filter((p) => p.slug !== slug);
 
     return {
       props: {
@@ -509,7 +515,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
           ...post[0],
           publishedAt: post[0].publishedAt?.toISOString(),
         },
-        otherPosts: filteredOtherPosts.map(post => ({
+        otherPosts: filteredOtherPosts.map((post) => ({
           ...post,
           publishedAt: post.publishedAt?.toISOString(),
         })),
@@ -525,4 +531,4 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       },
     };
   }
-}; 
+};
