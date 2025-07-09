@@ -328,12 +328,37 @@ const OtherPostMeta = styled.div<{ theme: ThemeType }>`
   align-items: center;
 `;
 
+// const FeaturedImageContainer = styled.div<{ theme: ThemeType }>`
+//   max-width: 800px;
+//   margin: 0 auto;
+//   padding: 0 2rem;
+//   margin-bottom: 2rem;
+
+//   @media (max-width: 768px) {
+//     padding: 0 1rem;
+//     margin-bottom: 1.5rem;
+//   }
+// `;
+
+// const FeaturedImage = styled.img<{ theme: ThemeType }>`
+//   width: 100%;
+//   height: auto;
+//   border-radius: 8px;
+//   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+//   transition: transform 0.3s ease;
+
+//   &:hover {
+//     transform: scale(1.02);
+//   }
+// `;
+
 interface BlogPost {
   id: number;
   title: string;
   slug: string;
   content: string;
   excerpt: string | null;
+  featuredImage: string | null;
   author: string;
   publishedAt: Date;
   tags: string | null;
@@ -384,6 +409,14 @@ export default function BlogPostPage({ post, otherPosts }: BlogPostPageProps) {
       <Head>
         <title>{post.title} - The Barefoot Developer</title>
         <meta name="description" content={post.excerpt || post.title} />
+        {post.featuredImage && (
+          <>
+            <meta property="og:image" content={post.featuredImage} />
+            <meta name="twitter:image" content={post.featuredImage} />
+            <meta property="og:image:width" content="1200" />
+            <meta property="og:image:height" content="630" />
+          </>
+        )}
       </Head>
 
       <PostContainer>
@@ -402,6 +435,12 @@ export default function BlogPostPage({ post, otherPosts }: BlogPostPageProps) {
             </PostTags>
           )}
         </PostHeader>
+{/* 
+        {post.featuredImage && (
+          <FeaturedImageContainer>
+            <FeaturedImage src={post.featuredImage} alt={post.title} />
+          </FeaturedImageContainer>
+        )} */}
 
         <PostContent dangerouslySetInnerHTML={{ __html: post.content }} />
 
@@ -473,6 +512,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         slug: blogPosts.slug,
         content: blogPosts.content,
         excerpt: blogPosts.excerpt,
+        featuredImage: blogPosts.featuredImage,
         author: blogPosts.author,
         publishedAt: blogPosts.publishedAt,
         tags: blogPosts.tags,
@@ -498,6 +538,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         slug: blogPosts.slug,
         content: blogPosts.content,
         excerpt: blogPosts.excerpt,
+        featuredImage: blogPosts.featuredImage,
         author: blogPosts.author,
         publishedAt: blogPosts.publishedAt,
         tags: blogPosts.tags,

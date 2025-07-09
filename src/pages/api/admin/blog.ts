@@ -14,7 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   } else if (req.method === 'POST') {
     try {
-      const { title, slug, content, excerpt, author, status, tags } = req.body;
+      const { title, slug, content, excerpt, featuredImage, author, status, tags } = req.body;
       
       // Generate slug from title if not provided
       const generateSlug = (title: string) => {
@@ -31,6 +31,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         slug: finalSlug,
         content,
         excerpt,
+        featuredImage,
         author,
         status,
         tags: tags ? JSON.stringify(tags) : null,
@@ -46,7 +47,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   } else if (req.method === 'PUT') {
     try {
-      const { id, title, slug, content, excerpt, author, status, tags } = req.body;
+      const { id, title, slug, content, excerpt, featuredImage, author, status, tags } = req.body;
       
       // Generate slug from title if not provided
       const generateSlug = (title: string) => {
@@ -64,6 +65,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           slug: finalSlug,
           content,
           excerpt,
+          featuredImage,
           author,
           status,
           tags: tags ? JSON.stringify(tags) : null,

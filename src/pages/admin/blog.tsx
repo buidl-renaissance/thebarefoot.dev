@@ -397,6 +397,47 @@ const TagsInput = styled.input`
   }
 `;
 
+const FileInput = styled.input`
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid ${({ theme }) => theme.colors.rustedSteel};
+  border-radius: 4px;
+  padding: 0.75rem;
+  color: ${({ theme }) => theme.colors.creamyBeige};
+  font-family: ${({ theme }) => theme.fonts.body};
+  
+  &:focus {
+    outline: none;
+    border-color: ${({ theme }) => theme.colors.neonOrange};
+  }
+  
+  &::file-selector-button {
+    background: ${({ theme }) => theme.colors.neonOrange};
+    color: ${({ theme }) => theme.colors.asphaltBlack};
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: ${({ theme }) => theme.fonts.body};
+    font-weight: 600;
+    margin-right: 1rem;
+    
+    &:hover {
+      background: ${({ theme }) => theme.colors.brickRed};
+    }
+  }
+`;
+
+const ImagePreview = styled.div`
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid ${({ theme }) => theme.colors.rustedSteel};
+  border-radius: 4px;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  font-family: ${({ theme }) => theme.fonts.body};
+  color: ${({ theme }) => theme.colors.creamyBeige};
+  font-size: 0.9rem;
+`;
+
 // New styled components for transcript workflow
 const WorkflowTabs = styled.div`
   display: flex;
@@ -534,6 +575,7 @@ interface BlogPost {
   slug: string;
   content: string;
   excerpt: string;
+  featuredImage: string | null;
   author: string;
   status: string;
   tags: string;
@@ -542,15 +584,7 @@ interface BlogPost {
   updatedAt: string | Date;
 }
 
-interface PostFormData {
-  title: string;
-  content: string;
-  excerpt: string;
-  author: string;
-  status: string;
-  tags: string;
-  id?: number;
-}
+
 
 interface TranscriptFormData {
   transcript: string;
@@ -573,12 +607,14 @@ export default function AdminBlog() {
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
   const [activeTab, setActiveTab] = useState<'manual' | 'transcript'>('manual');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [generatedBlog, setGeneratedBlog] = useState<GeneratedBlogData | null>(null);
   
   const [formData, setFormData] = useState({
     title: '',
     content: '',
     excerpt: '',
+    featuredImage: null as string | null,
     author: 'The Barefoot Dev',
     status: 'draft',
     tags: '',
@@ -615,6 +651,7 @@ export default function AdminBlog() {
       title: '',
       content: '',
       excerpt: '',
+      featuredImage: null,
       author: 'The Barefoot Dev',
       status: 'draft',
       tags: '',
@@ -632,6 +669,7 @@ export default function AdminBlog() {
       title: '',
       content: '',
       excerpt: '',
+      featuredImage: null,
       author: 'The Barefoot Dev',
       status: 'draft',
       tags: '',
@@ -656,6 +694,7 @@ export default function AdminBlog() {
       title: post.title,
       content: post.content,
       excerpt: post.excerpt || '',
+      featuredImage: post.featuredImage,
       author: post.author,
       status: post.status,
       tags: post.tags ? JSON.parse(post.tags).join(', ') : '',
@@ -684,17 +723,19 @@ export default function AdminBlog() {
     e.preventDefault();
     
     try {
-      const postData: PostFormData = {
-        ...formData,
+      const postData = {
+        title: formData.title,
+        content: formData.content,
+        excerpt: formData.excerpt,
+        author: formData.author,
+        status: formData.status,
         tags: tags.join(', '),
+        featuredImage: formData.featuredImage,
+        ...(editingPost && { id: editingPost.id })
       };
 
       const url = '/api/admin/blog';
       const method = editingPost ? 'PUT' : 'POST';
-      
-      if (editingPost) {
-        postData.id = editingPost.id;
-      }
 
       const response = await fetch(url, {
         method,
@@ -785,6 +826,47 @@ export default function AdminBlog() {
 
   const handleRemoveTag = (tagToRemove: string) => {
     setTags(tags.filter(tag => tag !== tagToRemove));
+  };
+
+  const handleFileUpload = async (file: File) => {
+    setIsUploading(true);
+    try {
+      // Convert file to base64
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const base64Data = e.target?.result as string;
+        
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            file: base64Data,
+            fileName: file.name,
+            fileType: file.type,
+            folder: 'blog-images'
+          }),
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          setFormData(prev => ({ 
+            ...prev, 
+            featuredImage: result.url 
+          }));
+        } else {
+          console.error('Error uploading file');
+          alert('Failed to upload image. Please try again.');
+        }
+        setIsUploading(false);
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      alert('Failed to upload image. Please try again.');
+      setIsUploading(false);
+    }
   };
 
   return (
@@ -912,6 +994,31 @@ export default function AdminBlog() {
                     onChange={(e) => setFormData(prev => ({ ...prev, excerpt: e.target.value }))}
                     placeholder="Brief description of the post..."
                   />
+                </FormGroup>
+
+                <FormGroup>
+                  <Label htmlFor="featuredImage">Featured Image</Label>
+                  <FileInput
+                    id="featuredImage"
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        handleFileUpload(file);
+                      }
+                    }}
+                  />
+                  {isUploading && (
+                    <ImagePreview>
+                      <span>Uploading image...</span>
+                    </ImagePreview>
+                  )}
+                  {formData.featuredImage && !isUploading && (
+                    <ImagePreview>
+                      <span>Uploaded: {formData.featuredImage}</span>
+                    </ImagePreview>
+                  )}
                 </FormGroup>
 
                 <FormGroup>
@@ -1071,6 +1178,31 @@ export default function AdminBlog() {
                         onChange={(e) => setFormData(prev => ({ ...prev, excerpt: e.target.value }))}
                         placeholder="Brief description of the post..."
                       />
+                    </FormGroup>
+
+                    <FormGroup>
+                      <Label htmlFor="featuredImage">Featured Image</Label>
+                      <FileInput
+                        id="featuredImage"
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            handleFileUpload(file);
+                          }
+                        }}
+                      />
+                      {isUploading && (
+                        <ImagePreview>
+                          <span>Uploading image...</span>
+                        </ImagePreview>
+                      )}
+                      {formData.featuredImage && !isUploading && (
+                        <ImagePreview>
+                          <span>Uploaded: {formData.featuredImage}</span>
+                        </ImagePreview>
+                      )}
                     </FormGroup>
 
                     <FormGroup>

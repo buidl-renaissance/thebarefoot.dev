@@ -185,6 +185,28 @@ const BlogPostExcerpt = styled.p<{ theme: ThemeType }>`
   }
 `;
 
+// const BlogPostImage = styled.div<{ theme: ThemeType }>`
+//   margin-bottom: 1rem;
+//   border-radius: 8px;
+//   overflow: hidden;
+//   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+//   transition: transform 0.3s ease;
+
+//   &:hover {
+//     transform: translateY(-2px);
+//   }
+
+//   img {
+//     width: 100%;
+//     height: auto;
+//     display: block;
+//   }
+
+//   @media (max-width: 480px) {
+//     margin-bottom: 0.75rem;
+//   }
+// `;
+
 const BlogPostMeta = styled.div<{ theme: ThemeType }>`
   display: flex;
   justify-content: space-between;
@@ -261,6 +283,7 @@ interface BlogPost {
   title: string;
   slug: string;
   excerpt: string | null;
+  featuredImage: string | null;
   author: string;
   publishedAt: Date;
   tags: string | null;
@@ -322,6 +345,14 @@ export default function BlogPage({ posts }: BlogPageProps) {
                   </Link>
                 </BlogPostTitle>
                 
+                {/* {post.featuredImage && (
+                  <BlogPostImage>
+                    <Link href={`/blog/${post.slug}`}>
+                      <img src={post.featuredImage} alt={post.title} />
+                    </Link>
+                  </BlogPostImage>
+                )} */}
+                
                 {post.excerpt && (
                   <BlogPostExcerpt>{post.excerpt}</BlogPostExcerpt>
                 )}
@@ -364,6 +395,7 @@ export const getStaticProps: GetStaticProps = async () => {
         title: blogPosts.title,
         slug: blogPosts.slug,
         excerpt: blogPosts.excerpt,
+        featuredImage: blogPosts.featuredImage,
         author: blogPosts.author,
         publishedAt: blogPosts.publishedAt,
         tags: blogPosts.tags,

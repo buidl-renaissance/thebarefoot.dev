@@ -60,6 +60,7 @@ export const blogPosts = sqliteTable("blog_posts", {
   slug: text("slug").notNull().unique(),
   content: text("content").notNull(),
   excerpt: text("excerpt"),
+  featuredImage: text("featured_image"),
   author: text("author").notNull(),
   publishedAt: integer("published_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
   status: text("status").notNull().default("draft"), // draft, published, archived
