@@ -8,6 +8,8 @@ import { eq } from "drizzle-orm";
 import type { ThemeType } from "@/styles/theme";
 import EmailSubscription from "@/components/EmailSubscription";
 import BlogContent from "@/components/BlogContent";
+import HeaderComponent from "@/components/Header";
+import FooterComponent from "@/components/Footer";
 
 const PostContainer = styled.div<{ theme: ThemeType }>`
   min-height: 100vh;
@@ -152,6 +154,7 @@ const OtherPostsSection = styled.section<{ theme: ThemeType }>`
   color: ${({ theme }) => theme.colors.creamyBeige};
   padding: 4rem 2rem;
   position: relative;
+  margin-bottom: 0rem;
 
   &::before {
     content: "";
@@ -279,6 +282,7 @@ export default function BlogPostPage({ post, otherPosts }: BlogPostPageProps) {
         <Head>
           <title>Post Not Found - The Barefoot Developer</title>
         </Head>
+        <HeaderComponent />
         <NotFoundContainer>
           <NotFoundTitle>Post Not Found</NotFoundTitle>
           <NotFoundText>
@@ -286,6 +290,7 @@ export default function BlogPostPage({ post, otherPosts }: BlogPostPageProps) {
           </NotFoundText>
           <HomeLink href="/blog">Back to Blog</HomeLink>
         </NotFoundContainer>
+        <FooterComponent />
       </>
     );
   }
@@ -323,6 +328,7 @@ export default function BlogPostPage({ post, otherPosts }: BlogPostPageProps) {
         )}
       </Head>
 
+      <HeaderComponent />
       <PostContainer>
         <PostHeader>
           <PostTitle>{post.title}</PostTitle>
@@ -377,6 +383,7 @@ export default function BlogPostPage({ post, otherPosts }: BlogPostPageProps) {
           </OtherPostsSection>
         )}
       </PostContainer>
+      <FooterComponent />
     </>
   );
 }
