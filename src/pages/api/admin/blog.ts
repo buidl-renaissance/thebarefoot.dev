@@ -49,6 +49,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
       const { id, title, slug, content, excerpt, featuredImage, author, status, tags } = req.body;
       
+      // Get the existing post to preserve its slug if no new slug is provided
+      const existingPost = await db.select().from(blogPosts).where(eq(blogPosts.id, id)).limit(1);
+      
+      if (!existingPost || existingPost.length === 0) {
+        return res.status(404).json({ error: 'Blog post not found' });
+      }
+      
       // Generate slug from title if not provided
       const generateSlug = (title: string) => {
         return title
@@ -57,7 +64,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           .replace(/(^-|-$)/g, '');
       };
       
-      const finalSlug = slug || generateSlug(title);
+      // Preserve existing slug if no new slug is provided, otherwise use the new slug
+      const finalSlug = slug || existingPost[0].slug || generateSlug(title);
       
       const updatedPost = await db.update(blogPosts)
         .set({
