@@ -185,6 +185,17 @@ export default function AdminDashboard() {
               Manage Subscriptions →
             </CardLink>
           </Card>
+
+          <Card>
+            <CardTitle>Blog Digest</CardTitle>
+            <CardDescription>
+              Send recent blog posts to subscribers with a specified date range. 
+              Perfect for weekly or monthly newsletters.
+            </CardDescription>
+            <CardLink href="/admin/blog-digest">
+              Send Blog Digest →
+            </CardLink>
+          </Card>
         </DashboardGrid>
       </AdminContainer>
     </>

@@ -259,6 +259,23 @@ const ThemedEditor: React.FC<WYSIWYGEditorProps> = ({
         >
           Right
         </ToolbarButton>
+        <ToolbarButton
+          onClick={() => {
+            const url = window.prompt('Enter URL:');
+            if (url) {
+              editor.chain().focus().setLink({ href: url }).run();
+            }
+          }}
+          active={editor.isActive('link')}
+        >
+          Link
+        </ToolbarButton>
+        <ToolbarButton
+          onClick={() => editor.chain().focus().unsetLink().run()}
+          disabled={!editor.isActive('link')}
+        >
+          Unlink
+        </ToolbarButton>
       </Toolbar>
       
       <EditorContainer>
