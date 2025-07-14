@@ -4,7 +4,10 @@ const nextConfig: NextConfig = {
   /* config options here */
   reactStrictMode: true,
   images: {
-    domains: ['dpop.nyc3.digitaloceanspaces.com'],
+    domains: [
+      "dpop.nyc3.digitaloceanspaces.com",
+      "nyc3.digitaloceanspaces.com",
+    ],
   },
 };
 
