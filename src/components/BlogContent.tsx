@@ -40,7 +40,7 @@ const ContentContainer = styled.div<{ theme: ThemeType }>`
   }
 
   p {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
   }
 
   ul,
@@ -51,6 +51,9 @@ const ContentContainer = styled.div<{ theme: ThemeType }>`
 
   li {
     margin-bottom: 0.5rem;
+    p {
+      margin-bottom: 0.5rem;
+    }
   }
 
   blockquote {

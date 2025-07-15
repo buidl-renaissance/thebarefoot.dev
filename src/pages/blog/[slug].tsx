@@ -4,12 +4,13 @@ import Link from "next/link";
 import { GetServerSideProps } from "next";
 import { db } from "@/db";
 import { blogPosts } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import type { ThemeType } from "@/styles/theme";
 import EmailSubscription from "@/components/EmailSubscription";
 import BlogContent from "@/components/BlogContent";
 import HeaderComponent from "@/components/Header";
 import FooterComponent from "@/components/Footer";
+import BlogPostItem from "@/components/BlogPostItem";
 
 const PostContainer = styled.div<{ theme: ThemeType }>`
   min-height: 100vh;
@@ -180,7 +181,7 @@ const OtherPostsTitle = styled.h2<{ theme: ThemeType }>`
   font-family: ${({ theme }) => theme.fonts.heading};
   font-size: clamp(1.4rem, 3vw, 1.4rem);
   text-align: center;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
   text-transform: uppercase;
   letter-spacing: 2px;
 `;
@@ -195,43 +196,6 @@ const OtherPostsGrid = styled.div`
   @media (max-width: 768px) {
     gap: 1.5rem;
   }
-`;
-
-const OtherPostCard = styled(Link)<{ theme: ThemeType }>`
-  border-radius: 8px;
-  padding: 1.5rem;
-  text-decoration: none;
-  color: ${({ theme }) => theme.colors.creamyBeige};
-  transition: all 0.3s ease;
-  display: block;
-  &:hover {
-    text-decoration: underline;
-  }
-`;
-
-const OtherPostTitle = styled.h3<{ theme: ThemeType }>`
-  font-family: ${({ theme }) => theme.fonts.heading};
-  font-size: 1.2rem;
-  margin-bottom: 0.75rem;
-  color: ${({ theme }) => theme.colors.neonOrange};
-  line-height: 1.3;
-`;
-
-const OtherPostExcerpt = styled.p<{ theme: ThemeType }>`
-  font-family: ${({ theme }) => theme.fonts.body};
-  font-size: 0.9rem;
-  line-height: 1.5;
-  opacity: 0.8;
-  margin-bottom: 1rem;
-`;
-
-const OtherPostMeta = styled.div<{ theme: ThemeType }>`
-  font-family: ${({ theme }) => theme.fonts.body};
-  font-size: 0.8rem;
-  opacity: 0.6;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 `;
 
 // const FeaturedImageContainer = styled.div<{ theme: ThemeType }>`
@@ -365,19 +329,17 @@ export default function BlogPostPage({ post, otherPosts }: BlogPostPageProps) {
             <OtherPostsTitle>More from the Barefoot Dev</OtherPostsTitle>
             <OtherPostsGrid>
               {otherPosts.map((otherPost) => (
-                <OtherPostCard
+                <BlogPostItem
                   key={otherPost.id}
-                  href={`/blog/${otherPost.slug}`}
-                >
-                  <OtherPostTitle>{otherPost.title}</OtherPostTitle>
-                  {otherPost.excerpt && (
-                    <OtherPostExcerpt>{otherPost.excerpt}</OtherPostExcerpt>
-                  )}
-                  <OtherPostMeta>
-                    <span>By {otherPost.author}</span>
-                    <span>{formatDate(otherPost.publishedAt)}</span>
-                  </OtherPostMeta>
-                </OtherPostCard>
+                  id={otherPost.id}
+                  title={otherPost.title}
+                  slug={otherPost.slug}
+                  excerpt={otherPost.excerpt}
+                  featuredImage={otherPost.featuredImage}
+                  author={otherPost.author}
+                  publishedAt={otherPost.publishedAt}
+                  tags={parseTags(otherPost.tags)}
+                />
               ))}
             </OtherPostsGrid>
           </OtherPostsSection>
@@ -432,10 +394,14 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
       })
       .from(blogPosts)
       .where(eq(blogPosts.status, "published"))
-      .limit(3); // Limit to 3 other posts
+      .orderBy(desc(blogPosts.publishedAt))
+      .limit(4);
 
     // Filter out the current post
     const filteredOtherPosts = otherPosts.filter((p) => p.slug !== slug);
+
+    // Limit to 3 other posts
+    const limitedOtherPosts = filteredOtherPosts.slice(0, 3);
 
     return {
       props: {
@@ -443,7 +409,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
           ...post[0],
           publishedAt: post[0].publishedAt?.toISOString(),
         },
-        otherPosts: filteredOtherPosts.map((post) => ({
+        otherPosts: limitedOtherPosts.map((post) => ({
           ...post,
           publishedAt: post.publishedAt?.toISOString(),
         })),
