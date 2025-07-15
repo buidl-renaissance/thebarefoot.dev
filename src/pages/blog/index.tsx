@@ -6,8 +6,10 @@ import { db } from "@/db";
 import { blogPosts } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
 import type { ThemeType } from "@/styles/theme";
-import Image from "next/image";
 import EmailSubscription from "@/components/EmailSubscription";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import Image from "next/image";
 
 const BlogContainer = styled.div<{ theme: ThemeType }>`
   min-height: 100vh;
@@ -119,7 +121,10 @@ const BlogList = styled.div`
   }
 `;
 
-const BlogPostItem = styled.article<{ theme: ThemeType }>`
+const BlogPostItemRow = styled.article<{ theme: ThemeType }>`
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
   margin-bottom: 3rem;
   position: relative;
 
@@ -139,18 +144,53 @@ const BlogPostItem = styled.article<{ theme: ThemeType }>`
   }
 
   @media (max-width: 480px) {
+    gap: 1rem;
     margin-bottom: 2rem;
     padding: 0.5rem;
-
     &:not(:last-child)::after {
       bottom: -1rem;
     }
   }
 `;
 
+const BlogPostImage = styled.div<{ theme: ThemeType }>`
+  flex: none;
+  width: 96px;
+  height: 96px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: ${({ theme }) => theme.colors.creamyBeige};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  @media (max-width: 480px) {
+    width: 64px;
+    height: 64px;
+  }
+`;
+
+const BlogPostImagePlaceholder = styled.div<{ theme: ThemeType }>`
+  width: 96px;
+  height: 96px;
+  border-radius: 12px;
+  background: ${({ theme }) => theme.colors.neonOrange}22;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${({ theme }) => theme.colors.neonOrange};
+  font-size: 2.2rem;
+  font-weight: bold;
+  @media (max-width: 480px) {
+    width: 64px;
+    height: 64px;
+    font-size: 1.3rem;
+  }
+`;
+
 const BlogPostTitle = styled.h2<{ theme: ThemeType }>`
   font-family: ${({ theme }) => theme.fonts.heading};
-  font-size: clamp(1.6rem, 3vw, 2.5rem);
+  font-size: clamp(1.2rem, 3vw, 2em);
   margin-bottom: 0.75rem;
   line-height: 1.3;
   color: ${({ theme }) => theme.colors.creamyBeige};
@@ -173,13 +213,13 @@ const BlogPostTitle = styled.h2<{ theme: ThemeType }>`
 
 const BlogPostExcerpt = styled.p<{ theme: ThemeType }>`
   font-family: ${({ theme }) => theme.fonts.body};
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   line-height: 1.7;
   margin-bottom: 1rem;
   opacity: 0.9;
 
   @media (max-width: 480px) {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     line-height: 1.6;
     margin-bottom: 0.75rem;
   }
@@ -268,16 +308,6 @@ const EmptyState = styled.div<{ theme: ThemeType }>`
   }
 `;
 
-const Logo = styled.div<{ theme: ThemeType }>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 0.5rem;
-  position: relative;
-  z-index: 1;
-`;
-
-
 interface BlogPost {
   id: number;
   title: string;
@@ -313,21 +343,13 @@ export default function BlogPage({ posts }: BlogPageProps) {
 
   return (
     <>
-      <Head>
-        <title>Blog - The Barefoot Developer</title>
-        <meta name="description" content="Thoughts on technology, community, and building in Detroit" />
-      </Head>
-      
+      <Header />
       <BlogContainer>
+        <Head>
+          <title>Blog - The Barefoot Developer</title>
+          <meta name="description" content="Thoughts on technology, community, and building in Detroit" />
+        </Head>
         <BlogHeader>
-          <Logo>
-            <Image
-              src="/images/thebarefoot.dev.png"
-              alt="Barefoot Dev Logo"
-              width={144}
-              height={144}
-            />
-          </Logo>
           <BlogTitle>Sharing community tools,</BlogTitle>
           <BlogTitle>one <BlockSpan>blog</BlockSpan> at a time.</BlogTitle>
           <BlogSubtitle>
@@ -338,38 +360,41 @@ export default function BlogPage({ posts }: BlogPageProps) {
         {posts.length > 0 ? (
           <BlogList>
             {posts.map((post) => (
-              <BlogPostItem key={post.id}>
-                <BlogPostTitle>
-                  <Link href={`/blog/${post.slug}`}>
-                    {post.title}
-                  </Link>
-                </BlogPostTitle>
-                
-                {/* {post.featuredImage && (
-                  <BlogPostImage>
-                    <Link href={`/blog/${post.slug}`}>
-                      <img src={post.featuredImage} alt={post.title} />
-                    </Link>
-                  </BlogPostImage>
-                )} */}
-                
-                {post.excerpt && (
-                  <BlogPostExcerpt>{post.excerpt}</BlogPostExcerpt>
-                )}
-                
-                <BlogPostMeta>
-                  <span>By {post.author}</span>
-                  <span>{formatDate(post.publishedAt)}</span>
-                </BlogPostMeta>
-                
-                {post.tags && parseTags(post.tags).length > 0 && (
-                  <BlogPostTags>
-                    {parseTags(post.tags).slice(0, 3).map((tag: string, index: number) => (
-                      <Tag key={index}>{tag}</Tag>
-                    ))}
-                  </BlogPostTags>
-                )}
-              </BlogPostItem>
+              <BlogPostItemRow key={post.id}>
+                <BlogPostImage>
+                  {post.featuredImage ? (
+                    <Image
+                      src={post.featuredImage}
+                      alt={post.title}
+                      width={96}
+                      height={96}
+                      style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                      sizes="(max-width: 480px) 64px, 96px"
+                    />
+                  ) : (
+                    <BlogPostImagePlaceholder>
+                      {post.title.charAt(0)}
+                    </BlogPostImagePlaceholder>
+                  )}
+                </BlogPostImage>
+                <div style={{ flex: 1 }}>
+                  <BlogPostTitle>
+                    <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+                  </BlogPostTitle>
+                  {post.excerpt && <BlogPostExcerpt>{post.excerpt}</BlogPostExcerpt>}
+                  <BlogPostMeta>
+                    <span>By {post.author}</span>
+                    <span>{formatDate(post.publishedAt)}</span>
+                  </BlogPostMeta>
+                  {post.tags && parseTags(post.tags).length > 0 && (
+                    <BlogPostTags>
+                      {parseTags(post.tags).slice(0, 3).map((tag: string, index: number) => (
+                        <Tag key={index}>{tag}</Tag>
+                      ))}
+                    </BlogPostTags>
+                  )}
+                </div>
+              </BlogPostItemRow>
             ))}
           </BlogList>
         ) : (
@@ -381,8 +406,10 @@ export default function BlogPage({ posts }: BlogPageProps) {
         <EmailSubscription 
           title="Stay in the loop"
           description="Get notified when new posts are published. I share insights about building community tools, lessons learned from Detroit projects, and thoughts on technology that serves people first."
+          compact
         />
       </BlogContainer>
+      <Footer />
     </>
   );
 }
