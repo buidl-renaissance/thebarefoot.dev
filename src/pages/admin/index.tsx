@@ -196,6 +196,17 @@ export default function AdminDashboard() {
               Send Blog Digest →
             </CardLink>
           </Card>
+
+          <Card>
+            <CardTitle>Profiles Management</CardTitle>
+            <CardDescription>
+              Create, edit, and manage user profiles with their information, 
+              LinkedIn links, bio, and experience details.
+            </CardDescription>
+            <CardLink href="/admin/profiles">
+              Manage Profiles →
+            </CardLink>
+          </Card>
         </DashboardGrid>
       </AdminContainer>
     </>

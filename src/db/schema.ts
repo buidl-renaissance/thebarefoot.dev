@@ -79,4 +79,17 @@ export const walkSubmissions = sqliteTable("walk_submissions", {
   city: text("city").notNull(), // city selection
   accountability: integer("accountability", { mode: "boolean" }).notNull().default(false),
   createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+});
+
+// Profiles table
+export const profiles = sqliteTable("profiles", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  name: text("name").notNull(),
+  email: text("email").unique(),
+  linkedin: text("linkedin"),
+  bio: text("bio"),
+  experience: text("experience"), // JSON object of experience data
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+  deletedAt: integer("deleted_at", { mode: "timestamp" }),
 }); 

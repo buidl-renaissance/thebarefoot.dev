@@ -114,6 +114,7 @@ const HeaderComponent: React.FC = () => {
         </Logo>
         <Navigation>
           <NavLink href="/blog">Blog</NavLink>
+          <NavLink href="/roadmap">Roadmap</NavLink>
           <NavLink href="/about">About</NavLink>
         </Navigation>
       </HeaderContainer>
