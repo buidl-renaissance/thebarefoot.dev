@@ -181,7 +181,7 @@ const OtherPostsTitle = styled.h2<{ theme: ThemeType }>`
   font-family: ${({ theme }) => theme.fonts.heading};
   font-size: clamp(1.4rem, 3vw, 1.4rem);
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
   text-transform: uppercase;
   letter-spacing: 2px;
 `;

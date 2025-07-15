@@ -72,7 +72,7 @@ const BlogPostImagePlaceholder = styled.div<{ theme: ThemeType }>`
 
 const BlogPostTitle = styled.h2<{ theme: ThemeType }>`
   font-family: ${({ theme }) => theme.fonts.heading};
-  font-size: clamp(1.2rem, 3vw, 2em);
+  font-size: clamp(1.2rem, 3vw, 1.8em);
   margin-bottom: 0.75rem;
   line-height: 1.3;
   color: ${({ theme }) => theme.colors.creamyBeige};

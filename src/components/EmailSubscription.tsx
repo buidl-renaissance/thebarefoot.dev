@@ -5,7 +5,7 @@ import type { ThemeType } from "@/styles/theme";
 const EmailSection = styled.section<{ theme: ThemeType; compact?: boolean }>`
   background: ${({ theme }) => theme.colors.asphaltBlack};
   color: ${({ theme }) => theme.colors.creamyBeige};
-  padding: ${({ compact }) => (compact ? "2rem 1rem" : "4rem 1rem")};
+  padding: ${({ compact }) => (compact ? "3rem 1rem" : "4rem 1rem")};
   text-align: center;
   position: relative;
   margin-bottom: ${({ compact }) => (compact ? "0" : "2rem")};
