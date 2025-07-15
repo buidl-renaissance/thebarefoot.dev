@@ -287,6 +287,44 @@ const Button = styled.button<{ variant?: 'secondary' }>`
   }
 `;
 
+// Add styled FileInput and ImagePreview (copied from blog/create.tsx)
+const FileInput = styled.input`
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid ${({ theme }) => theme.colors.rustedSteel};
+  border-radius: 4px;
+  padding: 0.75rem;
+  color: ${({ theme }) => theme.colors.creamyBeige};
+  font-family: ${({ theme }) => theme.fonts.body};
+  &:focus {
+    outline: none;
+    border-color: ${({ theme }) => theme.colors.neonOrange};
+  }
+  &::file-selector-button {
+    background: ${({ theme }) => theme.colors.neonOrange};
+    color: ${({ theme }) => theme.colors.asphaltBlack};
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: ${({ theme }) => theme.fonts.body};
+    font-weight: 600;
+    margin-right: 1rem;
+    &:hover {
+      background: ${({ theme }) => theme.colors.brickRed};
+    }
+  }
+`;
+const ImagePreview = styled.div`
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid ${({ theme }) => theme.colors.rustedSteel};
+  border-radius: 4px;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  font-family: ${({ theme }) => theme.fonts.body};
+  color: ${({ theme }) => theme.colors.creamyBeige};
+  font-size: 0.9rem;
+`;
+
 interface Event {
   id: number;
   title: string;
@@ -313,6 +351,7 @@ export default function AdminEvents() {
     type: 'workshop',
     imageUrl: ''
   });
+  const [isUploading, setIsUploading] = useState(false);
 
   // Fetch events from API
   useEffect(() => {
@@ -419,6 +458,40 @@ export default function AdminEvents() {
       setIsModalOpen(false);
     } catch (error) {
       console.error('Error saving event:', error);
+    }
+  };
+
+  // Add file upload handler
+  const handleFileUpload = async (file: File) => {
+    setIsUploading(true);
+    try {
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const base64Data = e.target?.result as string;
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            file: base64Data,
+            fileName: file.name,
+            fileType: file.type,
+            folder: 'event-images',
+          }),
+        });
+        if (response.ok) {
+          const result = await response.json();
+          setFormData((prev) => ({ ...prev, imageUrl: result.url }));
+        } else {
+          alert('Failed to upload image. Please try again.');
+        }
+        setIsUploading(false);
+      };
+      reader.readAsDataURL(file);
+    } catch {
+      alert('Failed to upload image. Please try again.');
+      setIsUploading(false);
     }
   };
 
@@ -602,12 +675,27 @@ export default function AdminEvents() {
               </FormGroup>
               
               <FormGroup>
-                <Label>Image URL (Optional)</Label>
-                <Input
-                  type="url"
-                  value={formData.imageUrl}
-                  onChange={(e) => setFormData({...formData, imageUrl: e.target.value})}
+                <Label>Event Image (Optional)</Label>
+                <FileInput
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) handleFileUpload(file);
+                  }}
                 />
+                {isUploading && (
+                  <ImagePreview>
+                    <span>Uploading image...</span>
+                  </ImagePreview>
+                )}
+                {formData.imageUrl && !isUploading && (
+                  <ImagePreview>
+                    <span>Uploaded: {formData.imageUrl}</span>
+                    <br />
+                    <img src={formData.imageUrl} alt="Event" style={{ maxWidth: '100%', marginTop: '0.5rem', borderRadius: '4px' }} />
+                  </ImagePreview>
+                )}
               </FormGroup>
               
               <ButtonGroup>
