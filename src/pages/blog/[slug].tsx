@@ -284,8 +284,8 @@ export default function BlogPostPage({ post, otherPosts }: BlogPostPageProps) {
         <meta name="description" content={post.excerpt || post.title} />
         {post.featuredImage && (
           <>
-            <meta property="og:image" content={post.featuredImage} />
-            <meta name="twitter:image" content={post.featuredImage} />
+            <meta property="og:image" content={post.featuredImage || '/images/blog-default.png'} />
+            <meta name="twitter:image" content={post.featuredImage || '/images/blog-default.png'} />
             <meta property="og:image:width" content="1200" />
             <meta property="og:image:height" content="630" />
           </>

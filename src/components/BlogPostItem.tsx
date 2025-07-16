@@ -52,23 +52,7 @@ const BlogPostImage = styled.div<{ theme: ThemeType }>`
   }
 `;
 
-const BlogPostImagePlaceholder = styled.div<{ theme: ThemeType }>`
-  width: 96px;
-  height: 96px;
-  border-radius: 12px;
-  background: ${({ theme }) => theme.colors.neonOrange}22;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: ${({ theme }) => theme.colors.neonOrange};
-  font-size: 2.2rem;
-  font-weight: bold;
-  @media (max-width: 480px) {
-    width: 64px;
-    height: 64px;
-    font-size: 1.3rem;
-  }
-`;
+
 
 const BlogPostTitle = styled.h2<{ theme: ThemeType }>`
   font-family: ${({ theme }) => theme.fonts.heading};
@@ -197,9 +181,14 @@ export default function BlogPostItem({
             sizes="(max-width: 480px) 64px, 96px"
           />
         ) : (
-          <BlogPostImagePlaceholder>
-            {title.charAt(0)}
-          </BlogPostImagePlaceholder>
+          <Image
+            src="/images/thebarefoot.dev-logo.png"
+            alt={title}
+            width={96}
+            height={96}
+            style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+            sizes="(max-width: 480px) 64px, 96px"
+          />
         )}
       </BlogPostImage>
       <div style={{ flex: 1 }}>
