@@ -289,7 +289,6 @@ interface Event {
 
 export default withAdminAuth(function AdminEvents() {
   const [events, setEvents] = useState<Event[]>([]);
-  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentEvent, setCurrentEvent] = useState<Event | null>(null);
   const [formData, setFormData] = useState({
