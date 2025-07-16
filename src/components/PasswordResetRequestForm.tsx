@@ -59,6 +59,7 @@ export default function PasswordResetRequestForm() {
         setEmail('');
       }
     } catch (err) {
+      console.error('Error requesting password reset:', err);
       setError('Network error');
     } finally {
       setLoading(false);

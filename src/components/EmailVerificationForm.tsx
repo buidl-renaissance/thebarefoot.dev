@@ -54,6 +54,7 @@ export default function EmailVerificationForm() {
         setSuccess(true);
       }
     } catch (err) {
+      console.error('Error verifying email:', err);
       setError('Network error');
     } finally {
       setLoading(false);
