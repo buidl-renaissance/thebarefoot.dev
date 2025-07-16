@@ -92,4 +92,25 @@ export const profiles = sqliteTable("profiles", {
   createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
   updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
   deletedAt: integer("deleted_at", { mode: "timestamp" }),
+});
+
+// Users table for authentication (NextAuth compatible)
+export const users = sqliteTable("users", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  name: text("name"),
+  email: text("email").notNull().unique(),
+  emailVerified: integer("email_verified", { mode: "timestamp" }),
+  password: text("password"), // hashed password for credentials provider
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+});
+
+// Verification tokens table for email verification and password reset
+export const verificationTokens = sqliteTable("verification_tokens", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").notNull(),
+  token: text("token").notNull().unique(),
+  type: text("type").notNull(), // 'email' or 'password_reset'
+  expires: integer("expires", { mode: "timestamp" }).notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
 }); 

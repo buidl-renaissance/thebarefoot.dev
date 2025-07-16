@@ -4,6 +4,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrash, faSortUp, faSortDown, faSort, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import { withAdminAuth } from '@/components/withAdminAuth';
 
 const AdminContainer = styled.div`
   min-height: 100vh;
@@ -217,7 +218,7 @@ interface BlogPost {
 
 
 
-export default function AdminBlog() {
+function AdminBlog() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState<'title' | 'publishedAt'>('publishedAt');
@@ -403,4 +404,6 @@ export default function AdminBlog() {
       </AdminContainer>
     </>
   );
-} 
+}
+
+export default withAdminAuth(AdminBlog); 

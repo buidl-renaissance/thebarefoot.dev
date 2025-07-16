@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import Head from 'next/head';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 
 const AdminContainer = styled.div`
   min-height: 100vh;
@@ -109,6 +111,20 @@ const StatLabel = styled.div`
 `;
 
 export default function AdminDashboard() {
+  const router = useRouter();
+  const { status } = useSession();
+
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.replace('/admin/login');
+    }
+  }, [status, router]);
+
+  // Show nothing while loading or redirecting
+  if (status === 'loading' || status === 'unauthenticated') {
+    return null;
+  }
+
   return (
     <>
       <Head>

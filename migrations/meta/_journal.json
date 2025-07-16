@@ -57,6 +57,13 @@
       "when": 1752559468647,
       "tag": "0007_crazy_prima",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1752677937442,
+      "tag": "0008_furry_lucky_pierre",
+      "breakpoints": true
     }
   ]
 }
