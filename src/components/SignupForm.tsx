@@ -122,12 +122,13 @@ export default function SignupForm() {
     name: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    role: 'user' as 'user' | 'admin'
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
@@ -148,17 +149,17 @@ export default function SignupForm() {
         body: JSON.stringify({
           name: form.name,
           email: form.email,
-          password: form.password
+          password: form.password,
+          role: form.role
         })
       });
 
-      let errorMessage = 'Failed to create account';
       if (!res.ok) {
+        let errorMessage = 'Failed to create account';
         try {
           const errorData = await res.json();
           errorMessage = errorData.error || errorMessage;
         } catch {
-          // If we can't parse the error response as JSON, use the status text
           errorMessage = `Error: ${res.statusText || 'Something went wrong'}`;
         }
         setError(errorMessage);
@@ -210,6 +211,20 @@ export default function SignupForm() {
         </InputGroup>
 
         <InputGroup>
+          <Label htmlFor="role">Role</Label>
+          <Select
+            id="role"
+            name="role"
+            value={form.role}
+            onChange={handleChange}
+            required
+          >
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </Select>
+        </InputGroup>
+
+        <InputGroup>
           <Label htmlFor="password">Password</Label>
           <Input
             id="password"
@@ -248,4 +263,26 @@ export default function SignupForm() {
       </LoginText>
     </FormContainer>
   );
-} 
+}
+
+const Select = styled.select`
+  padding: 0.75rem;
+  background: ${({ theme }) => theme.colors.asphaltBlack};
+  border: 1px solid ${({ theme }) => theme.colors.rustedSteel};
+  border-radius: 4px;
+  font-size: 1rem;
+  color: ${({ theme }) => theme.colors.creamyBeige};
+  font-family: ${({ theme }) => theme.fonts.body};
+  transition: all 0.2s ease;
+  width: 100%;
+
+  &:focus {
+    outline: none;
+    border-color: ${({ theme }) => theme.colors.neonOrange};
+  }
+
+  option {
+    background: ${({ theme }) => theme.colors.asphaltBlack};
+    color: ${({ theme }) => theme.colors.creamyBeige};
+  }
+`; 

@@ -10,10 +10,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const { email, password, name } = req.body;
+    const { email, password, name, role = 'user' } = req.body;
 
     if (!email || !password) {
       return res.status(400).json({ error: 'Email and password are required' });
+    }
+
+    // Validate role
+    if (role !== 'user' && role !== 'admin') {
+      return res.status(400).json({ error: 'Invalid role' });
     }
 
     // Check if user already exists
@@ -31,6 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       name: name || null,
       password: hashedPassword,
       emailVerified: null,
+      role,
       createdAt: new Date(),
       updatedAt: new Date(),
     }).returning();
@@ -40,6 +46,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       id: newUser.id,
       email: newUser.email,
       name: newUser.name,
+      role: newUser.role,
       emailVerified: newUser.emailVerified,
       createdAt: newUser.createdAt,
       updatedAt: newUser.updatedAt

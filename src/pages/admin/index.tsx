@@ -1,16 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Head from 'next/head';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
+import { AdminLayout } from '@/components/AdminLayout';
 
-const AdminContainer = styled.div`
-  min-height: 100vh;
-  background: ${({ theme }) => theme.colors.asphaltBlack};
-  color: ${({ theme }) => theme.colors.creamyBeige};
-  padding: 2rem;
-`;
+const DashboardContainer = styled.div``;
 
 const Header = styled.header`
   margin-bottom: 3rem;
@@ -111,28 +105,14 @@ const StatLabel = styled.div`
 `;
 
 export default function AdminDashboard() {
-  const router = useRouter();
-  const { status } = useSession();
-
-  useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.replace('/admin/login');
-    }
-  }, [status, router]);
-
-  // Show nothing while loading or redirecting
-  if (status === 'loading' || status === 'unauthenticated') {
-    return null;
-  }
-
   return (
-    <>
+    <AdminLayout>
       <Head>
         <title>Admin Dashboard - The Barefoot Dev</title>
         <meta name="description" content="Admin dashboard for The Barefoot Dev" />
       </Head>
       
-      <AdminContainer>
+      <DashboardContainer>
         <Header>
           <Title>Admin Dashboard</Title>
           <Subtitle>Manage your community and content</Subtitle>
@@ -224,7 +204,7 @@ export default function AdminDashboard() {
             </CardLink>
           </Card>
         </DashboardGrid>
-      </AdminContainer>
-    </>
+      </DashboardContainer>
+    </AdminLayout>
   );
-} 
+}

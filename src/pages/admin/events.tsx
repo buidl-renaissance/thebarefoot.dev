@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Head from 'next/head';
-import Link from 'next/link';
+import { withAdminAuth } from '@/components/withAdminAuth';
+import { AdminLayout } from '@/components/AdminLayout';
 
-const AdminContainer = styled.div`
-  min-height: 100vh;
-  background: ${({ theme }) => theme.colors.asphaltBlack};
-  color: ${({ theme }) => theme.colors.creamyBeige};
-  padding: 2rem;
-`;
+const EventsContainer = styled.div``;
 
 const Header = styled.header`
   display: flex;
@@ -22,19 +18,6 @@ const Title = styled.h1`
   font-size: 3rem;
   color: ${({ theme }) => theme.colors.neonOrange};
   margin: 0;
-`;
-
-const BackLink = styled(Link)`
-  color: ${({ theme }) => theme.colors.rustedSteel};
-  text-decoration: none;
-  font-family: ${({ theme }) => theme.fonts.body};
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  
-  &:hover {
-    color: ${({ theme }) => theme.colors.neonOrange};
-  }
 `;
 
 const ActionBar = styled.div`
@@ -61,40 +44,37 @@ const CreateButton = styled.button`
   }
 `;
 
-const EventsGrid = styled.div`
-  display: grid;
-  gap: 1.5rem;
+const Table = styled.table`
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 1rem;
 `;
 
-const EventCard = styled.div`
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid ${({ theme }) => theme.colors.rustedSteel};
-  border-radius: 8px;
-  padding: 1.5rem;
+const Th = styled.th`
+  text-align: left;
+  padding: 1rem;
+  font-family: ${({ theme }) => theme.fonts.body};
+  color: ${({ theme }) => theme.colors.rustedSteel};
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.rustedSteel};
+`;
+
+const Td = styled.td`
+  padding: 1rem;
+  font-family: ${({ theme }) => theme.fonts.body};
+  color: ${({ theme }) => theme.colors.creamyBeige};
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+`;
+
+const Tr = styled.tr`
   transition: all 0.3s ease;
   
   &:hover {
-    border-color: ${({ theme }) => theme.colors.neonOrange};
+    background: rgba(255, 255, 255, 0.05);
   }
-`;
-
-const EventHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 1rem;
-`;
-
-const EventTitle = styled.h3`
-  font-family: ${({ theme }) => theme.fonts.heading};
-  font-size: 1.5rem;
-  color: ${({ theme }) => theme.colors.neonOrange};
-  margin: 0;
-`;
-
-const EventActions = styled.div`
-  display: flex;
-  gap: 0.5rem;
 `;
 
 const ActionButton = styled.button<{ variant?: 'edit' | 'delete' }>`
@@ -110,6 +90,7 @@ const ActionButton = styled.button<{ variant?: 'edit' | 'delete' }>`
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.3s ease;
+  margin-left: 0.5rem;
   
   &:hover {
     background: ${({ theme, variant }) => 
@@ -117,37 +98,6 @@ const ActionButton = styled.button<{ variant?: 'edit' | 'delete' }>`
     color: ${({ theme, variant }) => 
       variant === 'delete' ? theme.colors.creamyBeige : theme.colors.asphaltBlack};
   }
-`;
-
-const EventDetails = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1rem;
-`;
-
-const DetailItem = styled.div`
-  font-family: ${({ theme }) => theme.fonts.body};
-`;
-
-const DetailLabel = styled.div`
-  font-size: 0.8rem;
-  color: ${({ theme }) => theme.colors.rustedSteel};
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 0.25rem;
-`;
-
-const DetailValue = styled.div`
-  color: ${({ theme }) => theme.colors.creamyBeige};
-  font-weight: 500;
-`;
-
-const EventDescription = styled.p`
-  font-family: ${({ theme }) => theme.fonts.body};
-  color: ${({ theme }) => theme.colors.rustedSteel};
-  line-height: 1.6;
-  margin: 0;
 `;
 
 const Modal = styled.div<{ isOpen: boolean }>`
@@ -337,19 +287,19 @@ interface Event {
   imageUrl?: string;
 }
 
-export default function AdminEvents() {
+export default withAdminAuth(function AdminEvents() {
   const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingEvent, setEditingEvent] = useState<Event | null>(null);
+  const [currentEvent, setCurrentEvent] = useState<Event | null>(null);
   const [formData, setFormData] = useState({
     title: '',
-    slug: '',
     description: '',
     startDatetime: '',
     endDatetime: '',
     location: '',
-    type: 'workshop',
-    imageUrl: ''
+    type: '',
+    imageUrl: '',
   });
   const [isUploading, setIsUploading] = useState(false);
 
@@ -371,31 +321,29 @@ export default function AdminEvents() {
   }, []);
 
   const handleCreateEvent = () => {
-    setEditingEvent(null);
+    setCurrentEvent(null);
     setFormData({
       title: '',
-      slug: '',
       description: '',
       startDatetime: '',
       endDatetime: '',
       location: '',
-      type: 'workshop',
-      imageUrl: ''
+      type: '',
+      imageUrl: '',
     });
     setIsModalOpen(true);
   };
 
   const handleEditEvent = (event: Event) => {
-    setEditingEvent(event);
+    setCurrentEvent(event);
     setFormData({
       title: event.title,
-      slug: event.slug,
       description: event.description,
       startDatetime: formatDateForInput(event.startDatetime),
       endDatetime: formatDateForInput(event.endDatetime),
       location: event.location,
       type: event.type,
-      imageUrl: event.imageUrl || ''
+      imageUrl: event.imageUrl || '',
     });
     setIsModalOpen(true);
   };
@@ -420,7 +368,7 @@ export default function AdminEvents() {
     e.preventDefault();
     
     try {
-      if (editingEvent) {
+      if (currentEvent) {
         // Update existing event
         const response = await fetch('/api/admin/events', {
           method: 'PUT',
@@ -428,7 +376,7 @@ export default function AdminEvents() {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            id: editingEvent.id,
+            id: currentEvent.id,
             ...formData
           }),
         });
@@ -436,7 +384,7 @@ export default function AdminEvents() {
         if (response.ok) {
           const updatedEvent = await response.json();
           setEvents(events.map(event => 
-            event.id === editingEvent.id ? updatedEvent : event
+            event.id === currentEvent.id ? updatedEvent : event
           ));
         }
       } else {
@@ -527,33 +475,41 @@ export default function AdminEvents() {
   };
 
   return (
-    <>
+    <AdminLayout>
       <Head>
-        <title>Events Management - Admin Dashboard</title>
-        <meta name="description" content="Manage events for The Barefoot Dev" />
+        <title>Admin - Events | The Barefoot Developer</title>
       </Head>
-      
-      <AdminContainer>
+      <EventsContainer>
         <Header>
-          <Title>Events Management</Title>
-          <BackLink href="/admin">
-            ← Back to Dashboard
-          </BackLink>
+          <Title>Events</Title>
         </Header>
 
         <ActionBar>
-          <h2>All Events ({events.length})</h2>
           <CreateButton onClick={handleCreateEvent}>
-            + Create New Event
+            Create New Event
           </CreateButton>
         </ActionBar>
 
-        <EventsGrid>
-          {events.map(event => (
-            <EventCard key={event.id}>
-              <EventHeader>
-                <EventTitle>{event.title}</EventTitle>
-                <EventActions>
+        <Table>
+          <thead>
+            <tr>
+              <Th>Title</Th>
+              <Th>Type</Th>
+              <Th>Location</Th>
+              <Th>Start Date</Th>
+              <Th>End Date</Th>
+              <Th>Actions</Th>
+            </tr>
+          </thead>
+          <tbody>
+            {events.map((event) => (
+              <Tr key={event.id}>
+                <Td>{event.title}</Td>
+                <Td>{event.type}</Td>
+                <Td>{event.location}</Td>
+                <Td>{formatDateTime(event.startDatetime)}</Td>
+                <Td>{formatDateTime(event.endDatetime)}</Td>
+                <Td>
                   <ActionButton onClick={() => handleEditEvent(event)}>
                     Edit
                   </ActionButton>
@@ -563,44 +519,21 @@ export default function AdminEvents() {
                   >
                     Delete
                   </ActionButton>
-                </EventActions>
-              </EventHeader>
-              
-              <EventDetails>
-                <DetailItem>
-                  <DetailLabel>Type</DetailLabel>
-                  <DetailValue>{event.type}</DetailValue>
-                </DetailItem>
-                <DetailItem>
-                  <DetailLabel>Location</DetailLabel>
-                  <DetailValue>{event.location}</DetailValue>
-                </DetailItem>
-                <DetailItem>
-                  <DetailLabel>Start</DetailLabel>
-                  <DetailValue>{formatDateTime(event.startDatetime)}</DetailValue>
-                </DetailItem>
-                <DetailItem>
-                  <DetailLabel>End</DetailLabel>
-                  <DetailValue>{formatDateTime(event.endDatetime)}</DetailValue>
-                </DetailItem>
-              </EventDetails>
-              
-              <EventDescription>{event.description}</EventDescription>
-            </EventCard>
-          ))}
-        </EventsGrid>
+                </Td>
+              </Tr>
+            ))}
+          </tbody>
+        </Table>
 
+        {/* Keep existing Modal component */}
         <Modal isOpen={isModalOpen}>
           <ModalContent>
             <ModalHeader>
               <ModalTitle>
-                {editingEvent ? 'Edit Event' : 'Create New Event'}
+                {currentEvent ? 'Edit Event' : 'Create New Event'}
               </ModalTitle>
-              <CloseButton onClick={() => setIsModalOpen(false)}>
-                ×
-              </CloseButton>
+              <CloseButton onClick={() => setIsModalOpen(false)}>&times;</CloseButton>
             </ModalHeader>
-            
             <Form onSubmit={handleSubmit}>
               <FormGroup>
                 <Label>Title</Label>
@@ -608,16 +541,6 @@ export default function AdminEvents() {
                   type="text"
                   value={formData.title}
                   onChange={(e) => setFormData({...formData, title: e.target.value})}
-                  required
-                />
-              </FormGroup>
-              
-              <FormGroup>
-                <Label>Slug</Label>
-                <Input
-                  type="text"
-                  value={formData.slug}
-                  onChange={(e) => setFormData({...formData, slug: e.target.value})}
                   required
                 />
               </FormGroup>
@@ -707,13 +630,13 @@ export default function AdminEvents() {
                   Cancel
                 </Button>
                 <Button type="submit">
-                  {editingEvent ? 'Update Event' : 'Create Event'}
+                  {currentEvent ? 'Update Event' : 'Create Event'}
                 </Button>
               </ButtonGroup>
             </Form>
           </ModalContent>
         </Modal>
-      </AdminContainer>
-    </>
+      </EventsContainer>
+    </AdminLayout>
   );
-} 
+});

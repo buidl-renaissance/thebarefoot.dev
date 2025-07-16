@@ -4,14 +4,9 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrash, faSortUp, faSortDown, faSort, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
-import { withAdminAuth } from '@/components/withAdminAuth';
+import { AdminLayout } from '@/components/AdminLayout';
 
-const AdminContainer = styled.div`
-  min-height: 100vh;
-  background: ${({ theme }) => theme.colors.asphaltBlack};
-  color: ${({ theme }) => theme.colors.creamyBeige};
-  padding: 2rem;
-`;
+const BlogContainer = styled.div``;
 
 const Header = styled.header`
   display: flex;
@@ -25,19 +20,6 @@ const Title = styled.h1`
   font-size: 3rem;
   color: ${({ theme }) => theme.colors.neonOrange};
   margin: 0;
-`;
-
-const BackLink = styled(Link)`
-  color: ${({ theme }) => theme.colors.rustedSteel};
-  text-decoration: none;
-  font-family: ${({ theme }) => theme.fonts.body};
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  
-  &:hover {
-    color: ${({ theme }) => theme.colors.neonOrange};
-  }
 `;
 
 const ActionBar = styled.div`
@@ -311,17 +293,14 @@ function AdminBlog() {
   };
 
   return (
-    <>
+    <AdminLayout>
       <Head>
         <title>Blog Management - Admin Dashboard</title>
         <meta name="description" content="Manage blog posts" />
       </Head>
-      <AdminContainer>
+      <BlogContainer>
         <Header>
           <Title>Blog Management</Title>
-          <BackLink href="/admin">
-            ← Back to Dashboard
-          </BackLink>
         </Header>
         <ActionBar>
           <div>
@@ -401,9 +380,9 @@ function AdminBlog() {
             ))}
           </tbody>
         </Table>
-      </AdminContainer>
-    </>
+      </BlogContainer>
+    </AdminLayout>
   );
 }
 
-export default withAdminAuth(AdminBlog); 
+export default AdminBlog; 

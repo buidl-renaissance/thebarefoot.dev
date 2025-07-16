@@ -5,11 +5,12 @@ import { useSession } from 'next-auth/react';
 export function withAdminAuth<P extends object>(WrappedComponent: React.ComponentType<P>) {
   return function WithAdminAuthComponent(props: P) {
     const router = useRouter();
-    const { status } = useSession();
+    const { data: session, status } = useSession();
 
     useEffect(() => {
-      if (status === 'unauthenticated' && router.pathname !== '/admin') {
-        router.replace('/admin');
+      // If not authenticated and finished loading, redirect to login
+      if (status === 'unauthenticated') {
+        router.replace('/admin/login');
       }
     }, [status, router]);
 
@@ -18,12 +19,12 @@ export function withAdminAuth<P extends object>(WrappedComponent: React.Componen
       return null;
     }
 
-    // If we're on /admin and not authenticated, the page will handle showing the login form
-    if (router.pathname === '/admin' || status === 'authenticated') {
+    // Only render the component if authenticated
+    if (status === 'authenticated' && session) {
       return <WrappedComponent {...props} />;
     }
 
-    // Show nothing while redirecting
+    // Show nothing while redirecting or if not authenticated
     return null;
   };
 } 

@@ -1,14 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Head from 'next/head';
-import Link from 'next/link';
+import { AdminLayout } from '@/components/AdminLayout';
 
-const AdminContainer = styled.div`
-  min-height: 100vh;
-  background: ${({ theme }) => theme.colors.asphaltBlack};
-  color: ${({ theme }) => theme.colors.creamyBeige};
-  padding: 2rem;
-`;
+const DigestContainer = styled.div``;
 
 const Header = styled.header`
   margin-bottom: 3rem;
@@ -25,18 +20,6 @@ const Subtitle = styled.p`
   font-family: ${({ theme }) => theme.fonts.body};
   font-size: 1.2rem;
   color: ${({ theme }) => theme.colors.rustedSteel};
-`;
-
-const BackLink = styled(Link)`
-  display: inline-block;
-  color: ${({ theme }) => theme.colors.neonOrange};
-  text-decoration: none;
-  font-family: ${({ theme }) => theme.fonts.body};
-  margin-bottom: 2rem;
-  
-  &:hover {
-    text-decoration: underline;
-  }
 `;
 
 const FormContainer = styled.div`
@@ -353,15 +336,13 @@ export default function BlogDigestPage() {
   }, []);
 
   return (
-    <>
+    <AdminLayout>
       <Head>
         <title>Blog Digest - Admin Dashboard</title>
         <meta name="description" content="Send blog digest emails" />
       </Head>
       
-      <AdminContainer>
-        <BackLink href="/admin">← Back to Dashboard</BackLink>
-        
+      <DigestContainer>
         <Header>
           <Title>Blog Digest</Title>
           <Subtitle>Send recent blog posts to subscribers</Subtitle>
@@ -499,7 +480,7 @@ export default function BlogDigestPage() {
             </PreviewContainer>
           )}
         </PageLayout>
-      </AdminContainer>
-    </>
+      </DigestContainer>
+    </AdminLayout>
   );
 } 
