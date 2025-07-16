@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Head from 'next/head';
 import Link from 'next/link';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPen, faTrash, faSortUp, faSortDown, faSort, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 
 const AdminContainer = styled.div`
   min-height: 100vh;
@@ -83,93 +85,55 @@ const CreateFromTranscriptButton = styled(Link)`
   }
 `;
 
-const PostsGrid = styled.div`
-  display: grid;
-  gap: 1.5rem;
-`;
-
-const PostCard = styled.div`
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid ${({ theme }) => theme.colors.rustedSteel};
-  border-radius: 8px;
-  padding: 1.5rem;
-  transition: all 0.3s ease;
-  
-  &:hover {
-    border-color: ${({ theme }) => theme.colors.neonOrange};
-  }
-`;
-
-const PostHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 1rem;
-`;
-
-const PostTitle = styled.h3`
-  font-family: ${({ theme }) => theme.fonts.heading};
-  font-size: 1.5rem;
-  color: ${({ theme }) => theme.colors.neonOrange};
-  margin: 0;
-`;
-
-const PostActions = styled.div`
-  display: flex;
-  gap: 0.5rem;
-`;
-
-const ActionButton = styled.button<{ variant?: 'edit' | 'delete' }>`
-  background: ${({ theme, variant }) => 
-    variant === 'delete' ? theme.colors.brickRed : 'transparent'};
-  color: ${({ theme, variant }) => 
-    variant === 'delete' ? theme.colors.creamyBeige : theme.colors.neonOrange};
-  border: 1px solid ${({ theme, variant }) => 
-    variant === 'delete' ? theme.colors.brickRed : theme.colors.neonOrange};
-  font-family: ${({ theme }) => theme.fonts.body};
-  font-size: 0.9rem;
+const SearchInput = styled.input`
   padding: 0.5rem 1rem;
   border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  
-  &:hover {
-    background: ${({ theme, variant }) => 
-      variant === 'delete' ? theme.colors.brickRed : theme.colors.neonOrange};
-    color: ${({ theme, variant }) => 
-      variant === 'delete' ? theme.colors.creamyBeige : theme.colors.asphaltBlack};
+  border: 1px solid ${({ theme }) => theme.colors.rustedSteel};
+  background: ${({ theme }) => theme.colors.asphaltBlack};
+  color: ${({ theme }) => theme.colors.creamyBeige};
+  font-family: ${({ theme }) => theme.fonts.body};
+  font-size: 1rem;
+  margin-bottom: 2rem;
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
+  transition: border 0.2s;
+  &:focus {
+    border-color: ${({ theme }) => theme.colors.neonOrange};
+    outline: none;
   }
 `;
 
-const PostDetails = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1rem;
+const Table = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.03);
 `;
 
-const DetailItem = styled.div`
+const Th = styled.th`
+  text-align: left;
+  padding: 0.75rem 0.5rem;
+  font-family: ${({ theme }) => theme.fonts.heading};
+  color: ${({ theme }) => theme.colors.neonOrange};
+  border-bottom: 2px solid ${({ theme }) => theme.colors.rustedSteel};
+  font-size: 1rem;
+`;
+
+const Td = styled.td`
+  padding: 0.75rem 0.5rem;
   font-family: ${({ theme }) => theme.fonts.body};
-`;
-
-const DetailLabel = styled.div`
-  font-size: 0.8rem;
-  color: ${({ theme }) => theme.colors.rustedSteel};
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 0.25rem;
-`;
-
-const DetailValue = styled.div`
   color: ${({ theme }) => theme.colors.creamyBeige};
-  font-weight: 500;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.rustedSteel};
+  vertical-align: middle;
 `;
 
-const PostExcerpt = styled.p`
-  font-family: ${({ theme }) => theme.fonts.body};
-  color: ${({ theme }) => theme.colors.rustedSteel};
-  line-height: 1.6;
-  margin: 0;
+const ImageThumb = styled.img`
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 6px;
+  background: ${({ theme }) => theme.colors.rustedSteel};
+  display: block;
 `;
 
 const StatusBadge = styled.span<{ status: string }>`
@@ -187,6 +151,51 @@ const StatusBadge = styled.span<{ status: string }>`
   text-transform: uppercase;
 `;
 
+const IconButton = styled.button`
+  background: none;
+  border: none;
+  color: ${({ theme }) => theme.colors.neonOrange};
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  font-size: 1.1rem;
+  display: inline-flex;
+  align-items: center;
+  transition: color 0.2s;
+  &:hover {
+    color: ${({ theme }) => theme.colors.brickRed};
+  }
+`;
+
+const SortIconWrapper = styled.span`
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.3em;
+  vertical-align: middle;
+`;
+
+const TitleLink = styled.a`
+  color: ${({ theme }) => theme.colors.neonOrange};
+  font-family: ${({ theme }) => theme.fonts.heading};
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s;
+  &:hover {
+    color: ${({ theme }) => theme.colors.brickRed};
+    text-decoration: underline;
+  }
+`;
+const ExternalIcon = styled.a`
+  margin-left: 0.5em;
+  color: ${({ theme }) => theme.colors.rustedSteel};
+  font-size: 0.95em;
+  vertical-align: middle;
+  display: inline-flex;
+  align-items: center;
+  &:hover {
+    color: ${({ theme }) => theme.colors.neonOrange};
+  }
+`;
 
 
 interface BlogPost {
@@ -210,6 +219,9 @@ interface BlogPost {
 
 export default function AdminBlog() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [search, setSearch] = useState('');
+  const [sortBy, setSortBy] = useState<'title' | 'publishedAt'>('publishedAt');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
   useEffect(() => {
     fetchPosts();
@@ -224,8 +236,6 @@ export default function AdminBlog() {
       console.error('Error fetching posts:', error);
     }
   };
-
-
 
   const handleDeletePost = async (postId: number) => {
     if (confirm('Are you sure you want to delete this post?')) {
@@ -248,13 +258,63 @@ export default function AdminBlog() {
     });
   };
 
+  const filteredPosts = posts.filter(post => {
+    const q = search.toLowerCase();
+    return (
+      post.title.toLowerCase().includes(q) ||
+      post.author.toLowerCase().includes(q) ||
+      post.slug.toLowerCase().includes(q)
+    );
+  });
+
+  const sortedPosts = React.useMemo(() => {
+    if (!sortBy) return filteredPosts;
+    const sorted = [...filteredPosts].sort((a, b) => {
+      let aValue = a[sortBy];
+      let bValue = b[sortBy];
+      if (sortBy === 'publishedAt') {
+        const aDate = typeof aValue === 'string' || aValue instanceof Date ? new Date(aValue).getTime() : 0;
+        const bDate = typeof bValue === 'string' || bValue instanceof Date ? new Date(bValue).getTime() : 0;
+        if (aDate < bDate) return sortOrder === 'asc' ? -1 : 1;
+        if (aDate > bDate) return sortOrder === 'asc' ? 1 : -1;
+        return 0;
+      } else {
+        aValue = String(aValue).toLowerCase();
+        bValue = String(bValue).toLowerCase();
+        if (aValue < bValue) return sortOrder === 'asc' ? -1 : 1;
+        if (aValue > bValue) return sortOrder === 'asc' ? 1 : -1;
+        return 0;
+      }
+    });
+    return sorted;
+  }, [filteredPosts, sortBy, sortOrder]);
+
+  const handleSort = (column: 'title' | 'publishedAt') => {
+    if (sortBy === column) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortBy(column);
+      setSortOrder('asc');
+    }
+  };
+
+  const renderSortIcon = (column: 'title' | 'publishedAt') => {
+    if (sortBy !== column) return (
+      <SortIconWrapper><FontAwesomeIcon icon={faSort} style={{ fontSize: '0.9em' }} /></SortIconWrapper>
+    );
+    return sortOrder === 'asc' ? (
+      <SortIconWrapper><FontAwesomeIcon icon={faSortUp} style={{ fontSize: '0.9em' }} /></SortIconWrapper>
+    ) : (
+      <SortIconWrapper><FontAwesomeIcon icon={faSortDown} style={{ fontSize: '0.9em' }} /></SortIconWrapper>
+    );
+  };
+
   return (
     <>
       <Head>
         <title>Blog Management - Admin Dashboard</title>
         <meta name="description" content="Manage blog posts" />
       </Head>
-      
       <AdminContainer>
         <Header>
           <Title>Blog Management</Title>
@@ -262,7 +322,6 @@ export default function AdminBlog() {
             ← Back to Dashboard
           </BackLink>
         </Header>
-
         <ActionBar>
           <div>
             <CreateButton href="/admin/blog/create">
@@ -272,48 +331,75 @@ export default function AdminBlog() {
               Create from Transcript
             </CreateFromTranscriptButton>
           </div>
+          <SearchInput
+            type="text"
+            placeholder="Search by title, author, or slug..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            aria-label="Search blog posts"
+          />
         </ActionBar>
-
-        <PostsGrid>
-          {posts.map((post) => (
-            <PostCard key={post.id}>
-              <PostHeader>
-                <PostTitle>{post.title}</PostTitle>
-                <PostActions>
-                  <ActionButton as={Link} href={`/admin/blog/create?id=${post.id}`}>
-                    Edit
-                  </ActionButton>
-                  <ActionButton variant="delete" onClick={() => handleDeletePost(post.id)}>
-                    Delete
-                  </ActionButton>
-                </PostActions>
-              </PostHeader>
-
-              <PostDetails>
-                <DetailItem>
-                  <DetailLabel>Status</DetailLabel>
-                  <StatusBadge status={post.status}>{post.status}</StatusBadge>
-                </DetailItem>
-                <DetailItem>
-                  <DetailLabel>Author</DetailLabel>
-                  <DetailValue>{post.author}</DetailValue>
-                </DetailItem>
-                <DetailItem>
-                  <DetailLabel>Published</DetailLabel>
-                  <DetailValue>{formatDate(post.publishedAt)}</DetailValue>
-                </DetailItem>
-                <DetailItem>
-                  <DetailLabel>Slug</DetailLabel>
-                  <DetailValue>{post.slug}</DetailValue>
-                </DetailItem>
-              </PostDetails>
-
-              {post.excerpt && (
-                <PostExcerpt>{post.excerpt}</PostExcerpt>
-              )}
-            </PostCard>
-          ))}
-        </PostsGrid>
+        <Table>
+          <thead>
+            <tr>
+              <Th>Image</Th>
+              <Th style={{ cursor: 'pointer' }} onClick={() => handleSort('title')}>
+                <span style={{ display: 'inline-flex', alignItems: 'center' }}>
+                  Title{renderSortIcon('title')}
+                </span>
+              </Th>
+              <Th>Status</Th>
+              <Th>Author</Th>
+              <Th style={{ cursor: 'pointer' }} onClick={() => handleSort('publishedAt')}>
+                <span style={{ display: 'inline-flex', alignItems: 'center' }}>
+                  Published{renderSortIcon('publishedAt')}
+                </span>
+              </Th>
+              <Th>Slug</Th>
+              <Th>Actions</Th>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedPosts.map(post => (
+              <tr key={post.id}>
+                <Td>
+                  {post.featuredImage ? (
+                    <ImageThumb src={post.featuredImage} alt={post.title} />
+                  ) : (
+                    <ImageThumb src="/images/thebarefoot.dev-logo.png" alt="No image" />
+                  )}
+                </Td>
+                <Td>
+                  <Link href={`/admin/blog/create?id=${post.id}`} passHref legacyBehavior>
+                    <TitleLink>{post.title}</TitleLink>
+                  </Link>
+                  {post.status === 'published' && (
+                    <ExternalIcon
+                      href={`/blog/${post.slug}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="Open published post"
+                    >
+                      <FontAwesomeIcon icon={faExternalLinkAlt} />
+                    </ExternalIcon>
+                  )}
+                </Td>
+                <Td><StatusBadge status={post.status}>{post.status}</StatusBadge></Td>
+                <Td>{post.author}</Td>
+                <Td>{formatDate(post.publishedAt)}</Td>
+                <Td>{post.slug}</Td>
+                <Td style={{ whiteSpace: 'nowrap' }}>
+                  <IconButton as={Link} href={`/admin/blog/create?id=${post.id}`} title="Edit">
+                    <FontAwesomeIcon icon={faPen} />
+                  </IconButton>
+                  <IconButton onClick={() => handleDeletePost(post.id)} title="Delete">
+                    <FontAwesomeIcon icon={faTrash} />
+                  </IconButton>
+                </Td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
       </AdminContainer>
     </>
   );
