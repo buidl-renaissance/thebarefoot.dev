@@ -5,6 +5,7 @@ export const theme = {
     asphaltBlack: "#222324", // Asphalt Black
     rustedSteel: "#7A7D7D", // Rusted Steel
     neonOrange: "#FF4F00", // Neon Orange (Detroit Techno)
+    neonYellow: "#FFD700", // Neon Yellow (Detroit Techno)
     brickRed: "#B33A3A", // Brick Red
     creamyBeige: "#F5E9DA", // Creamy Beige
   },
