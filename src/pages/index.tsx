@@ -6,6 +6,7 @@ import Link from "next/link";
 
 import type { ThemeType } from "@/styles/theme";
 import FooterComponent from "@/components/Footer";
+import { GridInteraction } from "@/components/GridInteraction";
 
 const HeroSection = styled.section<{ theme: ThemeType }>`
   display: flex;
@@ -23,7 +24,7 @@ const HeroSection = styled.section<{ theme: ThemeType }>`
     padding: 1rem;
   }
 
-  &::before {
+  /* &::before {
     content: "";
     position: absolute;
     top: 0;
@@ -32,7 +33,7 @@ const HeroSection = styled.section<{ theme: ThemeType }>`
     bottom: 0;
     background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,79,0,0.15)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
     z-index: 0;
-  }
+  } */
 `;
 
 const Headline = styled.h1<{ theme: ThemeType }>`
@@ -624,6 +625,7 @@ export default function Home({ events }: HomeProps) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <HeroSection>
+        <GridInteraction />
         <Logo>
           <Image
             src="/images/thebarefoot.dev.png"
