@@ -117,6 +117,11 @@ export default function JoinPage() {
       <Head>
         <title>Build Public AI - The Barefoot Dev</title>
         <meta name="description" content="Join us in building public AI for the people, by the people – starting right here in Detroit." />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta property="og:image" content="/images/public-ai.png" />
+        <meta name="twitter:image" content="/images/public-ai.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
       </Head>
 
       <Header />
