@@ -207,7 +207,7 @@ export default function JoinPage() {
         <Section>
           <SectionTitle>🚀 How to Get Involved</SectionTitle>
           <List>
-            <ListItem><Emphasis>Want to apply together?</Emphasis> Email me: john@dpop.tech</ListItem>
+            <ListItem><Emphasis>Want to apply together?</Emphasis> Email me: john@thebarefootdev.com</ListItem>
             <ListItem><Emphasis>Know someone perfect for this?</Emphasis> Please share this with them.</ListItem>
             <ListItem><Emphasis>Curious but not sure where you fit?</Emphasis> Let&apos;s talk. There may be more ways to collaborate beyond the fellowship.</ListItem>
           </List>

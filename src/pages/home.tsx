@@ -672,7 +672,7 @@ export default function Home() {
                         />
                         Instagram
                     </FooterLink>
-                    <FooterLink href="mailto:john@dpop.tech">
+                    <FooterLink href="mailto:john@thebarefootdev.com">
                         Email
                     </FooterLink>
                 </FooterRow>
