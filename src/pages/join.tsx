@@ -1,6 +1,5 @@
 import Head from "next/head";
 import styled from "styled-components";
-import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import type { ThemeType } from "@/styles/theme";
@@ -67,17 +66,6 @@ const Headline = styled.h1<{ theme: ThemeType }>`
   }
 `;
 
-const Subheadline = styled.p<{ theme: ThemeType }>`
-  font-family: ${({ theme }) => theme.fonts.body};
-  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
-  margin-bottom: 1rem;
-  max-width: 800px;
-  line-height: 1.6;
-  opacity: 0.9;
-  position: relative;
-  z-index: 1;
-`;
-
 const Main = styled.main`
   max-width: 800px;
   margin: 0 auto;
@@ -120,32 +108,6 @@ const Emphasis = styled.em`
   color: ${({ theme }) => theme.colors.neonYellow};
   font-style: normal;
   font-weight: 400;
-`;
-
-const CTAButton = styled(Link)<{ primary?: boolean; theme: ThemeType }>`
-  display: inline-block;
-  background: ${({ theme, primary }) =>
-    primary ? theme.colors.neonOrange : 'transparent'};
-  color: ${({ theme, primary }) =>
-    primary ? theme.colors.asphaltBlack : theme.colors.neonOrange};
-  border: 2px solid ${({ theme }) => theme.colors.neonOrange};
-  border-radius: 8px;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  font-family: ${({ theme }) => theme.fonts.heading};
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  margin-top: 2rem;
-
-  &:hover {
-    transform: translateY(-2px);
-    background: ${({ theme }) => theme.colors.neonOrange};
-    color: ${({ theme }) => theme.colors.asphaltBlack};
-    box-shadow: 0 8px 25px rgba(255, 79, 0, 0.3);
-  }
 `;
 
 export default function JoinPage() {
