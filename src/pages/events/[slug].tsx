@@ -24,7 +24,7 @@ const EventHeader = styled.div`
   position: relative;
   text-align: center;
   padding: 2rem;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   overflow: hidden;
 `;
 
@@ -110,6 +110,7 @@ const EventType = styled.span`
 
 const EventImageWrapper = styled.div`
   margin: 0 auto 2rem;
+  margin-top: 1rem;
   max-width: 800px;
   border-radius: 12px;
   overflow: hidden;
@@ -163,6 +164,11 @@ const Modal = styled.div<{ isOpen: boolean }>`
   justify-content: center;
   z-index: 1000;
   padding: 1rem;
+
+  @media (max-width: 480px) {
+    padding: 0;
+    align-items: flex-end;
+  }
 `;
 
 const ModalContent = styled.div`
@@ -172,6 +178,11 @@ const ModalContent = styled.div`
   padding: 2rem;
   width: 100%;
   max-width: 400px;
+
+  @media (max-width: 480px) {
+    border-radius: 12px 12px 0 0;
+    padding: 1.5rem;
+  }
 `;
 
 const ModalTitle = styled.h2`
@@ -179,6 +190,11 @@ const ModalTitle = styled.h2`
   color: ${({ theme }) => theme.colors.neonOrange};
   margin: 0 0 1.5rem 0;
   font-size: 1.5rem;
+
+  @media (max-width: 480px) {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
 `;
 
 const Form = styled.form`
@@ -191,20 +207,30 @@ const Input = styled.input`
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid ${({ theme }) => theme.colors.rustedSteel};
   border-radius: 4px;
-  padding: 0.75rem;
+  padding: 0.875rem;
   color: ${({ theme }) => theme.colors.creamyBeige};
   font-family: ${({ theme }) => theme.fonts.body};
+  font-size: 16px;
+  width: 100%;
   
   &:focus {
     outline: none;
     border-color: ${({ theme }) => theme.colors.neonOrange};
+  }
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.rustedSteel};
   }
 `;
 
 const ButtonGroup = styled.div`
   display: flex;
   gap: 1rem;
-  margin-top: 1rem;
+  margin-top: 1.5rem;
+
+  @media (max-width: 480px) {
+    flex-direction: column-reverse;
+  }
 `;
 
 const Button = styled.button<{ variant?: 'secondary' }>`
@@ -215,10 +241,11 @@ const Button = styled.button<{ variant?: 'secondary' }>`
   border: 1px solid ${({ theme }) => theme.colors.neonOrange};
   font-family: ${({ theme }) => theme.fonts.body};
   font-weight: 600;
-  padding: 0.75rem;
+  padding: 0.875rem;
   border-radius: 4px;
   cursor: pointer;
   flex: 1;
+  font-size: 16px;
   transition: all 0.3s ease;
   
   &:hover {
@@ -226,6 +253,15 @@ const Button = styled.button<{ variant?: 'secondary' }>`
       variant === 'secondary' ? theme.colors.neonOrange : theme.colors.brickRed};
     color: ${({ theme, variant }) => 
       variant === 'secondary' ? theme.colors.asphaltBlack : theme.colors.creamyBeige};
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  @media (max-width: 480px) {
+    padding: 1rem;
   }
 `;
 
@@ -266,6 +302,21 @@ function EventDetails({ event }: Props) {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleModalClose = () => {
+    if (!isSubmitting) {
+      setIsModalOpen(false);
+      setError('');
+      setSuccess('');
+    }
+  };
+
+  const handleModalClick = (e: React.MouseEvent) => {
+    // Close only if clicking the backdrop (not the modal content)
+    if (e.target === e.currentTarget) {
+      handleModalClose();
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -349,7 +400,7 @@ function EventDetails({ event }: Props) {
         </EventContent>
       </EventContainer>
 
-      <Modal isOpen={isModalOpen}>
+      <Modal isOpen={isModalOpen} onClick={handleModalClick}>
         <ModalContent>
           <ModalTitle>RSVP for {event.title}</ModalTitle>
           <Form onSubmit={handleSubmit}>
@@ -370,7 +421,7 @@ function EventDetails({ event }: Props) {
             {error && <ErrorMessage>{error}</ErrorMessage>}
             {success && <SuccessMessage>{success}</SuccessMessage>}
             <ButtonGroup>
-              <Button type="button" variant="secondary" onClick={() => setIsModalOpen(false)}>
+              <Button type="button" variant="secondary" onClick={handleModalClose} disabled={isSubmitting}>
                 Cancel
               </Button>
               <Button type="submit" disabled={isSubmitting}>
