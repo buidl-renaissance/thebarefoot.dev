@@ -13,7 +13,10 @@
     "db:studio": "drizzle-kit studio",
     "db:seed": "tsx src/db/seed.ts",
     "setup": "node scripts/setup-env.js",
-    "test:email": "tsx scripts/send-test-email.ts"
+    "test:email": "tsx scripts/send-test-email.ts",
+    "email:weekly": "tsx src/scripts/send-weekly-summary.ts",
+    "email:weekly-test": "tsx src/scripts/send-test-weekly.ts",
+    "email:blog-digest": "tsx src/scripts/send-blog-digest.ts"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.10.0",
