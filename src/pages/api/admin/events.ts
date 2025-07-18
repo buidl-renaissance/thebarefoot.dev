@@ -3,6 +3,7 @@ import { db } from '@/db';
 import { events } from '@/db/schema';
 import { eq, isNull } from 'drizzle-orm';
 import { convertToUTC } from '@/lib/utc';
+import slugify from 'slugify';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
@@ -16,10 +17,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } else if (req.method === 'POST') {
     try {
       const { title, slug, description, startDatetime, endDatetime, location, type, imageUrl } = req.body;
+
+      let theSlug = slug ?? slugify(title);
+
+      const slugExists = await db.select().from(events).where(eq(events.slug, theSlug));
+      if (slugExists.length > 0) {
+        theSlug = theSlug + '-' + slugExists.length + 1;
+      }
       
       const newEvent = await db.insert(events).values({
         title,
-        slug,
+        slug: theSlug,
         description,
         startDatetime: convertToUTC(startDatetime),
         endDatetime: convertToUTC(endDatetime),
