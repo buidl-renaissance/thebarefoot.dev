@@ -492,6 +492,7 @@ const NoEventsMessage = styled.p<{ theme: ThemeType }>`
 interface Event {
   id: number;
   title: string;
+  slug: string;
   description: string;
   startDatetime: string | Date;
   endDatetime: string | Date;
@@ -727,30 +728,32 @@ export default function Home({ events }: HomeProps) {
           <EventsGrid>
             {events.map((event) => (
               <EventCard key={event.id}>
-                {event.imageUrl && (
-                  <EventImage>
-                    <Image
-                      src={event.imageUrl}
-                      alt={event.title}
-                      width={400}
-                      height={200}
-                      style={{ objectFit: 'cover' }}
-                    />
-                  </EventImage>
-                )}
-                <EventTitle>{event.title}</EventTitle>
-                <EventDetails>
-                  <EventDetail>
-                    📅 {formatEventDateRange(event.startDatetime, event.endDatetime)}
-                  </EventDetail>
-                  <EventDetail>
-                    📍 {event.location}
-                  </EventDetail>
-                  <EventDetail>
-                    🎯 {event.type.charAt(0).toUpperCase() + event.type.slice(1)}
-                  </EventDetail>
-                </EventDetails>
-                <EventDescription>{event.description}</EventDescription>
+                <Link href={`/events/${event.slug}`} style={{ textDecoration: 'none' }}>
+                  {event.imageUrl && (
+                    <EventImage>
+                      <Image
+                        src={event.imageUrl}
+                        alt={event.title}
+                        width={400}
+                        height={200}
+                        style={{ objectFit: 'cover' }}
+                      />
+                    </EventImage>
+                  )}
+                  <EventTitle>{event.title}</EventTitle>
+                  <EventDetails>
+                    <EventDetail>
+                      📅 {formatEventDateRange(event.startDatetime, event.endDatetime)}
+                    </EventDetail>
+                    <EventDetail>
+                      📍 {event.location}
+                    </EventDetail>
+                    <EventDetail>
+                      🎯 {event.type.charAt(0).toUpperCase() + event.type.slice(1)}
+                    </EventDetail>
+                  </EventDetails>
+                  <EventDescription>{event.description}</EventDescription>
+                </Link>
               </EventCard>
             ))}
           </EventsGrid>
@@ -767,38 +770,16 @@ export default function Home({ events }: HomeProps) {
 
 export async function getServerSideProps() {
   try {
-    // Fetch events from the API
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/admin/events`);
+    // Fetch events from the public API
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/events`);
     
     if (response.ok) {
-      const allEvents = await response.json();
+      const events = await response.json();
       
-      // Filter for upcoming events (events that haven't ended yet)
-      const now = new Date();
-      const upcomingEvents = allEvents.filter((event: Event) => {
-        const endDate = typeof event.endDatetime === 'string' 
-          ? new Date(event.endDatetime) 
-          : event.endDatetime;
-        return endDate > now;
-      });
-      
-      // Sort by start date (earliest first)
-      upcomingEvents.sort((a: Event, b: Event) => {
-        const dateA = typeof a.startDatetime === 'string' 
-          ? new Date(a.startDatetime) 
-          : a.startDatetime;
-        const dateB = typeof b.startDatetime === 'string' 
-          ? new Date(b.startDatetime) 
-          : b.startDatetime;
-        return dateA.getTime() - dateB.getTime();
-      });
-      
-      // Limit to 3 upcoming events
-      const events = upcomingEvents.slice(0, 3);
-      
+      // Limit to 3 events (they're already sorted by date in the API)
       return {
         props: {
-          events,
+          events: events.slice(0, 3),
         },
       };
     }

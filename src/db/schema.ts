@@ -114,4 +114,15 @@ export const verificationTokens = sqliteTable("verification_tokens", {
   type: text("type").notNull(), // 'email' or 'password_reset'
   expires: integer("expires", { mode: "timestamp" }).notNull(),
   createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+});
+
+// RSVPs table
+export const rsvps = sqliteTable("rsvps", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  eventId: integer("event_id").notNull(),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+  deletedAt: integer("deleted_at", { mode: "timestamp" }),
 }); 

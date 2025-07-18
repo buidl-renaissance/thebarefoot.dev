@@ -18,7 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
       const { title, slug, description, startDatetime, endDatetime, location, type, imageUrl } = req.body;
 
-      let theSlug = slug ?? slugify(title);
+      let theSlug = slug ?? slugify(title).toLowerCase();
 
       const slugExists = await db.select().from(events).where(eq(events.slug, theSlug));
       if (slugExists.length > 0) {
@@ -45,12 +45,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   } else if (req.method === 'PUT') {
     try {
-      const { id, title, slug, description, startDatetime, endDatetime, location, type, imageUrl } = req.body;
+      const { id, title, description, startDatetime, endDatetime, location, type, imageUrl } = req.body;
       
       const updatedEvent = await db.update(events)
         .set({
           title,
-          slug,
           description,
           startDatetime: convertToUTC(startDatetime),
           endDatetime: convertToUTC(endDatetime),

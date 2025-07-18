@@ -71,6 +71,13 @@
       "when": 1752678236168,
       "tag": "0009_left_moondragon",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1752856890396,
+      "tag": "0010_watery_satana",
+      "breakpoints": true
     }
   ]
 }
