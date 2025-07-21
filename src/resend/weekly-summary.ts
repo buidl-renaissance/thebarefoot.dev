@@ -3,26 +3,25 @@ import { env } from '@/config/env';
 
 const resend = new Resend(env.RESEND_API_KEY);
 
-interface WeeklySummaryContent {
-  weeklyRecap: string[];
-  upcomingEvents: string[];
-  featuredEvent?: {
-    title: string;
-    date: string;
-    time: string;
-    description: string;
-  };
-}
+// interface WeeklySummaryContent {
+//   weeklyRecap: string[];
+//   upcomingEvents: string[];
+//   featuredEvent?: {
+//     title: string;
+//     date: string;
+//     time: string;
+//     description: string;
+//   };
+// }
 
 export async function sendWeeklySummaryEmail(
   email: string,
-  content: WeeklySummaryContent
 ) {
   try {
     const { data, error } = await resend.emails.send({
       from: 'thebarefoot.dev <john@thebarefoot.dev>',
       to: [email],
-      subject: "What We Built This Week (and What's Coming Next 🚀)",
+      subject: "The First Week of the Barefoot Blog ✍️🌱",
       html: `
         <!DOCTYPE html>
         <html>
@@ -38,10 +37,10 @@ export async function sendWeeklySummaryEmail(
             <!-- Header -->
             <div style="background: linear-gradient(135deg, #ff4f00 0%, #ff6b35 100%) !important; padding: 40px 30px; text-align: center;">
               <h1 style="color: #ffffff !important; margin: 0; font-size: 28px; font-weight: 700; line-height: 1.3; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-                The Barefoot Dev | Weekly Update
+                The Barefoot Dev | Week One Recap
               </h1>
               <p style="color: #ffffff !important; margin: 10px 0 0 0; font-size: 16px; opacity: 0.95;">
-                For the people. By the people. Built in Detroit.
+                Building in public. Connecting through code. Rooted in Detroit.
               </p>
             </div>
             
@@ -51,73 +50,75 @@ export async function sendWeeklySummaryEmail(
               <!-- Greeting -->
               <div style="margin-bottom: 30px;">
                 <p style="color: #2d3748 !important; font-size: 18px; line-height: 1.6; margin: 0 0 20px 0;">
-                  Hey there,
+                  Hey friends,
                 </p>
                 
                 <p style="color: #2d3748 !important; font-size: 16px; line-height: 1.7; margin: 0 0 30px 0;">
-                  Here's a quick look at what we built together this week and where we're headed:
+                  Last week marked something special—it was the first week we started publishing the story as it unfolds. No big launches, just a commitment to documenting what's happening in real time, from the people building it.
                 </p>
+              </div>
+
+              <!-- What Happened Section -->
+              <div style="margin-bottom: 40px;">
+                <h2 style="color: #2d3748 !important; font-size: 20px; margin: 0 0 20px 0;">
+                  📓 What Happened
+                </h2>
+                <div style="background: #f7fafc !important; border-radius: 12px; padding: 25px; border-left: 4px solid #ff4f00;">
+                  <p style="color: #2d3748 !important; font-size: 16px; line-height: 1.6; margin: 0 0 15px 0;">
+                    We kicked off with the VibeCoding Meetup, where speakers shared everything from internal AI tooling to startup journeys and technical experiments. The talks weren't just informative—they were deeply aligned with what this space is about: real people building real things. <a href="https://www.thebarefoot.dev/blog/vibecoding-royal-oak-recap-ai-tools-real-projects-and-what-we-re-building-next" style="color: #ff4f00 !important; text-decoration: none;">Read the full recap →</a>
+                  </p>
+                  <p style="color: #2d3748 !important; font-size: 16px; line-height: 1.6; margin: 0 0 15px 0;">
+                    On Wednesday, we attended a packed Dev meetup focused on APIs, gateways, and Chainlink Functions. More than just code talk, it was a bridge between ecosystems—connecting builders across disciplines. <a href="https://www.thebarefoot.dev/blog/building-bridges-apis-ai-and-chainlink-at-the-july-detroit-software-developers-meetup" style="color: #ff4f00 !important; text-decoration: none;">Read the full recap →</a>
+                  </p>
+                  <p style="color: #2d3748 !important; font-size: 16px; line-height: 1.6; margin: 0 0 15px 0;">
+                    And then there was Rochelle—an unexpected but powerful side quest. She's creating SOLAS COPIA Temple of LIGHT, a nonprofit rooted in sound healing, storytelling, and spiritual care. Her journey using technology as a vehicle for healing and sovereignty embodies everything we mean when we talk about building for people, not platforms. <a href="https://www.thebarefoot.dev/blog/from-spirit-to-stack-how-rochelle-is-building-a-healing-platform-with-ai-and-web3" style="color: #ff4f00 !important; text-decoration: none;">Read her story →</a>
+                  </p>
+                </div>
               </div>
 
               <!-- This Week Section -->
               <div style="margin-bottom: 40px;">
                 <h2 style="color: #2d3748 !important; font-size: 20px; margin: 0 0 20px 0;">
-                  🔧 This Week in the Lab
+                  🌱 This Week
                 </h2>
                 <div style="background: #f7fafc !important; border-radius: 12px; padding: 25px; border-left: 4px solid #ff4f00;">
-                  ${content.weeklyRecap.map(item => `
-                    <p style="color: #2d3748 !important; font-size: 16px; line-height: 1.6; margin: 0 0 15px 0;">
-                      ${item}
-                    </p>
-                  `).join('')}
+                  <p style="color: #2d3748 !important; font-size: 16px; line-height: 1.6; margin: 0 0 15px 0;">
+                    There aren't many big events on the calendar—just an intimate gathering tonight. It might be small, but that's the point. We're nurturing something here. These little pockets of people, sharing and learning together, are the foundation.
+                  </p>
+                  <p style="color: #2d3748 !important; font-size: 16px; line-height: 1.6; margin: 0 0 15px 0;">
+                    Click RSVP below to join the new weekly series where we can gather, co-work, and share ideas. First one's tonight. Bring your curiosity.
+                  </p>
                 </div>
               </div>
 
-              <!-- Coming Up Section -->
+              <!-- Featured Event -->
               <div style="margin-bottom: 40px;">
-                <h2 style="color: #2d3748 !important; font-size: 20px; margin: 0 0 20px 0;">
-                  🗓 What's Coming Up
-                </h2>
-                <div style="background: #f7fafc !important; border-radius: 12px; padding: 25px; border-left: 4px solid #ff4f00;">
-                  ${content.upcomingEvents.map(item => `
-                    <p style="color: #2d3748 !important; font-size: 16px; line-height: 1.6; margin: 0 0 15px 0;">
-                      ${item}
-                    </p>
-                  `).join('')}
-                </div>
-              </div>
-
-              ${content.featuredEvent ? `
-                <!-- Featured Event -->
-                <div style="margin-bottom: 40px;">
-                  <h2 style="color: #2d3748 !important; font-size: 20px; margin: 0 0 20px 0;">
-                    📣 Join Us ${content.featuredEvent.date}:
-                  </h2>
-                  <div style="background: linear-gradient(135deg, #ff4f00 0%, #ff6b35 100%) !important; border-radius: 12px; padding: 30px; color: #ffffff !important; text-align: center;">
-                    <h3 style="color: #ffffff !important; font-size: 24px; margin: 0 0 10px 0;">
-                      ${content.featuredEvent.title}
-                    </h3>
-                    <p style="color: #ffffff !important; font-size: 18px; margin: 0 0 5px 0;">
-                      ${content.featuredEvent.time}
-                    </p>
-                    <p style="color: #ffffff !important; font-size: 16px; margin: 15px 0; line-height: 1.6;">
-                      ${content.featuredEvent.description}
-                    </p>
-                    <div style="margin-top: 20px;">
-                      <a href="https://thebarefoot.dev/events" 
-                         style="display: inline-block; background: #ffffff !important; color: #ff4f00 !important; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 16px;">
-                        RSVP Now
-                      </a>
-                    </div>
+                <div style="background: linear-gradient(135deg, #ff4f00 0%, #ff6b35 100%) !important; border-radius: 12px; padding: 30px; color: #ffffff !important; text-align: center;">
+                  <h3 style="color: #ffffff !important; font-size: 24px; margin: 0 0 10px 0;">
+                    🛠️ Walking the Path of TheBarefoot.Dev
+                  </h3>
+                  <p style="color: #ffffff !important; font-size: 18px; margin: 0 0 5px 0;">
+                    Mondays @ 5:30–6:30 PM
+                  </p>
+                  <p style="color: #ffffff !important; font-size: 16px; margin: 15px 0; line-height: 1.6;">
+                    A space to build, share, and grow—together.<br>
+                    → Just show up. We'll figure it out together.
+                  </p>
+                  <div style="margin-top: 20px;">
+                    <a href="https://thebarefoot.dev/events" 
+                       style="display: inline-block; background: #ffffff !important; color: #ff4f00 !important; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 16px;">
+                      RSVP Now
+                    </a>
                   </div>
                 </div>
-              ` : ''}
+              </div>
 
               <!-- Signature -->
               <div style="border-top: 2px solid #e2e8f0; margin-top: 40px; padding-top: 30px;">
                 <p style="color: #2d3748 !important; font-size: 16px; line-height: 1.6; margin: 0;">
-                  Talk soon,<br>
-                  <span style="color: #ff4f00 !important; font-weight: 600;">John & the Barefoot Dev Team</span><br>
+                  Thanks for reading. If you're building something, learning something, or just curious—come through. That's how this whole thing grows.<br><br>
+                  In motion,<br>
+                  <span style="color: #ff4f00 !important; font-weight: 600;">The Barefoot Dev</span><br>
                   <a href="https://thebarefoot.dev" 
                      style="color: #ff4f00 !important; text-decoration: none;">
                     thebarefoot.dev
@@ -149,4 +150,4 @@ export async function sendWeeklySummaryEmail(
     console.error('Email sending error:', error);
     return { success: false, error };
   }
-} 
+}
