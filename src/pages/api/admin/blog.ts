@@ -1,7 +1,24 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '@/db';
-import { blogPosts } from '@/db/schema';
+import { blogPosts, blogPostHistory } from '@/db/schema';
 import { eq, isNull } from 'drizzle-orm';
+
+// Type for blog post row
+interface BlogPost {
+  id: number;
+  title: string;
+  slug: string;
+  content: string;
+  excerpt: string | null;
+  featuredImage: string | null;
+  author: string;
+  publishedAt: Date;
+  status: string;
+  tags: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: Date | null;
+}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
@@ -80,7 +97,40 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       
       // Preserve existing slug if no new slug is provided, otherwise use the new slug
       const finalSlug = slug || existingPost[0].slug || generateSlug(title);
-      
+
+      // Track changes for history
+      const fieldsToTrack = [
+        "title", "slug", "content", "excerpt", "featuredImage", "author", "status", "tags"
+      ] as const;
+      const oldPost = existingPost[0] as BlogPost;
+      const newValues: Partial<BlogPost> = {
+        title,
+        slug: finalSlug,
+        content,
+        excerpt,
+        featuredImage,
+        author,
+        status,
+        tags: tags ? JSON.stringify(tags) : null,
+      };
+      const changes = [];
+      for (const field of fieldsToTrack) {
+        let oldValue = oldPost[field];
+        let newValue = newValues[field];
+        // Normalize undefined/null/empty
+        if (oldValue === undefined) oldValue = null;
+        if (newValue === undefined) newValue = null;
+        if (String(oldValue) !== String(newValue)) {
+          changes.push({
+            blogPostId: id,
+            field,
+            oldValue: oldValue === null ? null : String(oldValue),
+            newValue: newValue === null ? null : String(newValue),
+            changedAt: new Date(),
+          });
+        }
+      }
+
       const updatedPost = await db.update(blogPosts)
         .set({
           title,
@@ -95,6 +145,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         })
         .where(eq(blogPosts.id, id))
         .returning();
+
+      // Insert history records if there are changes
+      if (changes.length > 0) {
+        for (const change of changes) {
+          await db.insert(blogPostHistory).values(change);
+        }
+      }
       
       res.status(200).json(updatedPost[0]);
     } catch (error) {
