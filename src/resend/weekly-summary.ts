@@ -15,12 +15,14 @@ const resend = new Resend(env.RESEND_API_KEY);
 // }
 
 export async function sendWeeklySummaryEmail(
-  email: string,
+  to: string,
+  bcc: string[],
 ) {
   try {
     const { data, error } = await resend.emails.send({
       from: 'thebarefoot.dev <john@thebarefoot.dev>',
-      to: [email],
+      to: [to],
+      bcc: bcc,
       subject: "The First Week of the Barefoot Blog ✍️🌱",
       html: `
         <!DOCTYPE html>
