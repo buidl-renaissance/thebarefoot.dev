@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from 'react';
+import React, { Suspense, useEffect, useState, useRef, useCallback } from 'react';
 import styled from 'styled-components';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
@@ -120,6 +120,65 @@ const ToolbarSelect = styled.select`
   }
 `;
 
+const LinkInputContainer = styled.div<{ position: { top: number; left: number } | null; visible: boolean }>`
+  position: absolute;
+  z-index: 1000;
+  display: ${({ position, visible }) => (position && visible) ? 'flex' : 'none'};
+  align-items: center;
+  gap: 0.5rem;
+  background: ${({ theme }) => theme.colors.asphaltBlack};
+  border: 1px solid ${({ theme }) => theme.colors.neonOrange};
+  border-radius: 6px;
+  padding: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  min-width: 280px;
+  top: ${({ position }) => position ? `${position.top}px` : '0px'};
+  left: ${({ position }) => position ? `${position.left}px` : '0px'};
+`;
+
+const LinkInput = styled.input`
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid ${({ theme }) => theme.colors.rustedSteel};
+  border-radius: 4px;
+  padding: 0.4rem 0.6rem;
+  color: ${({ theme }) => theme.colors.creamyBeige};
+  font-family: ${({ theme }) => theme.fonts.body};
+  font-size: 0.9rem;
+  flex: 1;
+  
+  &:focus {
+    outline: none;
+    border-color: ${({ theme }) => theme.colors.neonOrange};
+  }
+  
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.rustedSteel};
+  }
+`;
+
+const ReturnButton = styled.button`
+  background: transparent;
+  border: 1px solid ${({ theme }) => theme.colors.neonOrange};
+  color: ${({ theme }) => theme.colors.neonOrange};
+  border-radius: 4px;
+  padding: 0.4rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: ${({ theme }) => theme.colors.neonOrange};
+    color: ${({ theme }) => theme.colors.asphaltBlack};
+  }
+  
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+`;
+
 interface WYSIWYGEditorProps {
   value: string;
   onChange: (value: string) => void;
@@ -131,6 +190,11 @@ const ThemedEditor: React.FC<WYSIWYGEditorProps> = ({
   onChange, 
   placeholder = "Write your blog post content..." 
 }) => {
+  const [linkInputVisible, setLinkInputVisible] = useState(false);
+  const [linkInputPosition, setLinkInputPosition] = useState<{ top: number; left: number } | null>(null);
+  const [linkUrl, setLinkUrl] = useState('');
+  const linkInputRef = useRef<HTMLInputElement>(null);
+  const editorContainerRef = useRef<HTMLDivElement>(null);
 
   console.log('WYSIWYG Editor - Value prop:', value);
 
@@ -171,6 +235,130 @@ const ThemedEditor: React.FC<WYSIWYGEditorProps> = ({
     }
   }, [editor, value]);
 
+  // Function to hide link input
+  const hideLinkInput = useCallback(() => {
+    setLinkInputVisible(false);
+    setLinkInputPosition(null);
+    setLinkUrl('');
+    editor?.chain().focus().run();
+  }, [editor]);
+
+  // Click outside to close link input
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (linkInputVisible) {
+        const target = event.target as Element;
+        const linkContainer = document.querySelector('[data-link-input-container]');
+        
+        // Close if clicking outside the link input container
+        if (linkContainer && !linkContainer.contains(target)) {
+          hideLinkInput();
+        }
+      }
+    };
+
+    if (linkInputVisible) {
+      // Add a small delay to prevent immediate closing when opening
+      const timer = setTimeout(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+      }, 100);
+      
+      return () => {
+        clearTimeout(timer);
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }
+  }, [linkInputVisible, hideLinkInput]);
+
+  // Function to show link input positioned relative to selection
+  const showLinkInput = useCallback(() => {
+    if (!editor || !editorContainerRef.current) return;
+
+    const { from, to } = editor.state.selection;
+    if (from === to) return; // No text selected
+
+    // Get the selection coordinates
+    const coords = editor.view.coordsAtPos(from);
+    const containerRect = editorContainerRef.current.getBoundingClientRect();
+    
+    // Calculate position relative to the editor container with better positioning
+    let top = coords.top - containerRect.top - 50; // 50px above the selection
+    let left = coords.left - containerRect.left;
+    
+    // Ensure the input doesn't go outside the container bounds
+    const inputWidth = 280; // min-width from styled component
+    if (left + inputWidth > containerRect.width) {
+      left = containerRect.width - inputWidth - 10; // 10px margin from right edge
+    }
+    if (left < 10) {
+      left = 10; // 10px margin from left edge
+    }
+    if (top < 10) {
+      top = coords.bottom - containerRect.top + 10; // Position below selection if no space above
+    }
+
+    const position = { top, left };
+
+    // Get existing link URL if text is already linked
+    const existingLink = editor.getAttributes('link');
+    setLinkUrl(existingLink.href || '');
+    
+    setLinkInputPosition(position);
+    setLinkInputVisible(true);
+    
+    // Focus the input after a brief delay to ensure it's rendered
+    setTimeout(() => {
+      linkInputRef.current?.focus();
+    }, 10);
+  }, [editor]);
+
+  // Keyboard shortcut for link input (Cmd+K / Ctrl+K)
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Check for Cmd+K (Mac) or Ctrl+K (Windows/Linux)
+      if ((event.metaKey || event.ctrlKey) && event.key === 'k') {
+        event.preventDefault();
+        event.stopPropagation();
+        
+        // Only trigger if editor is focused and has text selection
+        if (editor && editor.isFocused) {
+          const { from, to } = editor.state.selection;
+          if (from !== to) { // Has text selected
+            showLinkInput();
+          }
+        }
+      }
+    };
+
+    // Add event listener to the document
+    document.addEventListener('keydown', handleKeyDown);
+    
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [editor, showLinkInput]);
+
+  // Function to apply the link
+  const applyLink = () => {
+    if (!editor || !linkUrl.trim()) return;
+
+    editor.chain().focus().setLink({ href: linkUrl.trim() }).run();
+    hideLinkInput();
+  };
+
+  // Handle keyboard events for link input
+  const handleLinkInputKeyDown = (e: React.KeyboardEvent) => {
+    e.stopPropagation(); // Prevent event from bubbling to parent form
+    
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      applyLink();
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      hideLinkInput();
+    }
+  };
+
   if (!editor) {
     return <div>Loading editor...</div>;
   }
@@ -179,24 +367,28 @@ const ThemedEditor: React.FC<WYSIWYGEditorProps> = ({
     <div>
       <Toolbar>
         <ToolbarButton
+          type="button"
           onClick={() => editor.chain().focus().toggleBold().run()}
           active={editor.isActive('bold')}
         >
           Bold
         </ToolbarButton>
         <ToolbarButton
+          type="button"
           onClick={() => editor.chain().focus().toggleItalic().run()}
           active={editor.isActive('italic')}
         >
           Italic
         </ToolbarButton>
         <ToolbarButton
+          type="button"
           onClick={() => editor.chain().focus().toggleStrike().run()}
           active={editor.isActive('strike')}
         >
           Strike
         </ToolbarButton>
         <ToolbarButton
+          type="button"
           onClick={() => editor.chain().focus().toggleCode().run()}
           active={editor.isActive('code')}
         >
@@ -224,53 +416,56 @@ const ThemedEditor: React.FC<WYSIWYGEditorProps> = ({
         </ToolbarSelect>
         
         <ToolbarButton
+          type="button"
           onClick={() => editor.chain().focus().toggleBulletList().run()}
           active={editor.isActive('bulletList')}
         >
           Bullet List
         </ToolbarButton>
         <ToolbarButton
+          type="button"
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
           active={editor.isActive('orderedList')}
         >
           Ordered List
         </ToolbarButton>
         <ToolbarButton
+          type="button"
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
           active={editor.isActive('blockquote')}
         >
           Quote
         </ToolbarButton>
         <ToolbarButton
+          type="button"
           onClick={() => editor.chain().focus().setTextAlign('left').run()}
           active={editor.isActive({ textAlign: 'left' })}
         >
           Left
         </ToolbarButton>
         <ToolbarButton
+          type="button"
           onClick={() => editor.chain().focus().setTextAlign('center').run()}
           active={editor.isActive({ textAlign: 'center' })}
         >
           Center
         </ToolbarButton>
         <ToolbarButton
+          type="button"
           onClick={() => editor.chain().focus().setTextAlign('right').run()}
           active={editor.isActive({ textAlign: 'right' })}
         >
           Right
         </ToolbarButton>
         <ToolbarButton
-          onClick={() => {
-            const url = window.prompt('Enter URL:');
-            if (url) {
-              editor.chain().focus().setLink({ href: url }).run();
-            }
-          }}
+          type="button"
+          onClick={showLinkInput}
           active={editor.isActive('link')}
         >
           Link
         </ToolbarButton>
         <ToolbarButton
+          type="button"
           onClick={() => editor.chain().focus().unsetLink().run()}
           disabled={!editor.isActive('link')}
         >
@@ -278,8 +473,32 @@ const ThemedEditor: React.FC<WYSIWYGEditorProps> = ({
         </ToolbarButton>
       </Toolbar>
       
-      <EditorContainer>
+      <EditorContainer ref={editorContainerRef} style={{ position: 'relative' }}>
         <EditorContent editor={editor} />
+        
+        <LinkInputContainer 
+          position={linkInputPosition} 
+          visible={linkInputVisible}
+          data-link-input-container
+        >
+          <LinkInput
+            ref={linkInputRef}
+            type="url"
+            value={linkUrl}
+            onChange={(e) => setLinkUrl(e.target.value)}
+            onKeyDown={handleLinkInputKeyDown}
+            placeholder="Enter URL (https://...)"
+          />
+          <ReturnButton
+            type="button"
+            onClick={applyLink}
+            title="Apply link (Enter)"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M19 12H5m7 7l-7-7 7-7"/>
+            </svg>
+          </ReturnButton>
+        </LinkInputContainer>
       </EditorContainer>
     </div>
   );

@@ -466,9 +466,7 @@ export default function CreateEditBlog() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
+  const handleSubmit = async () => {
     try {
       const postData = {
         title: formData.title,
@@ -640,7 +638,7 @@ export default function CreateEditBlog() {
         )}
 
         <TabContent active={activeTab === 'manual'}>
-          <Form onSubmit={handleSubmit}>
+          <Form>
             <FormGroup>
               <Label htmlFor="title">Title</Label>
               <Input
@@ -745,7 +743,7 @@ export default function CreateEditBlog() {
               <CancelButton type="button" onClick={() => router.push('/admin/blog')}>
                 Cancel
               </CancelButton>
-              <SubmitButton type="submit">
+              <SubmitButton type="button" onClick={handleSubmit}>
                 {isEditing ? 'Update Post' : 'Create Post'}
               </SubmitButton>
             </ButtonGroup>
@@ -753,7 +751,7 @@ export default function CreateEditBlog() {
         </TabContent>
 
         <TabContent active={activeTab === 'transcript'}>
-          <Form onSubmit={handleSubmit}>
+          <Form>
             <FormGroup>
               <Label htmlFor="transcript">Transcript/Notes</Label>
               <WYSIWYGEditor
@@ -927,7 +925,7 @@ export default function CreateEditBlog() {
                   <CancelButton type="button" onClick={() => router.push('/admin/blog')}>
                     Cancel
                   </CancelButton>
-                  <SubmitButton type="submit">
+                  <SubmitButton type="button" onClick={handleSubmit}>
                     Create Post
                   </SubmitButton>
                 </ButtonGroup>
