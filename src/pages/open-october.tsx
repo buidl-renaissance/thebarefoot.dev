@@ -90,7 +90,7 @@ const HeroDatesContainer = styled.div`
 
   @media (max-width: 768px) {
     gap: 1rem;
-    margin: 1.5rem 0 2rem 0;
+    margin: 1rem 0 1rem 0;
   }
 `;
 
@@ -149,7 +149,7 @@ const MainHeadline = styled.h1<{ theme: ThemeType }>`
 const SubHeadline = styled.h2<{ theme: ThemeType }>`
   font-family: ${({ theme }) => theme.fonts.body};
   font-size: clamp(1.1rem, 3vw, 1.6rem);
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   line-height: 1.6;
   opacity: 0.9;
   max-width: 700px;
@@ -573,7 +573,7 @@ export default function OpenOctober() {
             </HeroDateItem>
           </HeroDatesContainer>
 
-          <SubHeadline style={{ marginBottom: '3rem', fontWeight: '500', fontSize: '0.95rem' }}>
+          <SubHeadline style={{ marginBottom: '2rem', fontWeight: '500', fontSize: '0.95rem' }}>
             A month-long event series in Detroit — learn Git, explore open data, build in community, and merge your work into the commons.
           </SubHeadline>
           <CTAGroup>
