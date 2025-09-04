@@ -75,11 +75,6 @@ const HeroTreeContainer = styled.div`
 
 const HeroTreeImage = styled(Image)`
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
-
-  @media (max-width: 768px) {
-    width: 150px;
-    height: 150px;
-  }
 `;
 
 const HeroDatesContainer = styled.div`
@@ -130,7 +125,7 @@ const HeroDateLabel = styled.div`
 
 const MainHeadline = styled.h1<{ theme: ThemeType }>`
   font-family: ${({ theme }) => theme.fonts.mono};
-  font-size: clamp(2rem, 6vw, 4rem);
+  font-size: clamp(3rem, 6vw, 4rem);
   font-weight: bold;
   margin-bottom: 1rem;
   letter-spacing: 3px;
@@ -142,7 +137,7 @@ const MainHeadline = styled.h1<{ theme: ThemeType }>`
   text-transform: uppercase;
 
   @media (max-width: 480px) {
-    font-size: 2rem;
+    font-size: 2.5rem;
     letter-spacing: 1px;
   }
 `;
@@ -574,7 +569,7 @@ export default function OpenOctober() {
             </HeroDateItem>
           </HeroDatesContainer>
 
-          <SubHeadline style={{ fontSize: '1.1rem', marginBottom: '3rem' }}>
+          <SubHeadline style={{ marginBottom: '3rem', fontWeight: '500', fontSize: '0.95rem' }}>
             A month-long event series in Detroit — learn Git, explore open data, build in community, and merge your work into the commons.
           </SubHeadline>
           <CTAGroup>
@@ -583,11 +578,11 @@ export default function OpenOctober() {
                 <GitIcon>git</GitIcon> Register for Kickoff
               </CTAButton>
             </Link>
-            <CTAButton 
+            {/* <CTAButton 
               onClick={() => window.open('https://github.com/open-october-detroit', '_blank')}
             >
               Join the GitHub Repo
-            </CTAButton>
+            </CTAButton> */}
           </CTAGroup>
         </HeroContent>
       </HeroSection>
