@@ -53,7 +53,7 @@ const HeroSection = styled.section<{ theme: ThemeType }>`
     left: 0;
     right: 0;
     bottom: 0;
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="autumnGrid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(218,165,32,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23autumnGrid)"/></svg>');
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="autumnGrid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(218,165,32,0.05)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23autumnGrid)"/></svg>');
     z-index: 0;
   }
 
@@ -810,22 +810,46 @@ export default function OpenOctober() {
           property="og:description"
           content="A month-long open source event series in Detroit — learn Git, build in community, and celebrate at the Merge Party."
         />
-        <meta property="og:type" content="website" />
-        <meta
-          property="og:url"
-          content="https://thebarefoot.dev/open-october"
-        />
+                  <meta property="og:type" content="website" />
+          <meta
+            property="og:url"
+            content="https://thebarefoot.dev/open-october"
+          />
+          <meta
+            property="og:image"
+            content="https://thebarefoot.dev/images/open-october-featured.png"
+          />
+          <meta
+            property="og:image:width"
+            content="1200"
+          />
+          <meta
+            property="og:image:height"
+            content="630"
+          />
+          <meta
+            property="og:image:alt"
+            content="Open October: Detroit's open source and open data event series"
+          />
 
-        {/* Twitter */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta
-          name="twitter:title"
-          content="Open October: Build • Learn • Merge"
-        />
-        <meta
-          name="twitter:description"
-          content="Detroit's month-long open source event series. Learn Git, build in community, celebrate open source."
-        />
+          {/* Twitter */}
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta
+            name="twitter:title"
+            content="Open October: Build • Learn • Merge"
+          />
+          <meta
+            name="twitter:description"
+            content="Detroit's month-long open source event series. Learn Git, build in community, celebrate open source."
+          />
+          <meta
+            name="twitter:image"
+            content="https://thebarefoot.dev/images/open-october-featured.png"
+          />
+          <meta
+            name="twitter:image:alt"
+            content="Open October: Detroit's open source and open data event series"
+          />
       </Head>
 
       <HeaderComponent />
