@@ -75,18 +75,22 @@ const HeroTreeContainer = styled.div`
 
 const HeroTreeImage = styled(Image)`
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  @media (max-width: 768px) {
+    width: 200px;
+    height: 200px;
+  }
 `;
 
 const HeroDatesContainer = styled.div`
   display: flex;
   justify-content: center;
   gap: 2rem;
-  margin: 2rem 0 1rem 0;
+  margin: 1rem 0 3rem 0;
   flex-wrap: wrap;
 
   @media (max-width: 768px) {
     gap: 1rem;
-    margin: 1.5rem 0 1rem 0;
+    margin: 1.5rem 0 2rem 0;
   }
 `;
 
@@ -145,7 +149,7 @@ const MainHeadline = styled.h1<{ theme: ThemeType }>`
 const SubHeadline = styled.h2<{ theme: ThemeType }>`
   font-family: ${({ theme }) => theme.fonts.body};
   font-size: clamp(1.1rem, 3vw, 1.6rem);
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   line-height: 1.6;
   opacity: 0.9;
   max-width: 700px;
