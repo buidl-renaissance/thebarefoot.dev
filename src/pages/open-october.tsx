@@ -63,6 +63,67 @@ const HeroContent = styled.div`
   max-width: 900px;
 `;
 
+
+const HeroTreeContainer = styled.div`
+  text-align: center;
+  margin-top: 1rem;
+`;
+
+const HeroTreeImage = styled(Image)`
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+
+  @media (max-width: 768px) {
+    width: 150px;
+    height: 150px;
+  }
+`;
+
+const HeroDatesContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin: 2rem 0 1rem 0;
+  flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    gap: 1rem;
+    margin: 1.5rem 0 1rem 0;
+  }
+`;
+
+const HeroDateItem = styled.div<{ theme: ThemeType }>`
+  text-align: center;
+  font-family: ${({ theme }) => theme.fonts.mono};
+  color: ${({ theme }) => theme.colors.creamyBeige};
+  font-size: 0.9rem;
+  opacity: 0.9;
+
+  @media (max-width: 768px) {
+    font-size: 0.8rem;
+  }
+`;
+
+const HeroDateNumber = styled.div`
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: ${openOctoberColors.goldenrod};
+  margin-bottom: 0.2rem;
+
+  @media (max-width: 768px) {
+    font-size: 1.2rem;
+  }
+`;
+
+const HeroDateLabel = styled.div`
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+
+  @media (max-width: 768px) {
+    font-size: 0.7rem;
+  }
+`;
+
 const MainHeadline = styled.h1<{ theme: ThemeType }>`
   font-family: ${({ theme }) => theme.fonts.mono};
   font-size: clamp(2rem, 6vw, 4rem);
@@ -477,9 +538,38 @@ export default function OpenOctober() {
       <HeroSection>
         <HeroContent>
           <MainHeadline>Open October</MainHeadline>
+          <HeroTreeContainer>
+            <HeroTreeImage
+              src="/images/open-october-tree.png"
+              alt="Open October Tree - Git branches merging into autumn foliage"
+              width={300}
+              height={300}
+            />
+          </HeroTreeContainer>
+
           <SubHeadline>
             Build • Learn • Merge
           </SubHeadline>
+
+          <HeroDatesContainer>
+            <HeroDateItem>
+              <HeroDateNumber>Oct 7</HeroDateNumber>
+              <HeroDateLabel>Kickoff</HeroDateLabel>
+            </HeroDateItem>
+            <HeroDateItem>
+              <HeroDateNumber>Oct 14</HeroDateNumber>
+              <HeroDateLabel>Build #1</HeroDateLabel>
+            </HeroDateItem>
+            <HeroDateItem>
+              <HeroDateNumber>Oct 21</HeroDateNumber>
+              <HeroDateLabel>Build #2</HeroDateLabel>
+            </HeroDateItem>
+            <HeroDateItem>
+              <HeroDateNumber>Oct 28</HeroDateNumber>
+              <HeroDateLabel>Merge Party</HeroDateLabel>
+            </HeroDateItem>
+          </HeroDatesContainer>
+
           <SubHeadline style={{ fontSize: '1.1rem', marginBottom: '3rem' }}>
             A month-long open source event series in Detroit — learn Git, build in community, and celebrate at the Merge Party.
           </SubHeadline>
