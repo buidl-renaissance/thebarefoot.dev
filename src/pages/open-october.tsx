@@ -380,7 +380,6 @@ const CardDescription = styled.p<{ theme: ThemeType }>`
   font-family: ${({ theme }) => theme.fonts.body};
   font-size: 1rem;
   line-height: 1.6;
-  margin-bottom: 1.5rem;
   color: ${({ theme }) => theme.colors.asphaltBlack};
 `;
 
@@ -409,14 +408,16 @@ const ScheduleDate = styled.div<{ theme: ThemeType }>`
 
 const ScheduleTitle = styled.h4<{ theme: ThemeType }>`
   font-family: ${({ theme }) => theme.fonts.heading};
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   color: ${({ theme }) => theme.colors.creamyBeige};
   margin-bottom: 0.5rem;
+  line-height: 1.4;
 `;
 
 const ScheduleDescription = styled.p<{ theme: ThemeType }>`
   font-family: ${({ theme }) => theme.fonts.body};
   color: ${({ theme }) => theme.colors.creamyBeige};
+  font-size: 0.9rem;
   line-height: 1.5;
   opacity: 0.9;
 `;
@@ -927,8 +928,6 @@ export default function OpenOctober() {
                    <strong className="civic-teal">Collaboration</strong> •{" "}
                    <strong className="data-green">Local Impact</strong>
                  </AboutKeyValues>
-                 <br />
-                 <br />
                  Every project, every dollar, every decision is documented in the
                  open for the community to see and learn from.
                </CardDescription>
@@ -998,7 +997,7 @@ export default function OpenOctober() {
                 window.open("https://data.detroitmi.gov/", "_blank")
               }
             >
-              📊 Explore Detroit Open Data Portal
+              📊 Explore Detroit Open Data
             </WhyOpenDataCTAButton>
           </WhyOpenDataCTAContainer>
         </Container>
