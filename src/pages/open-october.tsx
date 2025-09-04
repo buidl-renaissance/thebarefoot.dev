@@ -221,7 +221,7 @@ const Section = styled.section<{ theme: ThemeType; autumn?: boolean }>`
       : theme.colors.creamyBeige};
   color: ${({ theme, autumn }) =>
     autumn ? theme.colors.creamyBeige : theme.colors.asphaltBlack};
-  padding: 5rem 1rem;
+  padding: 3rem 2rem;
   position: relative;
 
   &::before {
@@ -306,7 +306,7 @@ const Grid = styled.div<{ columns?: number }>`
 const SponsorshipCard = styled.div<{ theme: ThemeType; tier?: string }>`
   background: transparent;
   border-radius: 12px;
-  padding: 2rem;
+  padding: 1rem;
   border: none;
   transition: all 0.3s ease;
   position: relative;
@@ -343,7 +343,7 @@ const SponsorshipPrice = styled.div<{ tierColor: string }>`
 
 const SponsorshipBenefits = styled.p<{ theme: ThemeType; tierColor: string }>`
   font-family: ${({ theme }) => theme.fonts.body};
-  font-size: 1rem;
+  font-size: 0.85rem;
   line-height: 1.6;
   margin-bottom: 1.5rem;
   color: ${({ tierColor }) => tierColor};
@@ -425,7 +425,7 @@ const ResourceGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1.5rem;
-  margin-top: 2rem;
+  margin-top: 1rem;
 `;
 
 const ResourceItem = styled.a<{ theme: ThemeType }>`
@@ -574,6 +574,161 @@ const FormMessage = styled.div<{ success?: boolean; theme: ThemeType }>`
     ${({ success }) => (success ? openOctoberColors.githubGreen : "#ff6b6b")};
 `;
 
+// Resources section components
+const ResourcesContainer = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+`;
+
+const ResourceSectionTitle = styled.h3`
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-family: ${({ theme }) => theme.fonts.heading};
+  
+  &.featured {
+    color: ${openOctoberColors.goldenrod};
+  }
+  
+  &.open-data {
+    color: ${openOctoberColors.civicBlue};
+  }
+  
+  &.git-guides {
+    color: ${openOctoberColors.goldenrod};
+  }
+  
+  &.educational {
+    color: ${openOctoberColors.dataGreen};
+  }
+`;
+
+const ResourceSectionContainer = styled.div`
+  margin-top: 3rem;
+`;
+
+const RecordingsNote = styled.div`
+  text-align: center;
+  margin-top: 3rem;
+`;
+
+const RecordingsText = styled.p`
+  font-size: 1rem;
+  opacity: 0.8;
+  margin-bottom: 1rem;
+`;
+
+// Registration section components
+const RegistrationContainer = styled.div`
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+`;
+
+const RegistrationFormContainer = styled.div`
+  margin-top: 3rem;
+  padding: 2rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+`;
+
+const RegistrationForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+const ContactSection = styled.div`
+  margin-top: 3rem;
+  font-size: 1rem;
+  opacity: 0.8;
+`;
+
+const ContactEmail = styled.a`
+  color: ${openOctoberColors.goldenrod};
+  text-decoration: none;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+// Hero section components
+const HeroSubHeadlineStyled = styled(SubHeadline)`
+  margin-bottom: 2rem;
+  font-weight: 500;
+  font-size: 0.95rem;
+`;
+
+// About section components
+const AboutKeyValues = styled.div`
+  strong {
+    &.civic-blue {
+      color: ${openOctoberColors.civicBlue};
+    }
+    
+    &.civic-teal {
+      color: ${openOctoberColors.civicTeal};
+    }
+    
+    &.data-green {
+      color: ${openOctoberColors.dataGreen};
+    }
+  }
+`;
+
+const AboutQuote = styled.div`
+  text-align: center;
+  margin-top: 3rem;
+  font-size: 1.3rem;
+  font-style: italic;
+`;
+
+// Why Open Data section components
+const WhyOpenDataCTAContainer = styled.div`
+  text-align: center;
+  margin-top: 3rem;
+`;
+
+const WhyOpenDataCTAButton = styled(CTAButton)`
+  background: ${openOctoberColors.civicBlue};
+  border-color: ${openOctoberColors.civicBlue};
+`;
+
+// Schedule section components
+const ScheduleContainer = styled.div`
+  max-width: 800px;
+  margin: 0 auto;
+`;
+
+// Sponsorship section components
+const SponsorshipCTAContainer = styled.div`
+  text-align: center;
+  margin-top: 3rem;
+`;
+
+// Community section components
+const CommunityLinksContainer = styled.div`
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+`;
+
+const CommunityLink = styled.a`
+  color: ${openOctoberColors.githubGreen};
+  text-decoration: none;
+  font-size: 0.9rem;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const CommunityPartnersNote = styled.div`
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  opacity: 0.8;
+`;
+
 export default function OpenOctober() {
   const [formData, setFormData] = useState({
     email: "",
@@ -709,16 +864,10 @@ export default function OpenOctober() {
             </HeroDateItem>
           </HeroDatesContainer>
 
-          <SubHeadline
-            style={{
-              marginBottom: "2rem",
-              fontWeight: "500",
-              fontSize: "0.95rem",
-            }}
-          >
+          <HeroSubHeadlineStyled>
             A month-long event series in Detroit — learn Git, explore open data,
             build in community, and merge your work into the commons.
-          </SubHeadline>
+          </HeroSubHeadlineStyled>
           <CTAGroup>
             <Link href="#register" passHref legacyBehavior>
               <CTAButton primary as="a">
@@ -748,23 +897,17 @@ export default function OpenOctober() {
           <Grid columns={2}>
             <Card>
               <CardTitle>🔓 Key Values</CardTitle>
-              <CardDescription>
-                <strong style={{ color: openOctoberColors.civicBlue }}>
-                  Transparency
-                </strong>{" "}
-                •{" "}
-                <strong style={{ color: openOctoberColors.civicTeal }}>
-                  Collaboration
-                </strong>{" "}
-                •{" "}
-                <strong style={{ color: openOctoberColors.dataGreen }}>
-                  Local Impact
-                </strong>
-                <br />
-                <br />
-                Every project, every dollar, every decision is documented in the
-                open for the community to see and learn from.
-              </CardDescription>
+                             <CardDescription>
+                 <AboutKeyValues>
+                   <strong className="civic-blue">Transparency</strong> •{" "}
+                   <strong className="civic-teal">Collaboration</strong> •{" "}
+                   <strong className="data-green">Local Impact</strong>
+                 </AboutKeyValues>
+                 <br />
+                 <br />
+                 Every project, every dollar, every decision is documented in the
+                 open for the community to see and learn from.
+               </CardDescription>
             </Card>
 
             <Card>
@@ -781,16 +924,9 @@ export default function OpenOctober() {
             </Card>
           </Grid>
 
-          <div
-            style={{
-              textAlign: "center",
-              marginTop: "3rem",
-              fontSize: "1.3rem",
-              fontStyle: "italic",
-            }}
-          >
+          <AboutQuote>
             &quot;Open source. Open data. Open Detroit.&quot;
-          </div>
+          </AboutQuote>
         </Container>
       </Section>
 
@@ -832,19 +968,15 @@ export default function OpenOctober() {
             </Card>
           </Grid>
 
-          <div style={{ textAlign: "center", marginTop: "3rem" }}>
-            <CTAButton
+          <WhyOpenDataCTAContainer>
+            <WhyOpenDataCTAButton
               onClick={() =>
                 window.open("https://data.detroitmi.gov/", "_blank")
               }
-              style={{
-                background: openOctoberColors.civicBlue,
-                borderColor: openOctoberColors.civicBlue,
-              }}
             >
               📊 Explore Detroit Open Data Portal
-            </CTAButton>
-          </div>
+            </WhyOpenDataCTAButton>
+          </WhyOpenDataCTAContainer>
         </Container>
       </Section>
 
@@ -857,7 +989,7 @@ export default function OpenOctober() {
             exploration, and community building.
           </SectionDescription>
 
-          <div style={{ maxWidth: "800px", margin: "0 auto" }}>
+          <ScheduleContainer>
             <ScheduleItem>
               <ScheduleDate>Week 1 • October 7</ScheduleDate>
               <ScheduleTitle>
@@ -914,10 +1046,10 @@ export default function OpenOctober() {
                 <br />
                 Symbolic merge into shared repo.
                 <br />
-                Community celebration with food, drinks, and networking.
-              </ScheduleDescription>
-            </ScheduleItem>
-          </div>
+                              Community celebration with food, drinks, and networking.
+            </ScheduleDescription>
+          </ScheduleItem>
+        </ScheduleContainer>
         </Container>
       </Section>
 
@@ -947,11 +1079,13 @@ export default function OpenOctober() {
                 </SponsorshipPrice>
               </SponsorshipBadgeContainer>
               <SponsorshipBenefits tierColor={openOctoberColors.bronze}>
-                Covers pizza for one session
+                Sponsor an X-Large pizza you get:
                 <br />
                 Logo on website
                 <br />
                 Social media recognition
+                <br />
+                Newsletter mention
               </SponsorshipBenefits>
             </SponsorshipCard>
 
@@ -971,11 +1105,11 @@ export default function OpenOctober() {
                 </SponsorshipPrice>
               </SponsorshipBadgeContainer>
               <SponsorshipBenefits tierColor={openOctoberColors.silver}>
-                All Commit benefits
+                Sponsor 2 X-Large pizzas you get:
                 <br />
-                Newsletter mention
+                All Commit benefits +
                 <br />
-                Community thanks
+                Sponsored Text in Promotional Materials
               </SponsorshipBenefits>
             </SponsorshipCard>
 
@@ -995,11 +1129,11 @@ export default function OpenOctober() {
                 </SponsorshipPrice>
               </SponsorshipBadgeContainer>
               <SponsorshipBenefits tierColor={openOctoberColors.gold}>
-                All Branch benefits
+                Sponsor 4 X-Large pizzas you get:
+                <br />
+                All Branch benefits +
                 <br />
                 IRL mentions at events
-                <br />
-                Priority project support
               </SponsorshipBenefits>
             </SponsorshipCard>
 
@@ -1019,15 +1153,15 @@ export default function OpenOctober() {
                 </SponsorshipPrice>
               </SponsorshipBadgeContainer>
               <SponsorshipBenefits tierColor={openOctoberColors.platinum}>
-                Helps host multiple builds
-                <br />
-                Seeds micro-grants for projects
+                Sponsor 5+ X-Large pizzas you get:
+                <br />All Pull Request benefits +
+                <br />Sponsorship messaging in promotional materials
                 <br />1 minute pitch opportunity
               </SponsorshipBenefits>
             </SponsorshipCard>
           </Grid>
 
-          <div style={{ textAlign: "center", marginTop: "3rem" }}>
+          <SponsorshipCTAContainer>
             <CTAButton
               primary
               onClick={() =>
@@ -1039,7 +1173,7 @@ export default function OpenOctober() {
             >
               Become a Sponsor
             </CTAButton>
-          </div>
+          </SponsorshipCTAContainer>
 
           {/* Treasury Transparency */}
           <TreasuryWidget>
@@ -1051,15 +1185,9 @@ export default function OpenOctober() {
                 passHref
                 legacyBehavior
               >
-                <a
-                  style={{
-                    color: openOctoberColors.githubGreen,
-                    textDecoration: "none",
-                    fontSize: "0.9rem",
-                  }}
-                >
+                <CommunityLink>
                   View on Etherscan →
-                </a>
+                </CommunityLink>
               </Link>
             </div>
           </TreasuryWidget>
@@ -1075,16 +1203,10 @@ export default function OpenOctober() {
             and open data journey.
           </SectionDescription>
 
-          <div>
-            <h3
-              style={{
-                fontSize: "1.5rem",
-                marginBottom: "1rem",
-                color: openOctoberColors.goldenrod,
-              }}
-            >
-              🚀 Featured Projects to Explore
-            </h3>
+          <ResourcesContainer>
+            <ResourceSectionTitle className="featured">
+              🚀 Featured Projects
+            </ResourceSectionTitle>
             <ResourceGrid>
               <ResourceItem href="https://nextjs.org" target="_blank">
                 <strong>Next.js</strong>
@@ -1114,21 +1236,14 @@ export default function OpenOctober() {
               <ResourceItem href="https://tailwindcss.com" target="_blank">
                 <strong>Tailwind CSS</strong>
                 <br />
-                Utility-first CSS framework
-              </ResourceItem>
-            </ResourceGrid>
-          </div>
+                              Utility-first CSS framework
+            </ResourceItem>
+          </ResourceGrid>
 
-          <div style={{ marginTop: "3rem" }}>
-            <h3
-              style={{
-                fontSize: "1.5rem",
-                marginBottom: "1rem",
-                color: openOctoberColors.civicBlue,
-              }}
-            >
+          <ResourceSectionContainer>
+            <ResourceSectionTitle className="open-data">
               📊 Open Data Resources
-            </h3>
+            </ResourceSectionTitle>
             <ResourceGrid>
               <ResourceItem href="https://data.detroitmi.gov/" target="_blank">
                 <strong>Detroit Open Data Portal</strong>
@@ -1157,18 +1272,12 @@ export default function OpenOctober() {
                 Search engine for datasets
               </ResourceItem>
             </ResourceGrid>
-          </div>
+          </ResourceSectionContainer>
 
-          <div style={{ marginTop: "3rem" }}>
-            <h3
-              style={{
-                fontSize: "1.5rem",
-                marginBottom: "1rem",
-                color: openOctoberColors.goldenrod,
-              }}
-            >
+          <ResourceSectionContainer>
+            <ResourceSectionTitle className="git-guides">
               📚 Git & GitHub Guides
-            </h3>
+            </ResourceSectionTitle>
             <ResourceGrid>
               <ResourceItem href="https://git-scm.com/doc" target="_blank">
                 <strong>Official Git Documentation</strong>
@@ -1197,18 +1306,12 @@ export default function OpenOctober() {
                 Make your first open source contribution
               </ResourceItem>
             </ResourceGrid>
-          </div>
+          </ResourceSectionContainer>
 
-          <div style={{ marginTop: "3rem" }}>
-            <h3
-              style={{
-                fontSize: "1.5rem",
-                marginBottom: "1rem",
-                color: openOctoberColors.dataGreen,
-              }}
-            >
+          <ResourceSectionContainer>
+            <ResourceSectionTitle className="educational">
               📖 Educational Guides
-            </h3>
+            </ResourceSectionTitle>
             <ResourceGrid>
               <ResourceItem
                 href="https://opendatahandbook.org/"
@@ -1243,14 +1346,15 @@ export default function OpenOctober() {
                 Policy resources and guides
               </ResourceItem>
             </ResourceGrid>
-          </div>
+          </ResourceSectionContainer>
 
-          <div style={{ textAlign: "center", marginTop: "3rem" }}>
-            <p style={{ fontSize: "1rem", opacity: 0.8, marginBottom: "1rem" }}>
+          <RecordingsNote>
+            <RecordingsText>
               📹 Session recordings and slides will be added here after each
               week
-            </p>
-          </div>
+            </RecordingsText>
+          </RecordingsNote>
+        </ResourcesContainer>
         </Container>
       </Section>
 
@@ -1277,15 +1381,9 @@ export default function OpenOctober() {
                 passHref
                 legacyBehavior
               >
-                <a
-                  style={{
-                    color: openOctoberColors.githubGreen,
-                    textDecoration: "none",
-                    fontWeight: "bold",
-                  }}
-                >
+                <CommunityLink style={{ fontWeight: "bold" }}>
                   Visit GitHub Org →
-                </a>
+                </CommunityLink>
               </Link>
             </Card>
 
@@ -1300,15 +1398,9 @@ export default function OpenOctober() {
                 passHref
                 legacyBehavior
               >
-                <a
-                  style={{
-                    color: openOctoberColors.githubGreen,
-                    textDecoration: "none",
-                    fontWeight: "bold",
-                  }}
-                >
+                <CommunityLink style={{ fontWeight: "bold" }}>
                   View Treasury →
-                </a>
+                </CommunityLink>
               </Link>
             </Card>
 
@@ -1320,11 +1412,9 @@ export default function OpenOctober() {
                 Proudly supported by Detroit&apos;s best pizza shops and local
                 businesses who believe in building community through technology.
               </CardDescription>
-              <div
-                style={{ marginTop: "1rem", fontSize: "0.9rem", opacity: 0.8 }}
-              >
+              <CommunityPartnersNote>
                 TBA
-              </div>
+              </CommunityPartnersNote>
             </Card>
 
             <Card>
@@ -1334,32 +1424,18 @@ export default function OpenOctober() {
                 BuildDetroit and thebarefoot.dev, bringing open source education
                 to Detroit&apos;s tech community.
               </CardDescription>
-              <div style={{ display: "flex", gap: "1rem", marginTop: "1rem" }}>
+              <CommunityLinksContainer>
                 <Link href="https://builddetroit.xyz" passHref legacyBehavior>
-                  <a
-                    style={{
-                      color: openOctoberColors.githubGreen,
-                      textDecoration: "none",
-                      fontSize: "0.9rem",
-                    }}
-                    target="_blank"
-                  >
+                  <CommunityLink target="_blank">
                     BuildDetroit →
-                  </a>
+                  </CommunityLink>
                 </Link>
                 <Link href="https://thebarefoot.dev" passHref legacyBehavior>
-                  <a
-                    style={{
-                      color: openOctoberColors.githubGreen,
-                      textDecoration: "none",
-                      fontSize: "0.9rem",
-                    }}
-                    target="_blank"
-                  >
+                  <CommunityLink target="_blank">
                     thebarefoot.dev →
-                  </a>
+                  </CommunityLink>
                 </Link>
-              </div>
+              </CommunityLinksContainer>
             </Card>
           </Grid>
         </Container>
@@ -1368,31 +1444,15 @@ export default function OpenOctober() {
       {/* Registration/Contact */}
       <Section id="register" autumn>
         <Container>
-          <div
-            style={{ maxWidth: "600px", margin: "0 auto", textAlign: "center" }}
-          >
-            <div
-              style={{
-                marginTop: "3rem",
-                padding: "2rem",
-                background: "rgba(0,0,0,0.3)",
-                borderRadius: "12px",
-              }}
-            >
+          <RegistrationContainer>
+            <RegistrationFormContainer>
               <SectionTitle>Register for Open October</SectionTitle>
               <SectionDescription>
                 Ready to connect, build, and merge with Detroit&apos;s open
                 source and open data community? Register below.
               </SectionDescription>
 
-              <form
-                onSubmit={handleRegistrationSubmit}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "1rem",
-                }}
-              >
+              <RegistrationForm onSubmit={handleRegistrationSubmit}>
                 <FormInput
                   type="email"
                   name="email"
@@ -1423,7 +1483,7 @@ export default function OpenOctober() {
                 <SubmitButton type="submit" primary disabled={loading}>
                   {loading ? "Registering..." : "Register"}
                 </SubmitButton>
-              </form>
+              </RegistrationForm>
 
               {error && <FormMessage>{error}</FormMessage>}
               {success && (
@@ -1432,25 +1492,17 @@ export default function OpenOctober() {
                   and details soon.
                 </FormMessage>
               )}
-            </div>
+            </RegistrationFormContainer>
 
-            <div
-              style={{ marginTop: "3rem", fontSize: "1rem", opacity: "0.8" }}
-            >
+            <ContactSection>
               <p>Questions? Contact us:</p>
               <p>
-                <a
-                  href="mailto:john@thebarefoot.dev"
-                  style={{
-                    color: openOctoberColors.goldenrod,
-                    textDecoration: "none",
-                  }}
-                >
+                <ContactEmail href="mailto:john@thebarefoot.dev">
                   john@thebarefoot.dev
-                </a>
+                </ContactEmail>
               </p>
-            </div>
-          </div>
+            </ContactSection>
+          </RegistrationContainer>
         </Container>
       </Section>
 
