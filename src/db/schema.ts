@@ -135,4 +135,13 @@ export const blogPostHistory = sqliteTable("blog_post_history", {
   oldValue: text("old_value"), // previous value (as string/JSON)
   newValue: text("new_value"), // new value (as string/JSON)
   changedAt: integer("changed_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+});
+
+// Open October event registrations table
+export const openOctoberRegistrations = sqliteTable("open_october_registrations", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  email: text("email").notNull().unique(),
+  name: text("name"),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
 }); 
