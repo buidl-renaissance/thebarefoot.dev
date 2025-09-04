@@ -547,7 +547,7 @@ export default function OpenOctober() {
           </HeroTreeContainer>
 
           <SubHeadline>
-            Build • Connect • Merge
+            Connect • Build • Merge
           </SubHeadline>
 
           <HeroDatesContainer>
