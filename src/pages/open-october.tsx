@@ -275,7 +275,7 @@ const SectionTitle = styled.h2<{ theme: ThemeType }>`
 
 const SectionDescription = styled.p<{ theme: ThemeType }>`
   font-family: ${({ theme }) => theme.fonts.body};
-  font-size: 1rem;
+  font-size: 1.4rem;
   margin-bottom: 3rem;
   max-width: 800px;
   margin-left: auto;
@@ -376,7 +376,7 @@ const CardTitle = styled.h3<{ theme: ThemeType }>`
   gap: 0.5rem;
 `;
 
-const CardDescription = styled.p<{ theme: ThemeType }>`
+const CardDescription = styled.div<{ theme: ThemeType }>`
   font-family: ${({ theme }) => theme.fonts.body};
   font-size: 1rem;
   line-height: 1.6;
@@ -585,19 +585,19 @@ const ResourceSectionTitle = styled.h3`
   font-size: 1.5rem;
   margin-bottom: 0.5rem;
   font-family: ${({ theme }) => theme.fonts.heading};
-  
+
   &.featured {
     color: ${openOctoberColors.goldenrod};
   }
-  
+
   &.open-data {
     color: ${openOctoberColors.civicBlue};
   }
-  
+
   &.git-guides {
     color: ${openOctoberColors.goldenrod};
   }
-  
+
   &.educational {
     color: ${openOctoberColors.dataGreen};
   }
@@ -647,7 +647,7 @@ const ContactSection = styled.div`
 const ContactEmail = styled.a`
   color: ${openOctoberColors.goldenrod};
   text-decoration: none;
-  
+
   &:hover {
     text-decoration: underline;
   }
@@ -660,39 +660,12 @@ const HeroSubHeadlineStyled = styled(SubHeadline)`
   font-size: 0.95rem;
 `;
 
-// About section components
-const AboutKeyValues = styled.div`
-  strong {
-    &.civic-blue {
-      color: ${openOctoberColors.civicBlue};
-    }
-    
-    &.civic-teal {
-      color: ${openOctoberColors.civicTeal};
-    }
-    
-    &.data-green {
-      color: ${openOctoberColors.dataGreen};
-    }
-  }
-`;
 
 const AboutQuote = styled.div`
   text-align: center;
   margin-top: 3rem;
   font-size: 1.3rem;
   font-style: italic;
-`;
-
-// Why Open Data section components
-const WhyOpenDataCTAContainer = styled.div`
-  text-align: center;
-  margin-top: 3rem;
-`;
-
-const WhyOpenDataCTAButton = styled(CTAButton)`
-  background: ${openOctoberColors.civicBlue};
-  border-color: ${openOctoberColors.civicBlue};
 `;
 
 // Schedule section components
@@ -718,7 +691,7 @@ const CommunityLink = styled.a`
   color: ${openOctoberColors.githubGreen};
   text-decoration: none;
   font-size: 0.9rem;
-  
+
   &:hover {
     text-decoration: underline;
   }
@@ -811,46 +784,40 @@ export default function OpenOctober() {
           property="og:description"
           content="A month-long open source event series in Detroit — learn Git, build in community, and celebrate at the Merge Party."
         />
-                  <meta property="og:type" content="website" />
-          <meta
-            property="og:url"
-            content="https://thebarefoot.dev/open-october"
-          />
-          <meta
-            property="og:image"
-            content="https://thebarefoot.dev/images/open-october-featured.png"
-          />
-          <meta
-            property="og:image:width"
-            content="1200"
-          />
-          <meta
-            property="og:image:height"
-            content="630"
-          />
-          <meta
-            property="og:image:alt"
-            content="Open October: Detroit's open source and open data event series"
-          />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:url"
+          content="https://thebarefoot.dev/open-october"
+        />
+        <meta
+          property="og:image"
+          content="https://thebarefoot.dev/images/open-october-featured.png"
+        />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta
+          property="og:image:alt"
+          content="Open October: Detroit's open source and open data event series"
+        />
 
-          {/* Twitter */}
-          <meta name="twitter:card" content="summary_large_image" />
-          <meta
-            name="twitter:title"
-            content="Open October: Build • Learn • Merge"
-          />
-          <meta
-            name="twitter:description"
-            content="Detroit's month-long open source event series. Learn Git, build in community, celebrate open source."
-          />
-          <meta
-            name="twitter:image"
-            content="https://thebarefoot.dev/images/open-october-featured.png"
-          />
-          <meta
-            name="twitter:image:alt"
-            content="Open October: Detroit's open source and open data event series"
-          />
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:title"
+          content="Open October: Build • Learn • Merge"
+        />
+        <meta
+          name="twitter:description"
+          content="Detroit's month-long open source event series. Learn Git, build in community, celebrate open source."
+        />
+        <meta
+          name="twitter:image"
+          content="https://thebarefoot.dev/images/open-october-featured.png"
+        />
+        <meta
+          name="twitter:image:alt"
+          content="Open October: Detroit's open source and open data event series"
+        />
       </Head>
 
       <HeaderComponent />
@@ -890,8 +857,7 @@ export default function OpenOctober() {
           </HeroDatesContainer>
 
           <HeroSubHeadlineStyled>
-            A month-long event series in Detroit — learn Git, explore open data,
-            build in community, and merge your work into the commons.
+            Join the team building the open commons of Detroit.
           </HeroSubHeadlineStyled>
           <CTAGroup>
             <Link href="#register" passHref legacyBehavior>
@@ -899,11 +865,6 @@ export default function OpenOctober() {
                 <GitIcon>git</GitIcon> Register for Kickoff
               </CTAButton>
             </Link>
-            {/* <CTAButton 
-              onClick={() => window.open('https://github.com/open-october-detroit', '_blank')}
-            >
-              Join the GitHub Repo
-            </CTAButton> */}
           </CTAGroup>
         </HeroContent>
       </HeroSection>
@@ -912,94 +873,17 @@ export default function OpenOctober() {
       <Section>
         <Container>
           <SectionTitle>About Open October</SectionTitle>
+
           <SectionDescription>
-            Open October is a community experiment in open source and open data.
-            For one month, we&apos;ll learn the tools (Git, Supabase, Turso,
-            Next.js, Auth.js), explore how open data empowers communities, and
-            build together — with every contribution documented in public.
+            Detroit is building its open commons. Whether you&apos;re a
+            seasoned developer, a civic-minded community member, or just
+            curious what it means to build an open platform, join us for a month of learning,
+            building, and celebrating the power of community-driven technology.
           </SectionDescription>
-
-          <Grid columns={2}>
-            <Card>
-              <CardTitle>🔓 Key Values</CardTitle>
-                             <CardDescription>
-                 <AboutKeyValues>
-                   <strong className="civic-blue">Transparency</strong> •{" "}
-                   <strong className="civic-teal">Collaboration</strong> •{" "}
-                   <strong className="data-green">Local Impact</strong>
-                 </AboutKeyValues>
-                 Every project, every dollar, every decision is documented in the
-                 open for the community to see and learn from.
-               </CardDescription>
-            </Card>
-
-            <Card>
-              <CardTitle>
-                <PizzaIcon>🍕</PizzaIcon> From Pizza to Pull Requests
-              </CardTitle>
-              <CardDescription>
-                Detroit is building its open commons. Whether you&apos;re a
-                seasoned developer, a civic-minded community member, or just
-                curious about open data, join us for a month of learning,
-                building, and celebrating the power of community-driven
-                technology.
-              </CardDescription>
-            </Card>
-          </Grid>
 
           <AboutQuote>
-            &quot;Open source. Open data. Open Detroit.&quot;
+            &quot;Open source. Open data. An Open Platform for Detroit.&quot;
           </AboutQuote>
-        </Container>
-      </Section>
-
-      {/* Why Open Data */}
-      <Section>
-        <Container>
-          <SectionTitle>Why Open Data?</SectionTitle>
-          <SectionDescription>
-            Open data makes government, businesses, and communities more
-            transparent and accountable. Paired with open source, it lets us
-            build tools that serve everyone.
-          </SectionDescription>
-
-          <Grid>
-            <Card>
-              <CardTitle>🏙️ City Datasets</CardTitle>
-              <CardDescription>
-                Housing data, transit routes, public art locations — city
-                datasets help us understand and improve our communities through
-                data-driven insights.
-              </CardDescription>
-            </Card>
-
-            <Card>
-              <CardTitle>🗺️ Community Projects</CardTitle>
-              <CardDescription>
-                Mapping neighborhood resources, storytelling through data
-                visualization, community research — open data fuels grassroots
-                innovation.
-              </CardDescription>
-            </Card>
-
-            <Card>
-              <CardTitle>💰 Transparency Demos</CardTitle>
-              <CardDescription>
-                Our Open October treasury in USDC is completely transparent —
-                see exactly how community funds are used, in real-time.
-              </CardDescription>
-            </Card>
-          </Grid>
-
-          <WhyOpenDataCTAContainer>
-            <WhyOpenDataCTAButton
-              onClick={() =>
-                window.open("https://data.detroitmi.gov/", "_blank")
-              }
-            >
-              📊 Explore Detroit Open Data
-            </WhyOpenDataCTAButton>
-          </WhyOpenDataCTAContainer>
         </Container>
       </Section>
 
@@ -1069,10 +953,10 @@ export default function OpenOctober() {
                 <br />
                 Symbolic merge into shared repo.
                 <br />
-                              Community celebration with food, drinks, and networking.
-            </ScheduleDescription>
-          </ScheduleItem>
-        </ScheduleContainer>
+                Community celebration with food, drinks, and networking.
+              </ScheduleDescription>
+            </ScheduleItem>
+          </ScheduleContainer>
         </Container>
       </Section>
 
@@ -1081,8 +965,9 @@ export default function OpenOctober() {
         <Container>
           <SectionTitle>Sponsorship Tiers</SectionTitle>
           <SectionDescription>
-            Fuel Detroit&apos;s open data commons. Your sponsorship directly
-            supports community learning, transparency, and local innovation.
+            Fuel Detroit&apos;s open commons. <br /> 
+            <span style={{ fontSize: "1rem" }}>Your sponsorship directly
+            supports community learning, transparency, and local innovation.</span>
           </SectionDescription>
 
           <Grid>
@@ -1177,8 +1062,10 @@ export default function OpenOctober() {
               </SponsorshipBadgeContainer>
               <SponsorshipBenefits tierColor={openOctoberColors.platinum}>
                 Sponsor 5+ X-Large pizzas you get:
-                <br />All Pull Request benefits +
-                <br />Sponsorship messaging in promotional materials
+                <br />
+                All Pull Request benefits +
+                <br />
+                Sponsorship messaging in promotional materials
                 <br />1 minute pitch opportunity
               </SponsorshipBenefits>
             </SponsorshipCard>
@@ -1208,9 +1095,7 @@ export default function OpenOctober() {
                 passHref
                 legacyBehavior
               >
-                <CommunityLink>
-                  View on Etherscan →
-                </CommunityLink>
+                <CommunityLink>View on Etherscan →</CommunityLink>
               </Link>
             </div>
           </TreasuryWidget>
@@ -1259,125 +1144,128 @@ export default function OpenOctober() {
               <ResourceItem href="https://tailwindcss.com" target="_blank">
                 <strong>Tailwind CSS</strong>
                 <br />
-                              Utility-first CSS framework
-            </ResourceItem>
-          </ResourceGrid>
-
-          <ResourceSectionContainer>
-            <ResourceSectionTitle className="open-data">
-              📊 Open Data Resources
-            </ResourceSectionTitle>
-            <ResourceGrid>
-              <ResourceItem href="https://data.detroitmi.gov/" target="_blank">
-                <strong>Detroit Open Data Portal</strong>
-                <br />
-                City datasets, demographics, services
-              </ResourceItem>
-              <ResourceItem href="https://www.data.gov/" target="_blank">
-                <strong>Data.gov</strong>
-                <br />
-                Federal government open data
-              </ResourceItem>
-              <ResourceItem
-                href="https://github.com/awesomedata/awesome-public-datasets"
-                target="_blank"
-              >
-                <strong>Awesome Public Datasets</strong>
-                <br />
-                Curated list of public datasets
-              </ResourceItem>
-              <ResourceItem
-                href="https://datasetsearch.research.google.com/"
-                target="_blank"
-              >
-                <strong>Google Dataset Search</strong>
-                <br />
-                Search engine for datasets
+                Utility-first CSS framework
               </ResourceItem>
             </ResourceGrid>
-          </ResourceSectionContainer>
 
-          <ResourceSectionContainer>
-            <ResourceSectionTitle className="git-guides">
-              📚 Git & GitHub Guides
-            </ResourceSectionTitle>
-            <ResourceGrid>
-              <ResourceItem href="https://git-scm.com/doc" target="_blank">
-                <strong>Official Git Documentation</strong>
-                <br />
-                Complete reference and tutorials
-              </ResourceItem>
-              <ResourceItem href="https://docs.github.com" target="_blank">
-                <strong>GitHub Docs</strong>
-                <br />
-                Everything about GitHub
-              </ResourceItem>
-              <ResourceItem
-                href="https://learngitbranching.js.org"
-                target="_blank"
-              >
-                <strong>Learn Git Branching</strong>
-                <br />
-                Interactive Git tutorial
-              </ResourceItem>
-              <ResourceItem
-                href="https://github.com/firstcontributions/first-contributions"
-                target="_blank"
-              >
-                <strong>First Contributions</strong>
-                <br />
-                Make your first open source contribution
-              </ResourceItem>
-            </ResourceGrid>
-          </ResourceSectionContainer>
+            <ResourceSectionContainer>
+              <ResourceSectionTitle className="open-data">
+                📊 Open Data Resources
+              </ResourceSectionTitle>
+              <ResourceGrid>
+                <ResourceItem
+                  href="https://data.detroitmi.gov/"
+                  target="_blank"
+                >
+                  <strong>Detroit Open Data Portal</strong>
+                  <br />
+                  City datasets, demographics, services
+                </ResourceItem>
+                <ResourceItem href="https://www.data.gov/" target="_blank">
+                  <strong>Data.gov</strong>
+                  <br />
+                  Federal government open data
+                </ResourceItem>
+                <ResourceItem
+                  href="https://github.com/awesomedata/awesome-public-datasets"
+                  target="_blank"
+                >
+                  <strong>Awesome Public Datasets</strong>
+                  <br />
+                  Curated list of public datasets
+                </ResourceItem>
+                <ResourceItem
+                  href="https://datasetsearch.research.google.com/"
+                  target="_blank"
+                >
+                  <strong>Google Dataset Search</strong>
+                  <br />
+                  Search engine for datasets
+                </ResourceItem>
+              </ResourceGrid>
+            </ResourceSectionContainer>
 
-          <ResourceSectionContainer>
-            <ResourceSectionTitle className="educational">
-              📖 Educational Guides
-            </ResourceSectionTitle>
-            <ResourceGrid>
-              <ResourceItem
-                href="https://opendatahandbook.org/"
-                target="_blank"
-              >
-                <strong>Open Data Handbook</strong>
-                <br />
-                Complete guide to open data
-              </ResourceItem>
-              <ResourceItem
-                href="https://github.com/collections/government"
-                target="_blank"
-              >
-                <strong>Government on GitHub</strong>
-                <br />
-                Open source government projects
-              </ResourceItem>
-              <ResourceItem
-                href="https://www.codeforamerica.org/"
-                target="_blank"
-              >
-                <strong>Code for America</strong>
-                <br />
-                Civic technology community
-              </ResourceItem>
-              <ResourceItem
-                href="https://sunlightfoundation.com/open-data-policy-hub/"
-                target="_blank"
-              >
-                <strong>Open Data Policy Hub</strong>
-                <br />
-                Policy resources and guides
-              </ResourceItem>
-            </ResourceGrid>
-          </ResourceSectionContainer>
+            <ResourceSectionContainer>
+              <ResourceSectionTitle className="git-guides">
+                📚 Git & GitHub Guides
+              </ResourceSectionTitle>
+              <ResourceGrid>
+                <ResourceItem href="https://git-scm.com/doc" target="_blank">
+                  <strong>Official Git Documentation</strong>
+                  <br />
+                  Complete reference and tutorials
+                </ResourceItem>
+                <ResourceItem href="https://docs.github.com" target="_blank">
+                  <strong>GitHub Docs</strong>
+                  <br />
+                  Everything about GitHub
+                </ResourceItem>
+                <ResourceItem
+                  href="https://learngitbranching.js.org"
+                  target="_blank"
+                >
+                  <strong>Learn Git Branching</strong>
+                  <br />
+                  Interactive Git tutorial
+                </ResourceItem>
+                <ResourceItem
+                  href="https://github.com/firstcontributions/first-contributions"
+                  target="_blank"
+                >
+                  <strong>First Contributions</strong>
+                  <br />
+                  Make your first open source contribution
+                </ResourceItem>
+              </ResourceGrid>
+            </ResourceSectionContainer>
 
-          <RecordingsNote>
-            <RecordingsText>
-              📹 Session recordings and slides will be added here after each
-              week
-            </RecordingsText>
-          </RecordingsNote>
-        </ResourcesContainer>
+            <ResourceSectionContainer>
+              <ResourceSectionTitle className="educational">
+                📖 Educational Guides
+              </ResourceSectionTitle>
+              <ResourceGrid>
+                <ResourceItem
+                  href="https://opendatahandbook.org/"
+                  target="_blank"
+                >
+                  <strong>Open Data Handbook</strong>
+                  <br />
+                  Complete guide to open data
+                </ResourceItem>
+                <ResourceItem
+                  href="https://github.com/collections/government"
+                  target="_blank"
+                >
+                  <strong>Government on GitHub</strong>
+                  <br />
+                  Open source government projects
+                </ResourceItem>
+                <ResourceItem
+                  href="https://www.codeforamerica.org/"
+                  target="_blank"
+                >
+                  <strong>Code for America</strong>
+                  <br />
+                  Civic technology community
+                </ResourceItem>
+                <ResourceItem
+                  href="https://sunlightfoundation.com/open-data-policy-hub/"
+                  target="_blank"
+                >
+                  <strong>Open Data Policy Hub</strong>
+                  <br />
+                  Policy resources and guides
+                </ResourceItem>
+              </ResourceGrid>
+            </ResourceSectionContainer>
+
+            <RecordingsNote>
+              <RecordingsText>
+                📹 Session recordings and slides will be added here after each
+                week
+              </RecordingsText>
+            </RecordingsNote>
+          </ResourcesContainer>
         </Container>
       </Section>
 
@@ -1435,9 +1323,7 @@ export default function OpenOctober() {
                 Proudly supported by Detroit&apos;s best pizza shops and local
                 businesses who believe in building community through technology.
               </CardDescription>
-              <CommunityPartnersNote>
-                TBA
-              </CommunityPartnersNote>
+              <CommunityPartnersNote>TBA</CommunityPartnersNote>
             </Card>
 
             <Card>
@@ -1449,9 +1335,7 @@ export default function OpenOctober() {
               </CardDescription>
               <CommunityLinksContainer>
                 <Link href="https://builddetroit.xyz" passHref legacyBehavior>
-                  <CommunityLink target="_blank">
-                    BuildDetroit →
-                  </CommunityLink>
+                  <CommunityLink target="_blank">BuildDetroit →</CommunityLink>
                 </Link>
                 <Link href="https://thebarefoot.dev" passHref legacyBehavior>
                   <CommunityLink target="_blank">
